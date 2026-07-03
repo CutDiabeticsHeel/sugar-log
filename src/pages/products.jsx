@@ -1,5 +1,13 @@
+import { useGetProductsQuery } from "../store/api";
+
 function ProductsTable() {
-    return <h1>Продукты</h1>;
+    const {data: products} = useGetProductsQuery();
+    return (
+        <div>
+            <h1>Продукты</h1>
+            {products?.[0]?.id}
+        </div>
+    )
 }
 
 export default ProductsTable;
