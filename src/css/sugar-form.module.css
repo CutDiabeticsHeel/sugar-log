@@ -1,0 +1,4 @@
+.sugarForm {
+    display: flex;
+    flex-direction: column;
+}

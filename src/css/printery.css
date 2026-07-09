@@ -1,0 +1,42 @@
+:root {
+    --h1: 28px;
+    --h2: 28px;
+    --h3: 20px;
+    --small-text: 13px;
+    --medium-text: 16px;
+    --second-medium-text: 18px;
+    --topic-title-text: 16px;
+    --topic-name-date-text: 17px;
+    --large-text: 22px;
+    --buy-ticket-text: 20px;
+}
+
+@media (min-width: 769px) {
+    :root {
+        --h1: 42px;
+        --h2: 34px;
+        --h3: 28px;
+        --small-text: 14px;
+        --medium-text: 18px;
+        --second-medium-text: 21px;
+        --topic-title-text: 19px;
+        --topic-name-date-text: 18px;
+        --large-text: 26px;
+        --buy-ticket-text: 21px;
+    }
+}
+
+@media (min-width: 1026px) {
+    :root {
+        --h1: 56px;
+        --h2: 42px;
+        --h3: 32px;
+        --small-text: 15px;
+        --medium-text: 19px;
+        --second-medium-text: 24px;
+        --topic-title-text: 22px;
+        --topic-name-date-text: 21px;
+        --large-text: 30px;
+        --buy-ticket-text: 22px;
+    }
+}

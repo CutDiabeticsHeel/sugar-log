@@ -4,9 +4,10 @@ import Home from "./pages/home";
 import Diary from "./pages/diary";
 import Charts from "./pages/graph";
 import Statistics from "./pages/stats";
-import Products from "./pages/products";
+import ProductsPage from "./pages/products";
 import Profile from "./pages/profile";
 import Menu from "./components/Menu";
+import "./css/main.css"
 
 function App() {
     return (
@@ -17,7 +18,7 @@ function App() {
               <Route path="/diary" element={<Diary />} />
               <Route path="/graph" element={<Charts />} />
               <Route path="/statistics" element={<Statistics />} />
-              <Route path="/products" element={<Products />} />
+              <Route path="/products" element={<ProductsPage />} />
               <Route path="/profile" element={<Profile />} />
           </Routes>
         </>

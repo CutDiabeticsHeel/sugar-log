@@ -1,0 +1,40 @@
+a{
+    text-decoration: none;
+    color: var(--text-primary);
+}
+h1 {
+    box-sizing: border-box;
+    font-size: var(--h1);
+}
+h2 {
+    font-size: var(--h2);
+}
+h3 {
+    margin: 0;
+    font-size: var(--h3);
+}
+img {
+    object-fit: cover;
+}
+ul {
+    list-style: none;
+}
+figure {
+    margin: 0;
+    padding: 0;
+}
+p {
+    margin: 0;
+}
+body {
+    background-color: var(--primary-background);
+    color: var(--text-primary);
+    font-size: var(--medium-text);
+    margin: 0;
+    padding: 0;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+}
+html {
+  scroll-behavior: smooth;
+}

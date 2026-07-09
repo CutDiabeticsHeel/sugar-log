@@ -7,7 +7,7 @@ const app = Fastify({
     logger: true,
 });
 
-const db = new sqlite3.Database("./server/database/user-data.db");
+const db = new sqlite3.Database("./server/database/sugar-log.db");
 
 app.register(cors);
 
@@ -26,10 +26,14 @@ function getAll(sql) {
 }
 
 app.get("/api/products", async (request, reply) => {
-
     return await getAll("SELECT * FROM products");
 
 });
+
+app.post("/api/sugar", async (request, reply) => {
+    console.log("Принял", request.body)
+    return {message: "Успешно"}
+})
 
 const start = async () => {
     try {
