@@ -35,6 +35,17 @@ app.post("/api/sugar", async (request, reply) => {
     return {message: "Успешно"}
 })
 
+app.post("/api/foodAuto", async (request, reply) => {
+    console.log("Еда", request.body)
+    const calculatedInsulin = 4.5;
+    const calculatedXEBE = 3.2;
+
+    return {
+        insulin: calculatedInsulin,
+        XEBE: calculatedXEBE,
+    };
+})
+
 const start = async () => {
     try {
         await app.listen({

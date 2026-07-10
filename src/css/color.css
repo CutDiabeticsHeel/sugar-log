@@ -1,9 +1,11 @@
 :root {
-    --primary-background: #FDFDFD;
-    --secondary-background: #E1E3E5;
+    --primary-background: #E1E3E5;
+    --secondary-background: #FDFDFD;
 
     --primary-element-background: #1B6BB8;
     --secondary-element-background: #013567;
+
+    --paper-soft: #F3F4F5;
 
     --accent: #CFB093;
 
