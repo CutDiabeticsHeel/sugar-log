@@ -30,7 +30,12 @@ app.get("/api/products", async (request, reply) => {
 
 });
 
-app.post("/api/sugar", async (request, reply) => {
+app.post("/api/addSugar", async (request, reply) => {
+    console.log("Принял", request.body)
+    return {message: "Успешно"}
+})
+
+app.post("/api/addProduct", async (request, reply) => {
     console.log("Принял", request.body)
     return {message: "Успешно"}
 })

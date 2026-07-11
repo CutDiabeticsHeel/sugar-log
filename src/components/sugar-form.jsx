@@ -3,6 +3,11 @@ import axios from "axios";
 import style from "../css/sugar-form.module.css";
 import AsyncSelect  from "react-select/async";
 import Checkbox from "@mui/material/Checkbox";
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { TimeField } from '@mui/x-date-pickers/TimeField';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
@@ -10,8 +15,10 @@ import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 function SugarForm() {
     const { register, handleSubmit, control, reset, setValue } = useForm()
     const onSubmit = async (data) => {
+        data.time = dayjs(data.time).format("HH:mm");
+        data.date = dayjs(data.date).format("YYYY-MM-DD");
         const response = await axios.post(
-            "http://localhost:5000/api/sugar",
+            "http://localhost:5000/api/addSugar",
             data
         );
         reset();
@@ -59,8 +66,37 @@ function SugarForm() {
     return (
         <form onSubmit={handleSubmit(onSubmit)} className={style.sugarForm} autoComplete="off">
             <label className={style.timeInputContainer}>
-                Время
-                <input className={style.timeInput} {...register("firstName")} />
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <Controller
+                        name="time"
+                        control={control}
+                        defaultValue={dayjs('2026-04-17T15:30')}
+                        render={({ field }) => (
+                            <TimeField
+                                label="Выберите время"
+                                value={field.value}
+                                onChange={(newValue) => field.onChange(newValue)}
+                                format="HH:mm"
+                            />
+                        )}
+                    />
+                </LocalizationProvider>
+            </label>
+            <label className={style.dateInputContainer}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <Controller
+                        name="date"
+                        control={control}
+                        defaultValue={dayjs('2026-04-17')}
+                        render={({ field }) => (
+                            <DatePicker
+                                label="Выберите дату"
+                                value={field.value}
+                                onChange={(newValue) => field.onChange(newValue)}
+                            />
+                        )}
+                    />
+                </LocalizationProvider>
             </label>
             <label className={style.sugarInputContainer}>
                 Cахар
