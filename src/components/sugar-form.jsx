@@ -63,6 +63,7 @@ function SugarForm() {
         setValue("insulin", response.data.insulin)
         setValue("XEBE", response.data.XEBE)
     }
+
     return (
         <form onSubmit={handleSubmit(onSubmit)} className={style.sugarForm} autoComplete="off">
             <label className={style.timeInputContainer}>
@@ -70,7 +71,7 @@ function SugarForm() {
                     <Controller
                         name="time"
                         control={control}
-                        defaultValue={dayjs('2026-04-17T15:30')}
+                        defaultValue={dayjs()}
                         render={({ field }) => (
                             <TimeField
                                 label="Выберите время"
@@ -87,12 +88,13 @@ function SugarForm() {
                     <Controller
                         name="date"
                         control={control}
-                        defaultValue={dayjs('2026-04-17')}
+                        defaultValue={dayjs()}
                         render={({ field }) => (
                             <DatePicker
                                 label="Выберите дату"
                                 value={field.value}
                                 onChange={(newValue) => field.onChange(newValue)}
+                                format="DD-MM-YYYY"
                             />
                         )}
                     />

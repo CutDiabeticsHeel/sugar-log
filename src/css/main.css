@@ -2,3 +2,10 @@
 @import url('color.css');
 @import url('tag-style.css');
 
+.main {
+    display: grid;
+    grid-template-columns: 1fr 7fr;
+}
+section {
+    padding: 40px;
+}

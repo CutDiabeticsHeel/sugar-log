@@ -11,7 +11,7 @@ import "./css/main.css"
 
 function App() {
     return (
-        <>
+        <main className="main">
           <Menu />
           <Routes>
               <Route path="/" element={<Home />} />
@@ -21,7 +21,7 @@ function App() {
               <Route path="/products" element={<ProductsPage />} />
               <Route path="/profile" element={<Profile />} />
           </Routes>
-        </>
+        </main>
     );
 }
 

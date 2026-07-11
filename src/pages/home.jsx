@@ -1,15 +1,17 @@
 import TodayLog from "../components/today-log";
 import SugarForm from "../components/sugar-form";
 import ProductForm from "../components/product-form";
+import Welcome from "../components/welcome-section";
+import style from "../css/pages/home.module.css"
 
 function Home() {
     return (
-        <main>
-            <h1>Дом</h1>
-            <SugarForm />
+        <section className={style.homePage}>
+            <Welcome/>
             <TodayLog />
+            <SugarForm />
             <ProductForm />
-        </main>
+        </section>
     );
 }
 

@@ -1,0 +1,29 @@
+.homePage {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+.welcomeSection {
+    display: grid;
+    grid-column: 1/3;
+    gap: 20px;
+}
+.welcomeSection h3 {
+    color: var(--text-secondary)
+}
+.infoSection {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 40px;
+}
+.infoContainer {
+    background-color: var(--secondary-background);
+    color: var(--text-secondary);
+    border-radius: 20px;
+    padding: 10px;
+}
+.stats {
+    font-size: var(--h1);
+    color: var(--text-primary);
+    margin-right: 20px
+}
