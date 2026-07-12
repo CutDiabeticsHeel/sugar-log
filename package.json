@@ -8,6 +8,7 @@
     "@fastify/cors": "^11.2.0",
     "@fastify/static": "^9.1.3",
     "@mui/icons-material": "^9.2.0",
+    "@mui/lab": "^9.0.0-beta.6",
     "@mui/material": "^9.2.0",
     "@mui/x-date-pickers": "^9.9.0",
     "@reduxjs/toolkit": "^2.12.0",

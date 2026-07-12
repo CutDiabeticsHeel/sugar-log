@@ -2,6 +2,7 @@ const Fastify = require("fastify");
 const sqlite3 = require("sqlite3");
 const cors = require("@fastify/cors");
 const static = require("@fastify/static");
+const dayjs = require("dayjs");
 
 const app = Fastify({
     logger: true,
@@ -12,9 +13,10 @@ const db = new sqlite3.Database("./server/database/sugar-log.db");
 app.register(cors);
 
 
-function getAll(sql) {
+
+function getAll(sql, params = []) {
     return new Promise((resolve, reject) => {
-        db.all(sql, (err, rows) => {
+        db.all(sql, params, (err, rows) => {
             if (err) {
                 reject(err);
                 return;
@@ -28,6 +30,16 @@ function getAll(sql) {
 app.get("/api/products", async (request, reply) => {
     return await getAll("SELECT * FROM products");
 
+});
+
+app.get("/api/all-sugar-log", async (request, reply) => {
+    return await getAll("SELECT * FROM sugar_log");
+
+});
+app.get("/api/today-sugar-log", async (request, reply) => {
+    const today = dayjs().format("YYYY-MM-DD");
+
+    return await getAll("SELECT * FROM sugar_log WHERE date= ?", today);
 });
 
 app.post("/api/addSugar", async (request, reply) => {

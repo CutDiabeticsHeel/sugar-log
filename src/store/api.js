@@ -12,8 +12,12 @@ export const api = createApi({
             query: () => "/products",
         }),
 
-        getSugarLog: builder.query({
-            query: () => "/sugar-log",
+        getAllSugarLog: builder.query({
+            query: () => "/all-sugar-log",
+        }),
+
+        getTodaySugarLog: builder.query({
+            query: () => "/today-sugar-log",
         }),
 
         getUserInfo: builder.query({
@@ -24,6 +28,7 @@ export const api = createApi({
 
 export const {
     useGetProductsQuery,
-    useGetSugarLogQuery,
+    useGetAllSugarLogQuery,
+    useGetTodaySugarLogQuery,
     useGetUserInfoQuery,
 } = api;

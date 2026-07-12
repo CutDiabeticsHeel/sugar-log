@@ -17,7 +17,15 @@
 
     --border-color: #dde8ed;
 
+    --low: #7C3AED;
+    --low-bg: #F0E9FF;
+
     --success: #2E8B57;
+    --success-bg: #E8F5EE;
+
     --warning: #F59E0B;
+    --warning-bg: #FFF5E3;
+
     --danger: #E74C3C;
+    --danger-bg: #FDECEA;
 }

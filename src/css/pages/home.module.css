@@ -1,12 +1,11 @@
 .homePage {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
     gap: 30px;
 }
 .welcomeSection {
-    display: grid;
-    grid-column: 1/3;
+    display: flex;
+    flex-direction: column;
     gap: 20px;
+    margin-bottom: 20px;
 }
 .welcomeSection h3 {
     color: var(--text-secondary)
