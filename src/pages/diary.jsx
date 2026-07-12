@@ -20,12 +20,6 @@ function Diary() {
                 <SugarForm/>
             )}
             <SugarLogDay/>
-            <SugarLogDay/>
-            <SugarLogDay/>
-            <SugarLogDay/>
-            <SugarLogDay/>
-            <SugarLogDay/>
-            <SugarLogDay/>
         </section>
     )
 }

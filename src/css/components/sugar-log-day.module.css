@@ -1,0 +1,43 @@
+.dayLog {
+    background-color: var(--secondary-background);
+    padding: 0;
+    border-radius: 20px;
+    width: 100%;
+    border-spacing: 0px 15px;
+    text-align: center;
+}
+.headers {
+    color: var(--text-secondary);
+}
+td {
+    border-top: 1px solid var(--border-color);
+}
+.caption {
+    margin: 10px 0px;
+    padding: 0px 10px;
+    text-align: left;
+}
+.sugarLow,
+.sugarNormal,
+.sugarBitHigh,
+.sugarHigh {
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-weight: bold;
+}
+.sugarLow {
+    color: var(--low);
+    background-color: var(--low-bg);
+}
+.sugarNormal {
+    color: var(--success);
+    background-color: var(--success-bg);
+}
+.sugarBitHigh {
+    color: var(--warning);
+    background-color: var(--warning-bg);
+}
+.sugarHigh {
+    color: var(--danger);
+    background-color: var(--danger-bg);
+}

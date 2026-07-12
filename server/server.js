@@ -36,6 +36,18 @@ app.get("/api/all-sugar-log", async (request, reply) => {
     return await getAll("SELECT * FROM sugar_log");
 
 });
+
+app.get("/api/day-period-sugar-log", async (request, reply) => {
+    const limit = request.query.limit || 7;
+    return await getAll(`
+        SELECT * FROM (
+            SELECT * FROM sugar_log 
+            ORDER BY id DESC LIMIT ?
+        ) AS sub
+        ORDER BY id ASC
+    `, [limit]);
+});
+
 app.get("/api/today-sugar-log", async (request, reply) => {
     const today = dayjs().format("YYYY-MM-DD");
 

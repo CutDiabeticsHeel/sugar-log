@@ -20,6 +20,10 @@ export const api = createApi({
             query: () => "/today-sugar-log",
         }),
 
+        getDayPeriodSugarLog: builder.query({
+            query: () => "/day-period-sugar-log",
+        }),
+
         getUserInfo: builder.query({
             query: () => "/user-info",
         }),
@@ -30,5 +34,6 @@ export const {
     useGetProductsQuery,
     useGetAllSugarLogQuery,
     useGetTodaySugarLogQuery,
+    useGetDayPeriodSugarLogQuery,
     useGetUserInfoQuery,
 } = api;
