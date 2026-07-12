@@ -1,6 +1,7 @@
 @import url('printery.css');
 @import url('color.css');
 @import url('tag-style.css');
+@import url('vendor.css');
 
 .main {
     display: grid;

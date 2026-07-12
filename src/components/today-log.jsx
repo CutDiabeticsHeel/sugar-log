@@ -1,5 +1,5 @@
 import {useGetTodaySugarLogQuery} from "../store/api";
-import style from "../css/sugar-log-today.module.css"
+import style from "../css/components/sugar-log-today.module.css"
 import dayjs from "dayjs";
 import { getSugarStatus } from "../utils/sugar-status.js";
 

@@ -52,6 +52,12 @@ app.post("/api/addProduct", async (request, reply) => {
     return {message: "Успешно"}
 })
 
+app.post("/api/selectPeriod", async (request, reply) => {
+    const data = request.body.dateRange
+    console.log("Принял", data)
+    return {message: "Успешно"}
+})
+
 app.post("/api/foodAuto", async (request, reply) => {
     console.log("Еда", request.body)
     const calculatedInsulin = 4.5;

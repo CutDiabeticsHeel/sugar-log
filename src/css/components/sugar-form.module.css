@@ -24,10 +24,9 @@
     grid-column: 2/3;
     grid-row: 1;
 }
-input,
-textarea {
+.sugarForm input,
+.sugarForm textarea {
     box-sizing: border-box;
-    font-size: var(--second-medium-text);
     resize: none;
     border: none;
     border-radius: 10px;
@@ -35,6 +34,7 @@ textarea {
     background-color: var(--paper-soft);
     border: 1px solid var(--border-color);
     width: 100%;
+    font-size: var(--second-medium-text);
 }
 .foodSelect {
     width: 100%;

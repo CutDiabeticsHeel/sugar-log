@@ -1,6 +1,6 @@
 import { useForm, Controller  } from "react-hook-form"
 import axios from "axios";
-import style from "../css/sugar-form.module.css";
+import style from "../css/components/sugar-form.module.css";
 import AsyncSelect  from "react-select/async";
 import Checkbox from "@mui/material/Checkbox";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';

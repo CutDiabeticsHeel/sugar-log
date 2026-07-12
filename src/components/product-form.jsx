@@ -1,6 +1,6 @@
 import { useForm, Controller  } from "react-hook-form"
 import axios from "axios";
-import style from "../css/product-form.module.css";
+import style from "../css/components/product-form.module.css";
 
 function ProductForm() {
 
