@@ -1,0 +1,22 @@
+.poductTable {
+    width: 100%;
+    background-color: var(--secondary-background);
+    border-radius: 20px;
+    margin-top: 20px;
+    text-align: center;
+    border-spacing: 0px 15px;
+}
+.header {
+    color: var(--text-secondary);
+}
+.searchContainer {
+    margin: 15px 0px;
+}
+.searchRow {
+    width: 100%;
+    border-radius: 10px;
+    background-color: var(--paper-soft);
+    border: 1px solid var(--border-color);
+    font-size: var(--second-medium-text);
+    padding: 5px;
+}

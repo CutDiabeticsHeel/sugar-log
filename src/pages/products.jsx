@@ -1,19 +1,22 @@
-import { useGetProductsQuery } from "../store/api";
 import ProductForm from "../components/product-form";
 import ProductsTable from "../components/products-table"
+import style from "../css/pages/products.module.css";
+import { useState } from "react";
 
 function ProductsPage() {
-    const {data: products, isLoading} = useGetProductsQuery();
-    if (isLoading) {
-            return <div>Загрузка...</div>;
-    }
-    console.log(products)
+    const [openPopup, setOpenPopup] = useState(false)
+
     return (
-        <div>
-            <h1>Продукты {products[22]["Продукт"]}</h1>
-            <ProductForm/>
+        <section>
+            <h1>Таблица продуктов с расчетом ХЕ, БЖЕ и дозы инсулина</h1>
+            <div className={style.addProductForm}>
+                <button className={style.ProductFormPopup} onClick={() => setOpenPopup (prev => !prev)}>Добавить продукт</button>
+                {openPopup && (
+                    <ProductForm/>
+                )}
+            </div>
             <ProductsTable/>
-        </div>
+        </section>
     )
 }
 

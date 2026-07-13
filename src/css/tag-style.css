@@ -4,6 +4,7 @@ a{
 h1 {
     box-sizing: border-box;
     font-size: var(--h1);
+    margin: 0;
 }
 h2 {
     font-size: var(--h2);
