@@ -1,0 +1,69 @@
+.questionsSection {
+    background-color: var(--secondary-background);
+    padding: 20px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+}
+.questionList {
+    list-style: none;
+    margin: 15px 0px;
+    padding: 0;
+}
+.questionItem {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    border-radius: 10px;
+    padding: 5px;
+    background-color: var(--paper-soft);
+    border: 1px solid var(--border-color);
+    width: 100%;
+    font-size: var(--second-medium-text);
+    margin: 10px 0px;
+}
+.checkboxLabel {
+    display: flex;
+    align-items: center;
+}
+.checkboxLabel input {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+.buttonContainer {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+.addQuestionSection {
+    align-self: flex-end;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    border: none;
+    margin: 0;
+    background-color: var(--third-element-background);
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: var(--medium-text);
+    padding: 5px 10px;
+}
+.addQuestionForm {
+    display: flex;
+    flex-direction: column;
+    gap: 10px
+}
+.addQuestion {
+    cursor: pointer;
+    grid-column: 1 / 3;
+    border: none;
+    border-radius: 10px;
+    background-color: var(--primary-element-background);
+    color: #ffffff;
+    padding: 5px;
+    font-size: var(--second-medium-text);
+    border: 1px solid var(--border-color);
+    margin: 10px 0px;
+    width: 100%;
+}

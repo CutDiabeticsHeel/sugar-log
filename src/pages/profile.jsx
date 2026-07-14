@@ -1,15 +1,18 @@
 import ProfileInfo from "../components/profile-info";
 import Endocrinologist from "../components/endocrinologist"
 import Questions from "../components/questions"
+import style from "../css/pages/profile.module.css";
 
 function Profile() {
     return (
-        <div>
-            <h1>Профиль</h1>
-            <ProfileInfo/>
-            <Questions/>
-            <Endocrinologist/>
-        </div>
+        <section>
+            <h1>Личные данные</h1>
+            <div className={style.profileSection}>
+                <ProfileInfo/>
+                <Endocrinologist/>
+                <Questions/>
+            </div>
+        </section>
     );
 }
 

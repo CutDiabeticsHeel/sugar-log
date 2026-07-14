@@ -27,6 +27,14 @@ export const api = createApi({
         getUserInfo: builder.query({
             query: () => "/user-info",
         }),
+
+        getUserQuestions: builder.query({
+            query: () => "/user-questions",
+        }),
+
+        getEndocrinologistInfo: builder.query({
+            query: () => "/endocrinologist",
+        }),
     }),
 });
 
@@ -36,4 +44,6 @@ export const {
     useGetTodaySugarLogQuery,
     useGetDayPeriodSugarLogQuery,
     useGetUserInfoQuery,
+    useGetUserQuestionsQuery,
+    useGetEndocrinologistInfoQuery
 } = api;

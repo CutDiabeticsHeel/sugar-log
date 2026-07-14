@@ -27,6 +27,21 @@ function getAll(sql, params = []) {
     });
 }
 
+app.get("/api/user-info", async (request, reply) => {
+    return await getAll("SELECT * FROM user_info");
+
+});
+
+app.get("/api/user-questions", async (request, reply) => {
+    return await getAll("SELECT * FROM questions");
+
+});
+
+app.get("/api/endocrinologist", async (request, reply) => {
+    return await getAll("SELECT * FROM endocrinologist");
+
+});
+
 app.get("/api/products", async (request, reply) => {
     return await getAll("SELECT * FROM products");
 
