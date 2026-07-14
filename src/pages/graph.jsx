@@ -3,11 +3,11 @@ import DailyProfile from "../components/daily-profile"
 
 function Graph() {
     return (
-        <div>
+        <section>
             <h1>Графики</h1>
             <MainGraph/>
             <DailyProfile/>
-        </div>
+        </section>
         
     );
 }

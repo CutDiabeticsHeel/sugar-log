@@ -63,6 +63,16 @@ app.get("/api/day-period-sugar-log", async (request, reply) => {
     `, [limit]);
 });
 
+app.get("/api/sugar-log-for-chart", async (request, reply) => {
+    return await getAll(`
+        SELECT * FROM (
+            SELECT * FROM sugar_log 
+            ORDER BY id DESC LIMIT ?
+        ) AS sub
+        ORDER BY id ASC
+    `, [50]);
+});
+
 app.get("/api/today-sugar-log", async (request, reply) => {
     const today = dayjs().format("YYYY-MM-DD");
 

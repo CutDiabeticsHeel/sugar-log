@@ -1,5 +1,9 @@
 function DailyProfile(){
-    return <h1>Суточные графики</h1>
+    return (
+        <div>
+            
+        </div>
+    )
 }
 
 export default DailyProfile

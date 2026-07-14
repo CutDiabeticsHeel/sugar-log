@@ -31,7 +31,7 @@ function ProductsTable(){
         <table className={style.poductTable}>
             <caption className={style.searchContainer}>
                 <label>
-                    <input type="text" name="search" onChange={(e) => setSearchedVal(e.target.value)} className={style.searchRow}/>
+                    <input type="text" name="search" onChange={(e) => setSearchedVal(e.target.value)} className={style.searchRow} autoComplete="off"/>
                 </label>
             </caption>
             <thead>

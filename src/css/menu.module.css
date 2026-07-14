@@ -4,7 +4,7 @@
     background-color: var(--secondary-element-background);
     gap: 20px;
     padding: 20px;
-    height: 100%;
+    height: max(100vh - 40px, 100%);
 }
 .navigationItem {
     color: var(--text-link);
