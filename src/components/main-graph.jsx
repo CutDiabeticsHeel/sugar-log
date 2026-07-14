@@ -6,7 +6,6 @@ function MainGraph() {
     const { data: sugarLog, isLoading } = useGetSugarLogForChartQuery();
 
     if (isLoading) return <div>Загрузка...</div>;
-    console.log(sugarLog)
     const data = sugarLog.map(row => [
         `${row.date} ${row.time}`,
         row.sugar
