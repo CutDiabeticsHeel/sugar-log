@@ -1,0 +1,31 @@
+.statsSection {
+    display: grid;
+    gap: 30px;
+}
+.metricsList,
+.inRangeBars,
+.timesOfDaySugar {
+    background-color: var(--secondary-background);
+    border-radius: 20px;
+    padding: 20px;
+    margin: 0;
+}
+.metricsList {
+    width: 60%;
+}
+.metricsListItem {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0px;
+}
+.metricsListItem:not(:last-child) {
+    border-bottom: 1px solid var(--border-color);
+}
+.metricsValue {
+    font-weight: bold;
+}
+.metricsTitle {
+    font-size: var(--large-text);
+    font-style: italic;
+    margin-bottom: 15px;
+}

@@ -28,6 +28,10 @@ export const api = createApi({
             query: () => "/sugar-log-for-chart",
         }),
 
+        getOnlySugar: builder.query({
+            query: () => "/data-for-metrics",
+        }),
+
         getUserInfo: builder.query({
             query: () => "/user-info",
         }),
@@ -48,6 +52,7 @@ export const {
     useGetTodaySugarLogQuery,
     useGetDayPeriodSugarLogQuery,
     useGetSugarLogForChartQuery,
+    useGetOnlySugarQuery,
     useGetUserInfoQuery,
     useGetUserQuestionsQuery,
     useGetEndocrinologistInfoQuery

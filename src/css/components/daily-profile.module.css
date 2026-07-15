@@ -15,6 +15,7 @@
 }
 .dailyProfile span {
     font-size: var(--large-text);
+    font-style: italic;
 }
 .dayItem {
     display: flex;

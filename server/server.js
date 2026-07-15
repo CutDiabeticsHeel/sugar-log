@@ -12,8 +12,6 @@ const db = new sqlite3.Database("./server/database/sugar-log.db");
 
 app.register(cors);
 
-
-
 function getAll(sql, params = []) {
     return new Promise((resolve, reject) => {
         db.all(sql, params, (err, rows) => {
@@ -29,6 +27,11 @@ function getAll(sql, params = []) {
 
 app.get("/api/user-info", async (request, reply) => {
     return await getAll("SELECT * FROM user_info");
+
+});
+
+app.get("/api/data-for-metrics", async (request, reply) => {
+    return await getAll("SELECT sugar, date, time FROM sugar_log");
 
 });
 

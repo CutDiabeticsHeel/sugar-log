@@ -68,11 +68,11 @@ function DailyProfile() {
                             yAxis: 8.5,
                             itemStyle: { color: "#F59E0B" }
                         },
-                        { yAxis: 10.5 }
+                        { yAxis: 12.5 }
                     ],
                     [
                         {
-                            yAxis: 10.5,
+                            yAxis: 12.5,
                             itemStyle: { color: "#E74C3C" }
                         },
                         { yAxis: Math.ceil(maxSugar + 1) }

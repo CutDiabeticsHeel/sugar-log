@@ -86,12 +86,12 @@ function MainGraph() {
                                 }
                             },
                             {
-                                yAxis: 10.5
+                                yAxis: 12.5
                             }
                         ],
                         [
                             {
-                                yAxis: 10.5,
+                                yAxis: 12.5,
                                 itemStyle: {
                                     color: "#E74C3C"
                                 }
