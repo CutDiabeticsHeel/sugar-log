@@ -9,4 +9,5 @@
 }
 section {
     padding: 40px;
+    min-width: 0;
 }

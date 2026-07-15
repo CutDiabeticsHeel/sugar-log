@@ -1,6 +1,7 @@
 import ReactECharts from "echarts-for-react";
 import dayjs from "dayjs";
 import { useGetSugarLogForChartQuery } from "../store/api";
+import style from "../css/components/main-graph.module.css";
 
 function MainGraph() {
     const { data: sugarLog, isLoading } = useGetSugarLogForChartQuery();
@@ -106,10 +107,13 @@ function MainGraph() {
     };
 
     return (
-        <ReactECharts
-            option={option}
-            style={{ width: "100%", height: 500 }}
-        />
+        <div className={style.mainGraph}>
+            <span>Общий график сахаров</span>
+            <ReactECharts
+                option={option}
+                style={{ width: "100%", height: 500 }}
+            />
+        </div>
     );
 }
 

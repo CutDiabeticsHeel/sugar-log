@@ -1,0 +1,58 @@
+.dailyProfile {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    background-color: var(--secondary-background);
+    border-radius: 20px;
+    padding: 20px;
+    min-width: 0;
+}
+.dayChoice {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 100%;
+}
+.dailyProfile span {
+    font-size: var(--large-text);
+}
+.dayItem {
+    display: flex;
+    white-space: nowrap;
+    font-size: var(--second-medium-text);
+    cursor: pointer;
+    align-items: center;
+    gap: 5px;
+}
+.dayItem input[type='radio'] {
+    cursor: pointer;
+    height: 18px;
+    width: 18px;
+    position: relative;
+}
+
+input[type='radio']::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border: 2px solid var(--primary-element-background);
+}
+
+input[type='radio']:checked::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: var(--primary-element-background);
+  transform: translate(-50%, -50%);
+  visibility: visible;
+}

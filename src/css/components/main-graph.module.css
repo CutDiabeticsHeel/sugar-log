@@ -1,0 +1,9 @@
+.mainGraph {
+    background-color: var(--secondary-background);
+    border-radius: 20px;
+    padding: 20px;
+    margin: 20px 0px;
+}
+.mainGraph span {
+    font-size: var(--large-text);
+}

@@ -4,7 +4,7 @@ import DailyProfile from "../components/daily-profile"
 function Graph() {
     return (
         <section>
-            <h1>Графики</h1>
+            <h1>Графики сахаров</h1>
             <MainGraph/>
             <DailyProfile/>
         </section>

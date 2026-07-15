@@ -2,8 +2,10 @@ import ReactECharts from "echarts-for-react";
 import dayjs from "dayjs";
 import { useGetSugarLogForChartQuery } from "../store/api";
 import {useState} from "react";
+import style from "../css/components/daily-profile.module.css";
 
 function DailyProfile() {
+    dayjs.locale("ru")
     const { data: sugarLog, isLoading } = useGetSugarLogForChartQuery();
     const [days, setDays] = useState(7)
 
@@ -36,6 +38,49 @@ function DailyProfile() {
         data,
         connectNulls: false
     }));
+    const visibleSeries = series.slice(-days);
+
+    if (visibleSeries.length > 0) {
+        visibleSeries[0] = {
+            ...visibleSeries[0],
+            markArea: {
+                silent: true,
+                itemStyle: {
+                    opacity: 0.22
+                },
+                data: [
+                    [
+                        {
+                            yAxis: Math.floor(minSugar - 2),
+                            itemStyle: { color: "#7C3AED" }
+                        },
+                        { yAxis: 4.2 }
+                    ],
+                    [
+                        {
+                            yAxis: 4.2,
+                            itemStyle: { color: "#2E8B57" }
+                        },
+                        { yAxis: 8.5 }
+                    ],
+                    [
+                        {
+                            yAxis: 8.5,
+                            itemStyle: { color: "#F59E0B" }
+                        },
+                        { yAxis: 10.5 }
+                    ],
+                    [
+                        {
+                            yAxis: 10.5,
+                            itemStyle: { color: "#E74C3C" }
+                        },
+                        { yAxis: Math.ceil(maxSugar + 1) }
+                    ]
+                ]
+            }
+        };
+    }
 
 
     const option = {
@@ -78,55 +123,58 @@ function DailyProfile() {
             min: Math.floor(minSugar - 2),
             max: Math.ceil(maxSugar + 1)
         },
-
-        series: series.slice(-days)
+        
+        series: visibleSeries
     };
 
     return (
-        <div>
-            <label>
-                <input
-                    type="radio"
-                    name="days"
-                    value={1}
-                    checked={days === 1}
-                    onChange={() => setDays(1)}
-                />
-                1 день
-            </label>
+        <div className={style.dailyProfile}>
+            <span>Выберите кол-во дней для графика суточных профилей</span>
+            <div className={style.dayChoice}>
+                <label className={style.dayItem}>
+                    <input
+                        type="radio"
+                        name="days"
+                        value={1}
+                        checked={days === 1}
+                        onChange={() => setDays(1)}
+                    />
+                    1 день
+                </label>
 
-            <label>
-                <input
-                    type="radio"
-                    name="days"
-                    value={3}
-                    checked={days === 3}
-                    onChange={() => setDays(3)}
-                />
-                3 дня
-            </label>
+                <label className={style.dayItem}>
+                    <input
+                        type="radio"
+                        name="days"
+                        value={3}
+                        checked={days === 3}
+                        onChange={() => setDays(3)}
+                    />
+                    3 дня
+                </label>
 
-            <label>
-                <input
-                    type="radio"
-                    name="days"
-                    value={5}
-                    checked={days === 5}
-                    onChange={() => setDays(5)}
-                />
-                5 дней
-            </label>
+                <label className={style.dayItem}>
+                    <input
+                        type="radio"
+                        name="days"
+                        value={5}
+                        checked={days === 5}
+                        onChange={() => setDays(5)}
+                    />
+                    5 дней
+                </label>
 
-            <label>
-                <input
-                    type="radio"
-                    name="days"
-                    value={7}
-                    checked={days === 7}
-                    onChange={() => setDays(7)}
-                />
-                7 дней
-            </label>
+                <label className={style.dayItem}>
+                    <input
+                        type="radio"
+                        name="days"
+                        value={7}
+                        checked={days === 7}
+                        onChange={() => setDays(7)}
+                    />
+                    7 дней
+                </label>
+            </div>
             <ReactECharts
                 option={option}
                 notMerge={true}
