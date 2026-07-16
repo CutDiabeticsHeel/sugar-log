@@ -5,7 +5,7 @@
 
 .main {
     display: grid;
-    grid-template-columns: 1fr 7fr;
+    grid-template-columns: auto 1fr;
 }
 section {
     padding: 40px;

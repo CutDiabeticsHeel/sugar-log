@@ -1,0 +1,88 @@
+.navigationMenu {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--secondary-element-background);
+    gap: 20px;
+    padding: 20px;
+    overflow: hidden;
+    box-sizing: border-box;
+    height: max(100%, 100vh);
+    transition: width 0.3s ease, padding 0.3s ease;
+    width: auto;
+}
+.navigationItem {
+    color: #ffffff;
+    text-decoration: none;
+    display: grid;
+    grid-template-columns: 24px minmax(0, 1fr) 24px;
+    align-items: center;
+    gap: 10px;
+    padding: 5px;
+    border-radius: 8px;
+}
+.navigationItem:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+.navigationItem svg {
+    justify-self: center;
+}
+.navigationItem span {
+    color: #ffffff;
+}
+.linkText {
+    overflow: hidden;
+    white-space: nowrap;
+    transition: opacity 0.2s ease, width 0.2s ease;
+}
+.linkNumber {
+    justify-self: end;
+    font-size: 0.85em;
+    opacity: 0.6;
+    transition: opacity 0.2s ease, width 0.2s ease;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.titleMenu {
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: var(--large-text);
+    overflow: hidden;
+}
+.buttonMenu {
+    background-color: transparent;
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+    flex-shrink: 0;
+    padding: 0;
+}
+.openMenu {
+    width: 260px;
+}
+.closeMenu {
+    width: 64px;
+    padding: 20px 10px;
+}
+.closeMenu .navigationItem {
+    grid-template-columns: 24px 0 0; /* схлопываем 2 и 3 колонку в 0 */
+    gap: 0;
+    justify-items: center;
+    justify-content: center;
+}
+.closeMenu .linkText,
+.closeMenu .linkNumber {
+    opacity: 0;
+    width: 0;
+    margin: 0;
+    padding: 0;
+}
+.closeMenu .titleMenu {
+    gap: 0;
+    margin: 0;
+    justify-content: center;
+}
+.closeMenu .titleMenu .linkText {
+    display: none;
+}
