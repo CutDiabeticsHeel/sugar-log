@@ -11,9 +11,13 @@ import dayjs from 'dayjs';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
+import {useRef, useState, useEffect} from "react";
 
 function SugarForm() {
     const { register, handleSubmit, control, reset, setValue } = useForm()
+    const [width, setWidth] = useState(0);
+    const [smallForm, setSmallForm] = useState(false)
+    const formElement = useRef(null);
     const onSubmit = async (data) => {
         data.time = dayjs(data.time).format("HH:mm");
         data.date = dayjs(data.date).format("YYYY-MM-DD");
@@ -63,9 +67,33 @@ function SugarForm() {
         setValue("insulin", response.data.insulin)
         setValue("XEBE", response.data.XEBE)
     }
+    
+    useEffect(() => {
+        const element = formElement.current;
+    
+        if (!element) return;
+    
+        const observer = new ResizeObserver(([entry]) => {
+            setWidth(entry.contentRect.width);
+        });
+
+        observer.observe(element);
+    
+        return () => {
+            observer.disconnect();
+        };
+    }, []);
+    
+    useEffect(() => {
+        if (width < 469) {
+            setSmallForm(true)
+        } else {
+            setSmallForm(false)
+        }
+    }, [width]);
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className={style.sugarForm} autoComplete="off">
+        <form onSubmit={handleSubmit(onSubmit)} className={`${style.sugarForm} ${smallForm ? style.sugarSmallForm: "" }`} autoComplete="off" ref={formElement}>
             <label className={style.timeInputContainer}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <Controller

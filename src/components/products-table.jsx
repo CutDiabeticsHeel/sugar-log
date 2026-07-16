@@ -1,6 +1,6 @@
 import style from "../css/components/products-table.module.css";
 import {useGetProductsQuery} from "../store/api";
-import {useState, useMemo, useEffect, useRef} from "react";
+import {useState, useMemo, useEffect} from "react";
 import SearchIcon from '@mui/icons-material/Search';
 
 
@@ -9,11 +9,6 @@ function ProductsTable(){
     const [searchedVal, setSearchedVal] = useState("");
     const [debounceValue, setDebounceValue] = useState("");
     const [needScroll, setNeedScroll] = useState(false);
-    const fakeScrollbar = useRef(null);
-    const isSyncing = useRef(false);
-    const table = useRef(null);
-    const [scrollWidth, setScrollWidth] = useState(0);
-
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -32,40 +27,10 @@ function ProductsTable(){
         )
     }, [products, debounceValue, searchedVal])
 
-    useEffect(() => {
-        if (!table.current) return;
-
-        const checkOverflow = () => {
-            const el = table.current;
-            setScrollWidth(el.scrollWidth);
-            setNeedScroll(el.scrollWidth > el.clientWidth);
-        };
-
-        checkOverflow();
-
-        const tableObserver = new ResizeObserver(checkOverflow);
-        tableObserver.observe(table.current);
-
-        return () => {
-            tableObserver.disconnect();
-        };
-    }, [isLoading, filteredData]);
 
     if (isLoading) {
         return <div>Загрузка...</div>;
     }
-
-    const handleTableScroll = () => {
-        if (isSyncing.current) { isSyncing.current = false; return; }
-        isSyncing.current = true;
-        fakeScrollbar.current.scrollLeft = table.current.scrollLeft;
-    };
-
-    const handleFakeScroll = () => {
-        if (isSyncing.current) { isSyncing.current = false; return; }
-        isSyncing.current = true;
-        table.current.scrollLeft = fakeScrollbar.current.scrollLeft;
-    };
 
     return (
         <div>

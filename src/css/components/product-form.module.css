@@ -1,7 +1,7 @@
 .productAddSection {
     background-color: var(--secondary-background);
     border-radius: 20px;
-    padding: 20px;
+    padding: 10px;
     gap: 10px;
     display: flex;
     flex-direction: column;
@@ -11,6 +11,12 @@
     grid-template-columns: 1fr 1fr;
     gap: 10px;
     color: var(--text-secondary);
+}
+.productSmallForm {
+    grid-template-columns: 1fr;
+}
+.productSmallForm label {
+    grid-column: 1;
 }
 .nameProductConrainer {
     grid-column: 1/3;

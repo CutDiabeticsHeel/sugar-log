@@ -2,12 +2,13 @@ import {useGetTodaySugarLogQuery} from "../store/api";
 import style from "../css/components/sugar-log-today.module.css"
 import dayjs from "dayjs";
 import { getSugarStatus } from "../utils/sugar-status.js";
+import {useRef, useState, useEffect} from "react";
 
 function TodayLog() {
     const {data: todaySugarLog, isLoading} = useGetTodaySugarLogQuery();
-    if (isLoading) {
-        return <div className={style.welcomeSection}>Загрузка...</div>;
-    }
+    const [width, setWidth] = useState(0);
+    const [smallLog, setSmallLog] = useState(false)
+    const todayLogElement = useRef(null);
     function parseSugar(raw) {
         return parseFloat(String(raw).replace(",", "."));
     }
@@ -17,15 +18,41 @@ function TodayLog() {
         bitHigh: style.sugarBitHigh,
         high: style.sugarHigh,
     };
+    useEffect(() => {
+        const element = todayLogElement.current;
+        
+        if (!element) return;
+        
+        const observer = new ResizeObserver(([entry]) => {
+            setWidth(entry.contentRect.width);
+        });
+    
+        observer.observe(element);
 
+        return () => {
+            observer.disconnect();
+        };
+    }, []);
+        
+    useEffect(() => {
+        if (width < 301) {
+            setSmallLog(true)
+        } else {
+            setSmallLog(false)
+        }
+    }, [width]);
+    
+    if (isLoading) {
+        return <div className={style.welcomeSection}>Загрузка...</div>;
+    }
     return (
-        <div className={style.todayLog}>
+        <div className={`${style.todayLog} ${smallLog ? style.todaySmallLog: "" }`}ref={todayLogElement}>
             <p>Сахара сегодня</p>
             <span className={style.entryCount}>{todaySugarLog.length} записи</span>
 
             <div className={style.list}>
                 {todaySugarLog.map((entry) => (
-                    <div key={entry.id} className={style.row}>
+                    <div key={entry.id} className={`${style.row} ${smallLog ? style.smallRow: "" }`}>
                         <span className={style.time}>{entry.time}</span>
 
                         <div className={style.content}>

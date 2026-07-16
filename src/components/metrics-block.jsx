@@ -1,6 +1,18 @@
 import style from "../css/components/metrics-block.module.css";
 import {useState, useEffect} from "react"
 import InfoIcon from '@mui/icons-material/Info';
+import { motion, AnimatePresence } from "framer-motion";
+
+const metricsInfoVariants = {
+    closed: {
+        opacity: 0,
+        transition: { duration: 0.3, ease: "easeOut" }
+    },
+    open: {
+        opacity: 1,
+        transition: { duration: 0.3, ease: "easeOut" }
+    }
+};
 
 function MetricsBlock ({metrics}) {
     const [popupOpen, setPopupOpen] = useState(false)
@@ -61,95 +73,96 @@ function MetricsBlock ({metrics}) {
                 </li>
             </ul>
             <div>
-                <button onClick={() => (setPopupOpen(prev => !prev))} className={style.metricsInfoButton}><InfoIcon/>Узнать о метриках</button>
-                {popupOpen && (
-                    <div className={style.overlay} onClick={() => setPopupOpen(false)}>
-                        <div className={style.metricsInfo} onClick={(e) => e.stopPropagation()}>
-                            <h2>Описание метрик</h2>
+                <button onClick={() => (setPopupOpen(prev => !prev))} className={style.metricsInfoButton}><InfoIcon/> {!popupOpen ? `Узнать о метриках`: `Вернуться к статистике`}</button>
+                <AnimatePresence>
+                    {popupOpen && (
+                        <motion.div className={style.overlay} onClick={() => setPopupOpen(false)} style={{ overflow: "hidden" }} initial="closed" animate="open" exit="closed" variants={metricsInfoVariants}>
+                            <div className={style.metricsInfo} onClick={(e) => e.stopPropagation()}>
+                                <h2>Описание метрик</h2>
+                                <ul>
+                                    <li>
+                                        <strong>Средний сахар</strong><br />
+                                        Среднее значение всех измерений за выбранный период.
+                                    </li>
 
-                            <ul>
-                                <li>
-                                    <strong>Средний сахар</strong><br />
-                                    Среднее значение всех измерений за выбранный период.
-                                </li>
+                                    <li>
+                                        <strong>Среднее количество измерений в день</strong><br />
+                                        Показывает, насколько регулярно проводится контроль сахара.
+                                    </li>
 
-                                <li>
-                                    <strong>Среднее количество измерений в день</strong><br />
-                                    Показывает, насколько регулярно проводится контроль сахара.
-                                </li>
+                                    <li>
+                                        <strong>Коэффициент вариации (CV)</strong><br />
+                                        Показывает стабильность уровня глюкозы.
+                                        <br />
+                                        <b>Норма:</b> менее 36%.
+                                    </li>
 
-                                <li>
-                                    <strong>Коэффициент вариации (CV)</strong><br />
-                                    Показывает стабильность уровня глюкозы.
-                                    <br />
-                                    <b>Норма:</b> менее 36%.
-                                </li>
+                                    <li>
+                                        <strong>Количество измерений</strong><br />
+                                        Общее число измерений за выбранный период.
+                                    </li>
 
-                                <li>
-                                    <strong>Количество измерений</strong><br />
-                                    Общее число измерений за выбранный период.
-                                </li>
+                                    <li>
+                                        <strong>Максимальный сахар</strong><br />
+                                        Самое высокое зарегистрированное значение.
+                                    </li>
 
-                                <li>
-                                    <strong>Максимальный сахар</strong><br />
-                                    Самое высокое зарегистрированное значение.
-                                </li>
+                                    <li>
+                                        <strong>Минимальный сахар</strong><br />
+                                        Самое низкое зарегистрированное значение.
+                                    </li>
 
-                                <li>
-                                    <strong>Минимальный сахар</strong><br />
-                                    Самое низкое зарегистрированное значение.
-                                </li>
+                                    <li>
+                                        <strong>Самый частый сахар (мода)</strong><br />
+                                        Значение, которое встречалось чаще всего.
+                                    </li>
 
-                                <li>
-                                    <strong>Самый частый сахар (мода)</strong><br />
-                                    Значение, которое встречалось чаще всего.
-                                </li>
+                                    <li>
+                                        <strong>Время в диапазоне (TIR)</strong><br />
+                                        Процент измерений от 3.9 до 8.5 ммоль/л.
+                                    </li>
 
-                                <li>
-                                    <strong>Время в диапазоне (TIR)</strong><br />
-                                    Процент измерений от 3.9 до 8.5 ммоль/л.
-                                </li>
+                                    <li>
+                                        <strong>Низкий сахар</strong><br />
+                                        Процент измерений ниже 3.9 ммоль/л.
+                                    </li>
 
-                                <li>
-                                    <strong>Низкий сахар</strong><br />
-                                    Процент измерений ниже 3.9 ммоль/л.
-                                </li>
+                                    <li>
+                                        <strong>Чуть выше нормы</strong><br />
+                                        Процент измерений от 8.5 до 12.5 ммоль/л.
+                                    </li>
 
-                                <li>
-                                    <strong>Чуть выше нормы</strong><br />
-                                    Процент измерений от 8.5 до 12.5 ммоль/л.
-                                </li>
+                                    <li>
+                                        <strong>Высокий сахар</strong><br />
+                                        Процент измерений выше 12.5 ммоль/л.
+                                    </li>
 
-                                <li>
-                                    <strong>Высокий сахар</strong><br />
-                                    Процент измерений выше 12.5 ммоль/л.
-                                </li>
+                                    <li>
+                                        <strong>Средний сахар утром</strong><br />
+                                        Среднее значение с 06:00 до 12:00.
+                                    </li>
 
-                                <li>
-                                    <strong>Средний сахар утром</strong><br />
-                                    Среднее значение с 06:00 до 12:00.
-                                </li>
+                                    <li>
+                                        <strong>Средний сахар днем</strong><br />
+                                        Среднее значение с 12:00 до 18:00.
+                                    </li>
 
-                                <li>
-                                    <strong>Средний сахар днем</strong><br />
-                                    Среднее значение с 12:00 до 18:00.
-                                </li>
+                                    <li>
+                                        <strong>Средний сахар вечером</strong><br />
+                                        Среднее значение с 18:00 до 00:00.
+                                    </li>
 
-                                <li>
-                                    <strong>Средний сахар вечером</strong><br />
-                                    Среднее значение с 18:00 до 00:00.
-                                </li>
-
-                                <li>
-                                    <strong>Средний сахар ночью</strong><br />
-                                    Среднее значение с 00:00 до 06:00.
-                                    <br />
-                                    <b>Особенно важно:</b> контролировать отсутствие ночных гипогликемий.
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                )}
+                                    <li>
+                                        <strong>Средний сахар ночью</strong><br />
+                                        Среднее значение с 00:00 до 06:00.
+                                        <br />
+                                        <b>Особенно важно:</b> контролировать отсутствие ночных гипогликемий.
+                                    </li>
+                                </ul>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
         </div>
     )

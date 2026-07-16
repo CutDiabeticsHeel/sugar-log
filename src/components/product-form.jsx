@@ -2,7 +2,7 @@ import { useForm, Controller  } from "react-hook-form"
 import axios from "axios";
 import style from "../css/components/product-form.module.css";
 import { motion } from "framer-motion";
-
+import {useRef, useState, useEffect} from "react";
 
 const formVariants = {
     closed: {
@@ -11,15 +11,16 @@ const formVariants = {
     },
     open: {
         opacity: 1,
-        transition: { duration: 0.25, delay: 0.35 } // ждёт, пока высота начнёт раскрываться
+        transition: { duration: 0.25, delay: 0.35 }
     }
 };
 
 function ProductForm() {
-
     const {register, handleSubmit, watch, reset} = useForm()
-
     const toNumber = (value) => Number(String(value).replace(",", ".")) || 0;
+    const [smallForm, setSmallForm] = useState(false)
+    const [width, setWidth] = useState();
+    const formElement = useRef(null);
 
     const protein = toNumber(watch("protein"));
     const fat = toNumber(watch("fat"));
@@ -36,9 +37,34 @@ function ProductForm() {
         )
         reset();
     }
+    useEffect(() => {
+            const element = formElement.current;
+        
+            if (!element) return;
+        
+            const observer = new ResizeObserver(([entry]) => {
+                setWidth(entry.contentRect.width);
+            });
+    
+            observer.observe(element);
+        
+            return () => {
+                observer.disconnect();
+            };
+        }, []);
+        
+        useEffect(() => {
+            if (width < 469) {
+                setSmallForm(true)
+            } else {
+                setSmallForm(false)
+            }
+        }, [width]);
+
+
     return (
         <section className={style.productAddSection} >
-                <motion.form onSubmit={handleSubmit(onSubmit)} autoComplete="off" className={style.productForm} variants={formVariants}>
+                <motion.form onSubmit={handleSubmit(onSubmit)} autoComplete="off" className={`${style.productForm } ${smallForm ? style.productSmallForm : "" }`} autoComplete="off" ref={formElement} variants={formVariants}>
                     <label className={style.nameProductConrainer}>
                         Название продукта
                         <input type="text" {...register("nameProduct")} />
