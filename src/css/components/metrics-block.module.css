@@ -1,0 +1,90 @@
+.metricsBlock {
+    position: relative;
+    min-width: 0;
+}
+.metricsList {
+    background-color: var(--secondary-background);
+    border-radius: 20px;
+    padding: 20px;
+    margin: 0;
+    width: 70%;
+}
+.metricsListItem {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0px;
+}
+.metricsListItem:not(:last-child) {
+    border-bottom: 1px solid var(--border-color);
+}
+.metricsValue {
+    font-weight: bold;
+}
+.metricsTitle {
+    font-size: var(--large-text);
+    font-style: italic;
+    margin-bottom: 15px;
+}
+.metricsInfoButton {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: var(--third-element-background);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 10px 5px;
+    cursor: pointer;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    z-index: 1000;
+}
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.metricsInfo {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    background-color: var(--secondary-background);
+    border-radius: 20px;
+    padding: 20px;
+    height: auto;
+    max-height: 90vh;
+    width: 50%;
+    overflow-y: auto;
+    z-index: 901;
+    cursor: default;
+}
+.metricsInfo h2 {
+    margin: 0;
+}
+.metricsInfo ul {
+    padding: 0;
+}
+.metricsInfo::-webkit-scrollbar {
+    width: 10px;
+}
+.metricsInfo::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 20px 0;
+}
+.metricsInfo::-webkit-scrollbar-thumb {
+    background-color: var(--primary-element-background);
+    border-radius: 10px;
+}
+.metricsInfo {
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-element-background) transparent;
+}

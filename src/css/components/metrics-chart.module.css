@@ -1,0 +1,18 @@
+.inRangeBars,
+.timesOfDaySugar {
+    background-color: var(--secondary-background);
+    border-radius: 20px;
+    padding: 20px;
+    margin: 0;
+}
+.metricsTitle {
+    font-size: var(--large-text);
+    font-style: italic;
+    margin-bottom: 15px;
+}
+.metricsChart {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
+}
