@@ -23,6 +23,7 @@
     "echarts": "^6.1.0",
     "echarts-for-react": "^3.0.6",
     "fastify": "^5.9.0",
+    "framer-motion": "^12.42.2",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-hook-form": "^7.81.0",

@@ -66,7 +66,7 @@
     padding: 20px 10px;
 }
 .closeMenu .navigationItem {
-    grid-template-columns: 24px 0 0; /* схлопываем 2 и 3 колонку в 0 */
+    grid-template-columns: 24px 0 0;
     gap: 0;
     justify-items: center;
     justify-content: center;

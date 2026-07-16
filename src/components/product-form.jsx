@@ -1,6 +1,19 @@
 import { useForm, Controller  } from "react-hook-form"
 import axios from "axios";
 import style from "../css/components/product-form.module.css";
+import { motion } from "framer-motion";
+
+
+const formVariants = {
+    closed: {
+        opacity: 0,
+        transition: { duration: 0.15 }
+    },
+    open: {
+        opacity: 1,
+        transition: { duration: 0.25, delay: 0.35 } // ждёт, пока высота начнёт раскрываться
+    }
+};
 
 function ProductForm() {
 
@@ -24,38 +37,38 @@ function ProductForm() {
         reset();
     }
     return (
-        <section className={style.productAddSection}>
-            <form onSubmit={handleSubmit(onSubmit)} autoComplete="off" className={style.productForm}>
-                <label className={style.nameProductConrainer}>
-                    Название продукта
-                    <input type="text" {...register("nameProduct")} />
-                </label>
-                <label className={style.proteinConrainer}>
-                    Белки, г
-                    <input type="text" {...register("protein")} />
-                </label>
-                <label className={style.fatConrainer}>
-                    Жиры, г
-                    <input type="text" {...register("fat")} />
-                </label>
-                <label className={style.carbsConrainer}>
-                    Углеводы, г
-                    <input type="text" {...register("carbs")} />
-                </label>
-                <label className={style.weigthConrainer}>
-                    Вес продукта, г
-                    <input type="text" {...register("weigth")} />
-                </label>
-                <div className={style.valueContainer}>
-                    <p ><span>БЖЕ</span>{XEBEValue}</p>
-                    <p><span>ХЕ</span>{XEValue}</p>
-                    <p><span>ХЕ + БЖЕ</span>{Number((XEValue + XEBEValue).toFixed(2))}</p>
-                    <p><span>Инсулин, ед</span>{Number(((XEValue + XEBEValue) * 1).toFixed(2))}</p>
-                </div>
-                <button className={style.addEntry} type="submit" >
-                    Добавить продукт
-                </button>
-            </form>
+        <section className={style.productAddSection} >
+                <motion.form onSubmit={handleSubmit(onSubmit)} autoComplete="off" className={style.productForm} variants={formVariants}>
+                    <label className={style.nameProductConrainer}>
+                        Название продукта
+                        <input type="text" {...register("nameProduct")} />
+                    </label>
+                    <label className={style.proteinConrainer}>
+                        Белки, г
+                        <input type="text" {...register("protein")} />
+                    </label>
+                    <label className={style.fatConrainer}>
+                        Жиры, г
+                        <input type="text" {...register("fat")} />
+                    </label>
+                    <label className={style.carbsConrainer}>
+                        Углеводы, г
+                        <input type="text" {...register("carbs")} />
+                    </label>
+                    <label className={style.weigthConrainer}>
+                        Вес продукта, г
+                        <input type="text" {...register("weigth")} />
+                    </label>
+                    <div className={style.valueContainer}>
+                        <p ><span>БЖЕ</span>{XEBEValue}</p>
+                        <p><span>ХЕ</span>{XEValue}</p>
+                        <p><span>ХЕ + БЖЕ</span>{Number((XEValue + XEBEValue).toFixed(2))}</p>
+                        <p><span>Инсулин, ед</span>{Number(((XEValue + XEBEValue) * 1).toFixed(2))}</p>
+                    </div>
+                    <button className={style.addEntry} type="submit" >
+                        Добавить продукт
+                    </button>
+                </motion.form>
         </section>
     )
 }
