@@ -10,7 +10,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import {useState} from "react";
 
 function Menu() {
-    const [isOpen, setOpen] = useState(true)
+    const [isOpen, setOpen] = useState(false)
 
     return (
         <nav className={`${style.navigationMenu} ${isOpen ? style.openMenu : style.closeMenu}`}>

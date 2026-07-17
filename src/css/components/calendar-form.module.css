@@ -1,8 +1,8 @@
 .dateForm {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
     justify-content: space-around;
-    width: 40%;
     background-color: var(--secondary-background);
     padding: 10px;
     border-radius: 20px;
@@ -25,13 +25,13 @@
 .datePopup {
     position: absolute;
     top: 100%;
-    left: 0;
-    z-index: 100;
+    right: calc(0% - 10px);
+    z-index: 1001;
     margin-top: 8px;
     background: #fff;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-    padding: 16px;
+    padding: 5px;
     width: max-content; 
 }
 .popupButton {
@@ -43,4 +43,14 @@
     margin: 10px 10px 0px 10px;
     cursor: pointer;
 
+}
+@media (max-width: 481px) {
+    .datePopup {
+        right: -50%;
+    }
+}
+@media (max-width: 355px) {
+    .datePopup {
+        right: -22%;
+    }
 }

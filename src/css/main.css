@@ -5,11 +5,12 @@
 
 .main {
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns:1fr;
 }
 section {
     padding: 40px;
     min-width: 0;
+    margin-left: 60px;
 }
 .disable-scroll {
     overflow: hidden;

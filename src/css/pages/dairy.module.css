@@ -12,3 +12,9 @@
     font-size: var(--medium-text);
     cursor: pointer;
 }
+@media (max-width: 890px) {
+    .dairyActiveElements {
+        flex-direction: column;
+        gap: 20px;
+    }
+}

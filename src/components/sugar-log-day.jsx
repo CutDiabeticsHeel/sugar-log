@@ -44,40 +44,43 @@ function SugarLogDay() {
             {Object.entries(groupedByDate).map(([date, dayData]) => {
                 const avgSugar = Number(dayData.sugarSum / dayData.records.length).toFixed(1);
                 return (
-                <table key={date} className={style.dayLog}>
-                    <caption className={`${style.caption} ${sugarStyles[getSugarStatus(avgSugar)]}`}>{dayjs(date).format("DD MMM, dddd")}: Средний сахар за этот день - {avgSugar}. Всего Б: {dayData.proteinSum} Ж: {dayData.fatSum} У: {dayData.carbSum} Ккал: {dayData.ccalSum}</caption>
-                    <thead className={style.headers}>
-                        <tr>
-                            <th>Время</th>
-                            <th>Сахар</th>
-                            <th>Инсулин</th>
-                            <th>ХЕ + БЖЕ</th>
-                            <th>Б</th>
-                            <th>Ж</th>
-                            <th>У</th>
-                            <th>Ккал</th>
-                            <th>Еда</th>
-                            <th>Заметки</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {dayData.records.map((record) => (
-                            <tr key={record.id}>
-                                <td>{record.time}</td>
-                                <td>{record.sugar}</td>
-                                <td>{record.insulin}</td>
-                                <td>{record.XEBE}</td>
-                                <td>{record.protein}</td>
-                                <td>{record.fat}</td>
-                                <td>{record.carb}</td>
-                                <td>{record.ccal}</td>
-                                <td>{record.food}</td>
-                                <td>{record.notes}</td>
-                            </tr>
+                <div className={style.tableContainer}>
+                        <table key={date} className={style.dayLog}>
+                            <caption className={`${style.caption} ${sugarStyles[getSugarStatus(avgSugar)]}`}>{dayjs(date).format("DD MMM, dddd")}: Средний сахар за этот день - {avgSugar}. Всего Б: {dayData.proteinSum} Ж: {dayData.fatSum} У: {dayData.carbSum} Ккал: {dayData.ccalSum}</caption>
+                            <thead className={style.headers}>
+                                <tr>
+                                    <th>Время</th>
+                                    <th>Сахар</th>
+                                    <th>Инсулин</th>
+                                    <th>ХЕ + БЖЕ</th>
+                                    <th>Б</th>
+                                    <th>Ж</th>
+                                    <th>У</th>
+                                    <th>Ккал</th>
+                                    <th>Еда</th>
+                                    <th>Заметки</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {dayData.records.map((record) => (
+                                    <tr key={record.id}>
+                                        <td>{record.time}</td>
+                                        <td>{record.sugar}</td>
+                                        <td>{record.insulin}</td>
+                                        <td>{record.XEBE}</td>
+                                        <td>{record.protein}</td>
+                                        <td>{record.fat}</td>
+                                        <td>{record.carb}</td>
+                                        <td>{record.ccal}</td>
+                                        <td>{record.food}</td>
+                                        <td>{record.notes}</td>
+                                    </tr>
 
-                        ))}
-                    </tbody>
-                </table>
+                                ))}
+                            </tbody>
+                        </table>
+                        
+                </div>
                 )
             })}
         </div>

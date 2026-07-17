@@ -85,7 +85,7 @@ function SugarForm() {
     }, []);
     
     useEffect(() => {
-        if (width < 469) {
+        if (width < 450) {
             setSmallForm(true)
         } else {
             setSmallForm(false)
