@@ -5,11 +5,12 @@
     background-color: var(--secondary-background);
     color: var(--text-secondary);
     border-radius: 20px;
-    padding: 10px;
+    padding: 20px;
     gap: 10px
 }
 .sugarSmallForm {
     display: flex;
+    padding: 10px;
     flex-direction: column;
 }
 .sugarSmallForm .foodSelectContainer,

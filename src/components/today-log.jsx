@@ -32,7 +32,7 @@ function TodayLog() {
         return () => {
             observer.disconnect();
         };
-    }, []);
+    }, [isLoading]);
         
     useEffect(() => {
         if (width < 301) {
@@ -40,6 +40,7 @@ function TodayLog() {
         } else {
             setSmallLog(false)
         }
+        console.log(width)
     }, [width]);
     
     if (isLoading) {

@@ -1,7 +1,7 @@
 .productAddSection {
     background-color: var(--secondary-background);
     border-radius: 20px;
-    padding: 10px;
+    padding: 20px;
     gap: 10px;
     display: flex;
     flex-direction: column;
