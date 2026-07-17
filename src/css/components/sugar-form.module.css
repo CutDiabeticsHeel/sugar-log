@@ -1,3 +1,13 @@
+.sugarAddSection {
+    background-color: var(--secondary-background);
+    border-radius: 20px;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    container-type: inline-size;
+    container-name: sugarForm;
+}
 .sugarForm {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -6,17 +16,7 @@
     color: var(--text-secondary);
     border-radius: 20px;
     padding: 20px;
-    gap: 10px
-}
-.sugarSmallForm {
-    display: flex;
-    padding: 10px;
-    flex-direction: column;
-}
-.sugarSmallForm .foodSelectContainer,
-.sugarSmallForm .foodInputContainer{
-    display: flex;
-    flex-direction: column;
+    gap: 10px;
 }
 .dateInputContainer,
 .timeInputContainer,
@@ -126,4 +126,17 @@
     padding: 5px;
     font-size: var(--second-medium-text);
     border: 1px solid var(--border-color)
+}
+
+@container sugarForm (max-width: 504px) {
+    .sugarForm {
+        display: flex;
+        padding: 10px;
+        flex-direction: column;
+    }
+    .foodSelectContainer,
+    .foodInputContainer{
+        display: flex;
+        flex-direction: column;
+    }
 }

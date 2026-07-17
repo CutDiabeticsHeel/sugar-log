@@ -141,7 +141,6 @@ function DailyProfile() {
                     />
                     1 день
                 </label>
-
                 <label className={style.dayItem}>
                     <input
                         type="radio"
@@ -152,7 +151,6 @@ function DailyProfile() {
                     />
                     3 дня
                 </label>
-
                 <label className={style.dayItem}>
                     <input
                         type="radio"
@@ -163,7 +161,6 @@ function DailyProfile() {
                     />
                     5 дней
                 </label>
-
                 <label className={style.dayItem}>
                     <input
                         type="radio"

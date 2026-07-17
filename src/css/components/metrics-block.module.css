@@ -38,7 +38,7 @@
     color: var(--text-primary);
     display: flex;
     align-items: center;
-    z-index: 1000;
+    z-index: 901;
 }
 .overlay {
     position: fixed;
@@ -62,7 +62,7 @@
     border-radius: 20px;
     padding: 20px;
     height: auto;
-    max-height: 90vh;
+    max-height: 80vh;
     width: 50%;
     overflow-y: auto;
     z-index: 901;
@@ -88,4 +88,15 @@
 .metricsInfo {
     scrollbar-width: thin;
     scrollbar-color: var(--primary-element-background) transparent;
+}
+@media (max-width: 770px) {
+    .metricsBlock {
+        margin-top: 50px;
+    }
+    .metricsInfoButton {
+        top: -50px;
+    }
+    .metricsList {
+        width: calc(100% - 30px);
+    }
 }

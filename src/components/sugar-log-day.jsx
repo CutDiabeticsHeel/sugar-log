@@ -44,8 +44,8 @@ function SugarLogDay() {
             {Object.entries(groupedByDate).map(([date, dayData]) => {
                 const avgSugar = Number(dayData.sugarSum / dayData.records.length).toFixed(1);
                 return (
-                <div className={style.tableContainer}>
-                        <table key={date} className={style.dayLog}>
+                <div className={style.tableContainer} key={date}>
+                        <table className={style.dayLog}>
                             <caption className={`${style.caption} ${sugarStyles[getSugarStatus(avgSugar)]}`}>{dayjs(date).format("DD MMM, dddd")}: Средний сахар за этот день - {avgSugar}. Всего Б: {dayData.proteinSum} Ж: {dayData.fatSum} У: {dayData.carbSum} Ккал: {dayData.ccalSum}</caption>
                             <thead className={style.headers}>
                                 <tr>
@@ -79,7 +79,6 @@ function SugarLogDay() {
                                 ))}
                             </tbody>
                         </table>
-                        
                 </div>
                 )
             })}

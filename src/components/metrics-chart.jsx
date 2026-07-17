@@ -2,20 +2,25 @@ import style from "../css/components/metrics-chart.module.css";
 import ReactECharts from "echarts-for-react";
 
 function MetricsChart({metrics}) {
+    const isNarrowScreen = window.innerWidth < 540;
 
     const barsOption = {
+        grid: {
+            left: '1%',
+            right: '2%',
+            top: 20,
+            bottom: 0,
+            containLabel: true
+        },
         xAxis: {
             type: 'category',
             data: ['Низкий', 'В диапазоне', 'Чуть выше нормы', 'Высокий'],
-            axisLabel: {
-                interval: 0 
-            },
+            axisLabel: { interval: 0, rotate: isNarrowScreen ? 20 : 0},
+            boundaryGap: true,
+            
         },
-        yAxis: {
-            type: 'value'
-        },
-        series: [
-            {
+        yAxis: {max: Math.max(metrics.timeLow, metrics.timeInRange, metrics.timeBitHigh, metrics.timeHigh) + 5, type: 'value'},
+        series: [{
             data: [
                 {
                     value: metrics.timeLow,
@@ -54,15 +59,18 @@ function MetricsChart({metrics}) {
 
     const periodOption = {
         grid: {
-            left: 100,
-            right: 30,
-            top: 20,
+            left: '1%',
+            right: '10%',
+            top: 10,
             bottom: 20,
+            containLabel: true
         },
         xAxis: {
             type: "value",
             name: "ммоль/л",
-            max: Math.max(metrics.morningAverage, metrics.dayAverage, metrics.eveningAverage, metrics.nightAverage) + 2,
+            nameLocation: "middle",
+            nameGap: 30,
+            max: Math.max(metrics.morningAverage, metrics.dayAverage, metrics.eveningAverage, metrics.nightAverage),
         },
         yAxis: {
             type: "category",
@@ -100,8 +108,9 @@ function MetricsChart({metrics}) {
                 ],
                 label: {
                     show: true,
-                    position: "right",
-                    formatter: "{c} ммоль/л"
+                    position: "inside",
+                    color: "#ffffff",
+                    formatter: (params) => (params.value === 0 ? "" : `${params.value} ммоль/л`),
                 },
                 barWidth: 22,
                 borderRadius: [0, 8, 8, 0]
