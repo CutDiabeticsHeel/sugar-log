@@ -2,6 +2,31 @@ import {useGetUserQuestionsQuery} from "../store/api";
 import EditIcon from '@mui/icons-material/Edit';
 import style from "../css/components/questions.module.css";
 import {useState} from "react";
+import { motion, AnimatePresence } from "framer-motion";
+
+const wrapperVariants = {
+    closed: {
+        height: 0,
+        padding: 0,
+        opacity: 0,
+        transition: { duration: 0.3, ease: "easeOut" }
+    },
+    open: {
+        height: "auto",
+        opacity: 1,
+        transition: {
+            height: {
+                duration: 0.3,
+                ease: "easeOut"
+            },
+            opacity: {
+                duration: 0.3,
+                ease: "easeOut",
+                delay: 0.20
+            }
+        }
+    }
+};
 
 function Questions(){
     const {data: userQuestions, isLoading} = useGetUserQuestionsQuery()
@@ -31,15 +56,17 @@ function Questions(){
                     <EditIcon fontSize="small"/>
                 </button>
             </div>
-            {popupOpen &&
-                <form action="">
-                    <label className={style.addQuestionForm}>
-                        Введите вопрос
-                            <input type="text" />
-                    </label>
-                    <button type="submit" className={style.addQuestion}>Добавить вопрос</button>
-                </form>
-            }
+            <AnimatePresence>
+                {popupOpen &&
+                    <motion.form action="" style={{ overflow: "hidden" }} initial="closed" animate="open" exit="closed" variants={wrapperVariants}>
+                        <label className={style.addQuestionForm}>
+                            Введите вопрос
+                                <input type="text" />
+                        </label>
+                        <button type="submit" className={style.addQuestion}>Добавить вопрос</button>
+                    </motion.form>
+                }
+            </AnimatePresence>
         </div>
     )
 }

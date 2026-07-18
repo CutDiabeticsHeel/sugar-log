@@ -33,8 +33,10 @@
 }
 .buttonContainer {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     margin-bottom: 10px;
+    gap: 10px;
 }
 .addQuestionSection {
     align-self: flex-end;

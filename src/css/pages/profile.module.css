@@ -5,3 +5,8 @@
     margin-top: 15px;
     align-items: flex-start;
 }
+@media (max-width: 1000px) {
+    .profileSection {
+        grid-template-columns: 1fr;
+    }
+}
