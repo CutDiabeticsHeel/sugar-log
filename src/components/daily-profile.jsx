@@ -1,13 +1,21 @@
 import ReactECharts from "echarts-for-react";
 import dayjs from "dayjs";
 import { useGetSugarLogForChartQuery } from "../store/api";
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import style from "../css/components/daily-profile.module.css";
 
 function DailyProfile() {
     dayjs.locale("ru")
     const { data: sugarLog, isLoading } = useGetSugarLogForChartQuery();
     const [days, setDays] = useState(7)
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 480);
+
+    useEffect(() => {
+        const onResize = () => setIsMobile(window.innerWidth < 480);
+        window.addEventListener("resize", onResize);
+        return () => window.removeEventListener("resize", onResize);
+    }, []);
+    console.log(isMobile)
 
     if (isLoading) return <div>Загрузка...</div>;
 
@@ -86,6 +94,7 @@ function DailyProfile() {
     const option = {
         tooltip: {
             trigger: "axis",
+            confine: true, 
             formatter(params) {
                 let html = dayjs(params[0].value[0]).format("HH:mm") + "<br>";
 
@@ -96,34 +105,32 @@ function DailyProfile() {
                 return html;
             }
         },
-
         legend: {
+            type: "scroll",
             top: 0
         },
-
         grid: {
-            left: 50,
-            right: 30,
-            top: 50,
-            bottom: 50
+            left: '1%',
+            right: '2%',
+            top: 40,
+            bottom: 0,
+            containLabel: true
         },
-
         xAxis: {
             type: "time",
             min: "2000-01-01 00:00",
             max: "2000-01-02 00:00",
             axisLabel: {
+                rotate: isMobile ? 45: 0,
                 formatter(value) {
                     return dayjs(value).format("HH:mm");
                 }
             }
         },
-
         yAxis: {
             min: Math.floor(minSugar - 2),
             max: Math.ceil(maxSugar + 1)
         },
-        
         series: visibleSeries
     };
 

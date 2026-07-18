@@ -6,7 +6,6 @@
     box-sizing: border-box;
     margin-top: 20px;
 }
-
 .productTable {
     border-collapse: separate;
     border-spacing: 0;
@@ -15,22 +14,18 @@
     background: var(--secondary-background);
     text-align: center;
 }
-
 .productTable thead th {
     position: sticky;
     top: 0;
     z-index: 3;
     background: var(--secondary-background);
     padding: 12px;
-    white-space: nowrap;
     border-bottom: 1px solid var(--border-color);
 }
 .productTable td {
     padding: 12px;
-    white-space: nowrap;
     border-bottom: 1px solid var(--border-color);
 }
-
 .productTable th:first-child,
 .productTable td:first-child {
     position: sticky;
@@ -38,28 +33,37 @@
     z-index: 2;
     background: var(--secondary-background);
     text-align: left;
+    box-sizing: border-box;
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
-
+.productTable td:first-child {
+    border-right: 1px solid var(--border-color);
+}
 .productTable thead th:first-child {
     z-index: 4;
 }
-
 .searchContainer {
     caption-side: top;
     position: relative;
 }
-
 .searchIcon {
     position: absolute;
     left: 8px;
     top: 50%;
     transform: translateY(-50%);
 }
-
 .searchRow {
     width: 100%;
     padding: 8px 8px 8px 36px;
     border-radius: 10px;
     border: 1px solid var(--border-color);
     background: var(--paper-soft);
+}
+@media (max-width: 700px) {
+    .productTable th:first-child,
+    .productTable td:first-child {
+        max-width: 100px;
+    }
 }

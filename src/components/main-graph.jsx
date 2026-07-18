@@ -2,9 +2,17 @@ import ReactECharts from "echarts-for-react";
 import dayjs from "dayjs";
 import { useGetSugarLogForChartQuery } from "../store/api";
 import style from "../css/components/main-graph.module.css";
+import {useState, useEffect} from "react";
 
 function MainGraph() {
     const { data: sugarLog, isLoading } = useGetSugarLogForChartQuery();
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 480);
+    
+    useEffect(() => {
+        const onResize = () => setIsMobile(window.innerWidth < 480);
+        window.addEventListener("resize", onResize);
+        return () => window.removeEventListener("resize", onResize);
+    }, []);
 
     if (isLoading) return <div>Загрузка...</div>;
     const data = sugarLog.map(row => [
@@ -15,7 +23,15 @@ function MainGraph() {
     const maxSugar = Math.max(...sugarLog.map(i => i.sugar));
     const minSugar = Math.min(...sugarLog.map(i => i.sugar));
 
+
     const option = {
+        grid: {
+            left: '2%',
+            right: '2%',
+            top: 20,
+            bottom: 0,
+            containLabel: true
+        },
         tooltip: {
             trigger: "axis",
             formatter(params) {
@@ -27,21 +43,19 @@ function MainGraph() {
                 `;
             }
         },
-
         xAxis: {
             type: "time",
             axisLabel: {
+                rotate: isMobile ? 45: 0,
                 formatter(value) {
                     return dayjs(value).format("DD MMM");
                 }
             }
         },
-
         yAxis: {
             min: Math.floor(minSugar - 2),
             max: Math.ceil(maxSugar + 1)
         },
-
         series: [
             {
                 type: "line",

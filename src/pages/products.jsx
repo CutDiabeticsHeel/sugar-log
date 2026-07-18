@@ -7,13 +7,11 @@ import { motion, AnimatePresence } from "framer-motion";
 const wrapperVariants = {
     closed: {
         height: 0,
-        width: 0,
         padding: 0,
         transition: { duration: 0.3, ease: "easeOut" }
     },
     open: {
         height: "auto",
-        width: "100%",
         transition: { duration: 0.3, ease: "easeOut" }
     }
 };
