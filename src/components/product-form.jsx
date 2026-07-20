@@ -65,25 +65,25 @@ function ProductForm() {
     return (
         <section className={style.productAddSection} >
                 <motion.form onSubmit={handleSubmit(onSubmit)} autoComplete="off" className={`${style.productForm } ${smallForm ? style.productSmallForm : "" }`} autoComplete="off" ref={formElement} variants={formVariants}>
-                    <label className={style.nameProductConrainer}>
+                    <label className={style.nameProductConrainer} >
                         Название продукта
-                        <input type="text" {...register("nameProduct")} />
+                        <input type="text" {...register("nameProduct")} required/>
                     </label>
                     <label className={style.proteinConrainer}>
                         Белки, г
-                        <input type="text" {...register("protein")} />
+                        <input type="text" {...register("protein")} required/>
                     </label>
                     <label className={style.fatConrainer}>
                         Жиры, г
-                        <input type="text" {...register("fat")} />
+                        <input type="text" {...register("fat")} required/>
                     </label>
                     <label className={style.carbsConrainer}>
                         Углеводы, г
-                        <input type="text" {...register("carbs")} />
+                        <input type="text" {...register("carbs")} required/>
                     </label>
                     <label className={style.weigthConrainer}>
                         Вес продукта, г
-                        <input type="text" {...register("weigth")} />
+                        <input type="text" {...register("weigth")} required/>
                     </label>
                     <div className={style.valueContainer}>
                         <p ><span>БЖЕ</span>{XEBEValue}</p>

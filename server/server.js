@@ -1,8 +1,9 @@
-const Fastify = require("fastify");
-const sqlite3 = require("sqlite3");
-const cors = require("@fastify/cors");
-const static = require("@fastify/static");
-const dayjs = require("dayjs");
+import Fastify from "fastify";
+import sqlite3 from "sqlite3";
+import cors from "@fastify/cors";
+import fastifyStatic from "@fastify/static";
+import dayjs from "dayjs";
+import {addProduct} from "./database-function.js";
 
 const app = Fastify({
     logger: true,
@@ -88,9 +89,21 @@ app.post("/api/addSugar", async (request, reply) => {
 })
 
 app.post("/api/addProduct", async (request, reply) => {
-    console.log("Принял", request.body)
-    return {message: "Успешно"}
-})
+    try {
+        const { nameProduct, protein, fat, carbs, weigth } = request.body;
+
+        if (!nameProduct || !protein || !fat || !carbs || !weigth) {
+            return reply.status(400).send({ error: "Missing required fields" });
+        }
+
+        const result = await addProduct(request.body);
+
+        reply.status(201).send(result);
+    } catch (err) {
+        console.error(err);
+        reply.status(500).send({ error: "Database write failed" });
+    }
+});
 
 app.post("/api/selectPeriod", async (request, reply) => {
     const data = request.body.dateRange
