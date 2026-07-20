@@ -1,8 +1,3 @@
-// ✅ Медиана
-// ✅ Стандартное отклонение
-// ✅ Самый высокий сахар + время
-// ✅ Самый низкий сахар + время
-
 function fmt(value) {
     if (value === null || value === undefined || Number.isNaN(value)) {
         return null;
@@ -81,7 +76,6 @@ export default function calculateMetrics(records) {
     );
 
     return {
-        // Основные
         average: fmt(avg),
         median: fmt(median(sugars)),
         mode: fmt(mode(sugars)),
@@ -89,11 +83,9 @@ export default function calculateMetrics(records) {
         min: fmt(lowest.sugar),
         max: fmt(highest.sugar),
 
-        // Вариабельность
         standardDeviation: fmt(standardDeviation),
         coefficientVariation: fmt((standardDeviation / avg) * 100),
 
-        // Временные диапазоны
         timeLow: fmt((sugars.filter(v => v < 3.9).length / sugars.length) * 100),
 
         timeInRange: fmt(
@@ -106,12 +98,10 @@ export default function calculateMetrics(records) {
 
         timeHigh: fmt((sugars.filter(v => v > 12.5).length / sugars.length) * 100),
 
-        // Количество
         count: sugars.length,
 
         averagePerDay: fmt(sugars.length / uniqueDays.size),
 
-        // По времени суток
         morningAverage: fmt(averageByPeriod(records, 6, 12)),
 
         dayAverage: fmt(averageByPeriod(records, 12, 18)),

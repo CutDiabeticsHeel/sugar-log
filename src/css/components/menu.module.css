@@ -31,6 +31,10 @@
 .navigationItem span {
     color: #ffffff;
 }
+.navigationItemActive,
+.navigationItemActive span {
+    color: var(--text-muted);
+}
 .linkText {
     overflow: hidden;
     white-space: nowrap;
