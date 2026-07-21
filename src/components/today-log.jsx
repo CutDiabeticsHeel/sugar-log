@@ -40,7 +40,6 @@ function TodayLog() {
         } else {
             setSmallLog(false)
         }
-        console.log(width)
     }, [width]);
     
     if (isLoading) {
