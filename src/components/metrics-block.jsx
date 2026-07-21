@@ -14,6 +14,18 @@ const metricsInfoVariants = {
     }
 };
 
+const metricsDescription = {
+    average: "Средний сахар",
+    averagePerDay: "Среднее кол-во измерений сахара в день",
+    coefficientVariation: "Коэффициент вариации",
+    count: "Общее количество измерений",
+    max: "Самый высокий сахар",
+    min: "Самый низкий сахар",
+    mode: "Самый часто встречающийся сахар",
+    median: "Медиана",
+    standardDeviation: "Стандартное отклонение",
+};
+
 function MetricsBlock ({metrics}) {
     const [popupOpen, setPopupOpen] = useState(false)
 
@@ -35,42 +47,14 @@ function MetricsBlock ({metrics}) {
                 <li className={style.metricsTitle}>
                     Самые важные метрики
                 </li>
-                <li className={style.metricsListItem}>
-                    Средний сахар
-                    <span className={style.metricsValue}>{metrics.average}</span>
-                </li>
-                <li className={style.metricsListItem}>
-                    Среднее кол-во измерений сахара в день
-                    <span className={style.metricsValue}>{metrics.averagePerDay}</span>
-                </li>
-                <li className={style.metricsListItem}> 
-                    Коэффициент вариации
-                    <span className={style.metricsValue}>{metrics.coefficientVariation}</span>
-                </li>
-                <li className={style.metricsListItem}>
-                    Общее количество измерений
-                    <span className={style.metricsValue}>{metrics.count}</span>
-                </li>
-                <li className={style.metricsListItem}>
-                    Самый высокий сахар
-                    <span className={style.metricsValue}>{metrics.max}</span>
-                </li>
-                <li className={style.metricsListItem}>
-                    Самый низкий сахар
-                    <span className={style.metricsValue}>{metrics.min}</span>
-                </li>
-                <li className={style.metricsListItem}>
-                    Самый часто встречающийся сахар
-                    <span className={style.metricsValue}>{metrics.mode}</span>
-                </li>
-                <li className={style.metricsListItem}>
-                    Медиана
-                    <span className={style.metricsValue}>{metrics.median}</span>
-                </li>
-                <li className={style.metricsListItem}>
-                    Стандартное отклонение
-                    <span className={style.metricsValue}>{metrics.standardDeviation}</span>
-                </li>
+                {Object.entries(metricsDescription).map(([key, description]) => (
+                    <li key={key} className={style.metricsListItem}>
+                        {description}
+                        <span className={style.metricsValue}>
+                            {metrics[key] !== null && metrics[key] !== undefined ? metrics[key] : "—"}
+                        </span>
+                    </li>
+                ))}
             </ul>
             <div>
                 <button onClick={() => (setPopupOpen(prev => !prev))} className={style.metricsInfoButton}><InfoIcon/> {!popupOpen ? `Узнать о метриках`: `Вернуться к статистике`}</button>
