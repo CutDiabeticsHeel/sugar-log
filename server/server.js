@@ -3,7 +3,7 @@ import sqlite3 from "sqlite3";
 import cors from "@fastify/cors";
 import fastifyStatic from "@fastify/static";
 import dayjs from "dayjs";
-import {addProduct, getInsulinAndXEBE} from "./database-function.js";
+import {addProduct, getInsulinAndXEBE, updateUserInfo} from "./database-function.js";
 
 const app = Fastify({
     logger: true,
@@ -129,6 +129,20 @@ app.post("/api/foodAuto", async (request, reply) => {
         insulin: calculatedInsulin,
         XEBE: calculatedXEBE,
     };
+})
+
+app.post("/api/changeUserInfo", async (request, reply) => {
+    try {
+        const {name, height, weight, shortInsulin, longInsulin} = request.body;
+        await updateUserInfo(name, height, weight, shortInsulin, longInsulin)
+        return {message: "Успешно"}
+    } catch(err){
+        console.log(err)
+        reply.code(500)
+        return err
+    }
+    console.log("Принял", request.body)
+    return {message: "Успешно"}
 })
 
 const start = async () => {

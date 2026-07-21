@@ -68,7 +68,7 @@ async function addProduct({ nameProduct, protein, fat, carbs, weigth }) {
     };
 }
 
-function getInsulinAndXEBE(foodItems) {
+async function getInsulinAndXEBE(foodItems) {
     return new Promise((resolve, reject) => {
         if (!foodItems || foodItems.length === 0) {
             return resolve({ insulin: 0, XEBE: 0 });
@@ -113,5 +113,61 @@ function getInsulinAndXEBE(foodItems) {
     });
 }
 
+async function updateUserInfo(
+    name,
+    height,
+    weight,
+    shortInsulin,
+    longInsulin
+) {
+    return new Promise((resolve, reject) => {
+        const fields = [];
+        const values = [];
 
-export { addProduct, getInsulinAndXEBE };
+        if (name !== "") {
+            fields.push("name = ?");
+            values.push(name);
+        }
+
+        if (height !== "") {
+            fields.push("height = ?");
+            values.push(height);
+        }
+
+        if (weight !== "") {
+            fields.push("weight = ?");
+            values.push(weight);
+        }
+
+        if (shortInsulin !== "") {
+            fields.push("short_insulin = ?");
+            values.push(shortInsulin);
+        }
+
+        if (longInsulin !== "") {
+            fields.push("long_insulin = ?");
+            values.push(longInsulin);
+        }
+
+        if (fields.length === 0) {
+            resolve(0);
+            return;
+        }
+
+        const sql = `
+            UPDATE user_info
+            SET ${fields.join(", ")}
+        `;
+
+        db.run(sql, values, function (error) {
+            if (error) {
+                reject(error);
+                return;
+            }
+
+            resolve(this.changes);
+        });
+    });
+}
+
+export { addProduct, getInsulinAndXEBE, updateUserInfo};

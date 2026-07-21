@@ -16,55 +16,88 @@ const wrapperVariants = {
 };
 
 function ProfileInfo(){
-    const {data: userInfo, isLoading} = useGetUserInfoQuery()
-    const [popupOpen, setPopupOpen] = useState(false)
+    const {data: userInfo, isLoading, refetch} = useGetUserInfoQuery();
+    const [popupOpen, setPopupOpen] = useState(false);
+    const [name, setName] = useState("");
+    const [height, setHeight] = useState("");
+    const [weight, setWeight] = useState("");
+    const [shortInsulin, setShortInsulin] = useState("");
+    const [longInsulin, setLongInsulin] = useState("");
     if (isLoading) {
         return (<div>Загрузка....</div>)
     }
     const info = userInfo?.[0];
-    const handleSave = () => {
-        setPopupOpen(prev => !prev)
-    };
+    const changeUserInfo = async () => {
+        const data = {name, height, weight, shortInsulin, longInsulin}
+        const response = await fetch("http://localhost:5000/api/changeUserInfo", {
+            method: "POST",
+            headers: {
+                    "Content-Type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify(data)
+        })
+        if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+        }
+        await refetch();
+        setPopupOpen(false)
+        setHeight(""); setWeight(""); setShortInsulin(""); setLongInsulin(""); setName("");
+    }
     return (
         <div className={style.userInfoSection}>
-                <AnimatePresence mode="wait">
-                    {popupOpen ? (
-                        <motion.div className={style.changeName} key="edit" style={{ overflow: "hidden" }} initial="closed" animate="open" exit="closed" variants={wrapperVariants}>        
-                            <label className={style.userName}>
-                                Изменить имя на:
-                                <input type="text" className={style.changeNameInput}/>
-                            </label>
-                            <button className={style.addEntry} onClick={handleSave}>
-                                Применить
-                            </button>
-                        </motion.div>
-                    ):(
-                        <motion.span className={style.staticUserName} key="view" style={{ overflow: "hidden" }} initial="closed" animate="open" exit="closed" variants={wrapperVariants}>
-                            {info.name}
-                            <button onClick={() => {setPopupOpen(prev => !prev)}} className={style.editButton}>
-                                <EditIcon fontSize="small"/>
-                            </button>
-                        </motion.span>
-                    )
-                    }
-                </AnimatePresence>
-                <label>
-                    Рост, см
-                    <input type="text" placeholder={info.heigth}/>
-                </label>
-                <label>
-                    Вес, кг
-                    <input type="text" placeholder={info.weigth}/>
-                </label>
-                <label>
-                    Инсулин на 1 ХЕ, ед
-                    <input type="text" placeholder={info.short_insulin}/>
-                </label>
-                <label>
-                    Длинный инсулин, ед/сутки
-                    <input type="text" placeholder={info.long_insulin}/>
-                </label>
-                <button type="submit" className={style.addEntry}>Сохранить изменения</button>
+            <AnimatePresence mode="wait">
+                {popupOpen ? (
+                    <motion.div className={style.changeName} key="edit" initial="closed" animate="open" exit="closed" variants={wrapperVariants}>
+                        <label className={style.userName}>Имя 
+                            <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+                        </label>
+                        <label>Рост, см 
+                            <input type="text" value={height} onChange={(e) => setHeight(e.target.value)} />
+                        </label>
+                        <label>Вес, кг 
+                            <input type="text" value={weight} onChange={(e) => setWeight(e.target.value)} />
+                        </label>
+                        <label>Инсулин на 1 ХЕ, ед 
+                            <input type="text" value={shortInsulin} onChange={(e) => setShortInsulin(e.target.value)} />
+                        </label>
+                        <label>Длинный инсулин, ед/сутки 
+                            <input type="text" value={longInsulin} onChange={(e) => setLongInsulin(e.target.value)} />
+                        </label>
+                        <button className={style.addEntry} onClick={changeUserInfo}>
+                            Сохранить изменения
+                        </button>
+                    </motion.div>
+                ) : (
+                    <motion.div
+                        className={style.userValueContainer}
+                        key="view"
+                        initial="closed"
+                        animate="open"
+                        exit="closed"
+                        variants={wrapperVariants}
+                    >
+                        <p className={style.valueContainer}>Имя: 
+                            <span className={style.valueItem}>{info.name}</span>
+                        </p>
+                        <p className={style.valueContainer}>Рост: 
+                            <span className={style.valueItem}>{info.height} см</span>
+                            </p>
+                        <p className={style.valueContainer}>Вес: 
+                            <span className={style.valueItem}>{info.weight} кг</span>
+                            </p>
+                        <p className={style.valueContainer}>Инсулин на 1 ХЕ: 
+                            <span className={style.valueItem}>{info.short_insulin} ед</span>
+                            </p>
+                        <p className={style.valueContainer}>Длинный инсулин: 
+                            <span className={style.valueItem}>{info.long_insulin} ед/сутки</span>
+                        </p>
+
+                        <button onClick={() => setPopupOpen(true)} className={style.editButton}>
+                            <EditIcon fontSize="small" />
+                        </button>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     )
 }
