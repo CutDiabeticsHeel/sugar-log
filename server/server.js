@@ -3,7 +3,7 @@ import sqlite3 from "sqlite3";
 import cors from "@fastify/cors";
 import fastifyStatic from "@fastify/static";
 import dayjs from "dayjs";
-import {addProduct} from "./database-function.js";
+import {addProduct, getInsulinAndXEBE} from "./database-function.js";
 
 const app = Fastify({
     logger: true,
@@ -112,9 +112,18 @@ app.post("/api/selectPeriod", async (request, reply) => {
 })
 
 app.post("/api/foodAuto", async (request, reply) => {
-    console.log("Еда", request.body)
-    const calculatedInsulin = 4.5;
-    const calculatedXEBE = 3.2;
+    try {
+        const { insulin, XEBE } = await getInsulinAndXEBE(request.body)
+
+        return {
+            insulin,
+            XEBE,
+        };
+    } catch (err) {
+        console.log(err)
+        reply.code(500)
+        return {error: "Ошибка при расчете"}
+    }
 
     return {
         insulin: calculatedInsulin,

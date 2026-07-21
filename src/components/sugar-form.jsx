@@ -72,9 +72,11 @@ function SugarForm() {
             },
             body: JSON.stringify(selectedOptions)
         })
+        if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+        }
 
         const result = await response.json()
-        console.log(result)
         setValue("insulin", result.insulin)
         setValue("XEBE", result.XEBE)
     }
@@ -118,15 +120,15 @@ function SugarForm() {
                 </label>
                 <label className={style.sugarInputContainer}>
                     Cахар
-                    <input className={style.sugarInput} {...register("sugar")} />
+                    <input className={style.sugarInput} {...register("sugar")} required/>
                 </label>
                 <label className={style.insulinInputContainer}>
                     Инсулин
-                    <input className={style.insulinInput} {...register("insulin")} />
+                    <input className={style.insulinInput} {...register("insulin")} required/>
                 </label>
                 <label className={style.XEBEInputContainer}>
                     ХЕ и БЖЕ
-                    <input className={style.XEBEInput} {...register("XEBE")} />
+                    <input className={style.XEBEInput} {...register("XEBE")} required/>
                 </label>
                 <label className={style.foodSelectContainer}>
                     <span>Выберите продукт для автоподсчета</span>
@@ -136,8 +138,11 @@ function SugarForm() {
                         defaultValue={[]}
                         render={({ field }) => (
                             <AsyncSelect
-                                {...field}
                                 isMulti
+                                hideSelectedOptions={false}
+                                isOptionDisabled={() => false}
+                                isOptionSelected={() => false}
+                                value={field.value}
                                 cacheOptions
                                 defaultOptions
                                 loadOptions={promiseOptions}
@@ -164,9 +169,14 @@ function SugarForm() {
                                         color: "#000000",
                                     }),
                                 }}
-                                onChange={(selectedOptions) => {
-                                    field.onChange(selectedOptions);
-                                    handleFoodAutoChange(selectedOptions);
+                                onChange={(newValue, actionMeta) => {
+                                    const updatedValue =
+                                        actionMeta.action === "select-option"
+                                            ? [...(field.value || []), actionMeta.option]
+                                            : newValue;
+
+                                    field.onChange(updatedValue);
+                                    handleFoodAutoChange(updatedValue);
                                 }}
                             />
                         )}

@@ -68,4 +68,50 @@ async function addProduct({ nameProduct, protein, fat, carbs, weigth }) {
     };
 }
 
-export { addProduct };
+function getInsulinAndXEBE(foodItems) {
+    return new Promise((resolve, reject) => {
+        if (!foodItems || foodItems.length === 0) {
+            return resolve({ insulin: 0, XEBE: 0 });
+        }
+
+        const ids = foodItems.map(item => item.value);
+        const placeholders = ids.map(() => '?').join(',');
+
+        const query = `
+            SELECT id, "ХЕ + БЖЕ" as xebe, "Всего инсулина" as insulin
+            FROM products
+            WHERE id IN (${placeholders})
+        `;
+
+        db.all(query, ids, (err, rows) => {
+            if (err) {
+                return reject(err);
+            }
+
+            let calculatedInsulin = 0;
+            let calculatedXEBE = 0;
+
+            for (const item of foodItems) {
+                const row = rows.find(r => r.id === item.value);
+                if (!row) {
+                    console.warn(`Продукт с id=${item.value} не найден в БД`);
+                    continue;
+                }
+
+                const xebe = parseFloat(String(row.xebe).replace(',', '.')) || 0;
+                const insulin = parseFloat(String(row.insulin).replace(',', '.')) || 0;
+
+                calculatedXEBE += xebe;
+                calculatedInsulin += insulin;
+            }
+
+            resolve({
+                insulin: parseFloat(calculatedInsulin.toFixed(2)),
+                XEBE: parseFloat(calculatedXEBE.toFixed(2)),
+            });
+        });
+    });
+}
+
+
+export { addProduct, getInsulinAndXEBE };
