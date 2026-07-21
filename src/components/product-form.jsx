@@ -1,5 +1,4 @@
 import { useForm, Controller  } from "react-hook-form"
-import axios from "axios";
 import style from "../css/components/product-form.module.css";
 import { motion } from "framer-motion";
 import {useRef, useState, useEffect} from "react";
@@ -31,10 +30,13 @@ function ProductForm() {
     const XEValue = Number(((carbs * weight / 100) / 12).toFixed(2));
 
     const onSubmit = async (data) =>{
-        const responce = await axios.post(
-            "http://localhost:5000/api/addProduct",
-            data
-        )
+        const responce = await fetch("http://localhost:5000/api/addProduct",{
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify(data)
+        })
         reset();
     }
     useEffect(() => {

@@ -1,7 +1,6 @@
 import {  useRef, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { DayPicker } from "@daypicker/react";
-import axios from "axios";
 import dayjs from "dayjs";
 import "dayjs/locale/ru";
 import "@daypicker/react/style.css";
@@ -75,9 +74,13 @@ function CalendarForm() {
                 to: dayjs(data.dateRange.to).format('YYYY-MM-DD')
             }
         };
-        const response = await axios.post("http://localhost:5000/api/selectPeriod",
-            formattedData
-        );
+        const responce = await fetch("http://localhost:5000/api/selectPeriod",{
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify(formattedData)
+        })
         console.log(data)
         setPopupOpen(false)
     }

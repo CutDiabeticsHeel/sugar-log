@@ -1,5 +1,4 @@
 import { useForm, Controller  } from "react-hook-form"
-import axios from "axios";
 import style from "../css/components/sugar-form.module.css";
 import AsyncSelect  from "react-select/async";
 import Checkbox from "@mui/material/Checkbox";
@@ -13,6 +12,7 @@ import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import {useRef, useState, useEffect} from "react";
 import { motion } from "framer-motion";
+import { useGetProductsQuery } from "../store/api";
 
 const formVariants = {
     closed: {
@@ -27,35 +27,32 @@ const formVariants = {
 
 function SugarForm() {
     const { register, handleSubmit, control, reset, setValue } = useForm()
+    const { data: allProduct, isLoading} = useGetProductsQuery()
     const onSubmit = async (data) => {
         data.time = dayjs(data.time).format("HH:mm");
         data.date = dayjs(data.date).format("YYYY-MM-DD");
-        const response = await axios.post(
-            "http://localhost:5000/api/addSugar",
-            data
+        const response = await fetch(
+            "http://localhost:5000/api/addSugar", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json;charset=utf-8",
+                },
+                body: JSON.stringify(data)
+            }
         );
+        if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+        }
         reset();
     }
-    const colourOptions = [
-        {
-            value: "Красный",
-            label: "Красный",
-        },
-        {
-            value: "Синий",
-            label: "Синий",
-        },
-        {
-            value: "Зеленый",
-            label: "Зеленый",
-        },
-        {
-            value: "Желтый",
-            label: "Желтый",
-        },
-    ];
+    if (isLoading) return <div>Загрузка...</div>
+    const forEachProduct = allProduct.map((item)=> ({
+        value: item.id, 
+        label: item["Продукт"]
+    }))
+
     const filterColors = (inputValue) => {
-        return colourOptions.filter((i) =>
+        return forEachProduct.filter((i) =>
             i.label.toLowerCase().includes(inputValue.toLowerCase())
         );
     };
@@ -68,13 +65,18 @@ function SugarForm() {
     });
 
     const handleFoodAutoChange = async (selectedOptions) =>{
-        const response = await axios.post(
-            "http://localhost:5000/api/foodAuto",
-            selectedOptions
-        );
+        const response = await fetch("http://localhost:5000/api/foodAuto",{
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify(selectedOptions)
+        })
 
-        setValue("insulin", response.data.insulin)
-        setValue("XEBE", response.data.XEBE)
+        const result = await response.json()
+        console.log(result)
+        setValue("insulin", result.insulin)
+        setValue("XEBE", result.XEBE)
     }
 
     return (
