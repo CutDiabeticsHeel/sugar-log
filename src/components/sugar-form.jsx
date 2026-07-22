@@ -48,7 +48,11 @@ function SugarForm() {
     if (isLoading) return <div>Загрузка...</div>
     const forEachProduct = allProduct.map((item)=> ({
         value: item.id, 
-        label: item["Продукт"]
+        label: item["Продукт"],
+        kcal: item["ккал"],
+        protein: item["Белки"],
+        fat: item["Жиры"],
+        carbs: item["Углеводы"]
     }))
 
     const filterColors = (inputValue) => {
@@ -188,7 +192,7 @@ function SugarForm() {
                 </label>    
                 <label className={style.notesInputContainer}>
                     Заметки, введите что-то важное
-                    <textarea className={style.notesInput} name="" id=""></textarea>
+                    <textarea className={style.notesInput} name="notes" id="" {...register("notes")}></textarea>
                 </label>
                 <div className={style.activityContainer}>
                     <span>Готовые паттерны активности</span>

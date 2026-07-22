@@ -3,7 +3,7 @@ import sqlite3 from "sqlite3";
 import cors from "@fastify/cors";
 import fastifyStatic from "@fastify/static";
 import dayjs from "dayjs";
-import {addProduct, getInsulinAndXEBE, updateUserInfo} from "./database-function.js";
+import {addProduct, getInsulinAndXEBE, updateUserInfo, addSugarRecord} from "./database-function.js";
 
 const app = Fastify({
     logger: true,
@@ -84,7 +84,12 @@ app.get("/api/today-sugar-log", async (request, reply) => {
 });
 
 app.post("/api/addSugar", async (request, reply) => {
-    console.log("Принял", request.body)
+    try {
+        await addSugarRecord(request.body)
+    } catch (err) {
+        console.log(err)
+        reply.status(500).send({error: "Database write failed"})
+    }
     return {message: "Успешно"}
 })
 

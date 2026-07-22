@@ -170,4 +170,40 @@ async function updateUserInfo(
     });
 }
 
-export { addProduct, getInsulinAndXEBE, updateUserInfo};
+function addSugarRecord(entry) {
+  return new Promise((resolve, reject) => {
+    const foodList = Array.isArray(entry.food) ? entry.food : [];
+
+    const foodName = entry.foodText && entry.foodText.trim()
+      ? entry.foodText.trim()
+      : foodList.map(f => f.label).join(', ');
+
+    let protein = 0, fat = 0, carb = 0, ccal = 0;
+    for (const f of foodList) {
+      protein += Number(f.protein) || 0;
+      fat += Number(f.fat) || 0;
+      carb += Number(f.carbs) || 0;
+      ccal += parseFloat(f.kcal) || 0;
+    }
+
+    const activityText = Array.isArray(entry.activity) && entry.activity.length
+      ? `Активность: ${entry.activity.join(', ')}`
+      : '';
+    const notes = [entry.notes, activityText].filter(Boolean).join('; ');
+
+    const sql = `INSERT INTO sugar_log (date, time, sugar, insulin, XEBE, food, notes, protein, fat, carb, ccal)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+    const params = [
+      entry.date, entry.time, entry.sugar, entry.insulin, entry.XEBE,
+      foodName, notes, protein, fat, carb, ccal
+    ];
+
+    db.run(sql, params, function (err) {
+      if (err) return reject(err);
+      resolve(this.lastID);
+    });
+  });
+}
+
+export { addProduct, getInsulinAndXEBE, updateUserInfo, addSugarRecord};
