@@ -69,7 +69,7 @@ app.get("/api/day-period-sugar-log", async (request, reply) => {
     return await getAll(`
         SELECT * FROM sugar_log
         WHERE date BETWEEN ? AND ?
-        ORDER BY id ASC
+        ORDER BY id DESC
     `, [from, to]);
 });
 
