@@ -19,14 +19,17 @@ const wrapperVariants = {
 
 function Diary() {
     const [popupOpen, setPopupOpen] = useState(false)
+    const [period, setPeriod] = useState({ from: null, to: null });
 
     return (
         <section className={style.dairy}>
             <h1>Дневник</h1>
             <div className={style.dairyActiveElements}>
-                <CalendarFrom />
+                <CalendarFrom value={period} onChange={setPeriod} />
                 <label >
-                    <button onClick={() => setPopupOpen((prev) => !prev)} className={style.dairyAddEntry}>Добавить запись в дневник</button>
+                    <button onClick={() => setPopupOpen((prev) => !prev)} className={style.dairyAddEntry}>
+                        Добавить запись в дневник
+                    </button>
                 </label>
             </div>
             <AnimatePresence>
@@ -42,7 +45,7 @@ function Diary() {
                     </motion.div>
                 )}
             </AnimatePresence>
-            <SugarLogDay/>
+            <SugarLogDay period={period}/>
         </section>
     )
 }

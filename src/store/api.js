@@ -21,7 +21,10 @@ export const api = createApi({
         }),
 
         getDayPeriodSugarLog: builder.query({
-            query: () => "/day-period-sugar-log",
+            query: ({ from, to }) => ({
+                url: "/day-period-sugar-log",
+                params: { from, to },
+            }),
         }),
 
         getSugarLogForChart: builder.query({

@@ -39,7 +39,7 @@ const childVariants = {
 };
 
 
-function CalendarForm() {
+function CalendarForm({ onChange }) {
     dayjs.locale("ru");
     const { control, setValue, handleSubmit } = useForm();
     const [popupOpen, setPopupOpen] = useState(false);
@@ -63,6 +63,10 @@ function CalendarForm() {
 
     const changePeriod = (days) => {
         setDisplayDays(days)
+        onChange({
+            from: dayjs().subtract(days - 1, "day").format("YYYY-MM-DD"),
+            to: dayjs().format("YYYY-MM-DD"),
+        });
         setPopupOpen(false)
         console.log(days)
     };
@@ -74,6 +78,10 @@ function CalendarForm() {
                 to: dayjs(data.dateRange.to).format('YYYY-MM-DD')
             }
         };
+        onChange({
+            from: dayjs(data.dateRange.from).format('YYYY-MM-DD'),
+            to: dayjs(data.dateRange.to).format('YYYY-MM-DD')
+        });
         const responce = await fetch("http://localhost:5000/api/selectPeriod",{
             method: "POST",
             headers: {
@@ -81,7 +89,6 @@ function CalendarForm() {
             },
             body: JSON.stringify(formattedData)
         })
-        console.log(data)
         setPopupOpen(false)
     }
 

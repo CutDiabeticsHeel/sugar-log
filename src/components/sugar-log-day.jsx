@@ -2,11 +2,21 @@ import {useGetDayPeriodSugarLogQuery} from "../store/api";
 import style from "../css/components/sugar-log-day.module.css";
 import dayjs from "dayjs";
 import {getSugarStatus} from "../utils/sugar-status.js"
+import {useState} from "react"
 
-function SugarLogDay() {
+
+function SugarLogDay({ period }) {
     dayjs.locale("ru");
-    const {data: sugarLog, isLoading} = useGetDayPeriodSugarLogQuery();
-    if (isLoading) {
+    const [defaultPeriod] = useState({
+        from: dayjs().subtract(6, "day").format("YYYY-MM-DD"),
+        to: dayjs().format("YYYY-MM-DD"),
+    });
+    const effectivePeriod = period?.from && period?.to ? period : defaultPeriod;
+
+    const {data: sugarLog, isLoading} = useGetDayPeriodSugarLogQuery(effectivePeriod, {
+        skip: !effectivePeriod?.from || !effectivePeriod?.to,
+    });
+    if (isLoading || !sugarLog) {
         return <div>Загрузка...</div>;
     }
     const groupedByDate = sugarLog.reduce((acc, record) => {
@@ -40,8 +50,11 @@ function SugarLogDay() {
         high: style.sugarHigh,
     };
     return (
-        <div>
-            {Object.entries(groupedByDate).map(([date, dayData]) => {
+        <div className={style.dairyContainer}>
+            {sugarLog.length === 0 ?
+            <span className={style.zeroDairy}>Записей для выбранного периода нет</span>
+            :
+            Object.entries(groupedByDate).map(([date, dayData]) => {
                 const avgSugar = Number(dayData.sugarSum / dayData.records.length).toFixed(1);
                 return (
                 <div className={style.tableContainer} key={date}>

@@ -65,11 +65,15 @@ function Questions(){
         reset();
         refetch();
     }
+    console.log(userQuestions.length)
     return (
         <div className={style.questionsSection}>
             <p>Вопросы для следующего приема</p>
             <ul className={style.questionList}>
-                {userQuestions.map((question) =>(
+                { userQuestions.length === 0 ?
+                <li className={style.zeroQuestions}>Вопросов для обсуждения нет</li>
+                :
+                userQuestions.map((question) => (
                     <li key={question.id} className={style.questionItem}>
                         <label className={style.checkboxLabel}>
                             <input type="checkbox" name="question" id={question.id} checked={selectedIds.includes(question.id)} onChange={() => toggleQuestion(question.id)}/>

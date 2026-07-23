@@ -38,6 +38,11 @@
     margin-bottom: 10px;
     gap: 10px;
 }
+.zeroQuestions {
+    display: flex;
+    justify-content: center;
+    color: var(--text-muted);
+}
 .addQuestionSection {
     align-self: flex-end;
     display: flex;

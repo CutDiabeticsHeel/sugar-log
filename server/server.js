@@ -57,31 +57,32 @@ app.get("/api/products", async (request, reply) => {
 });
 
 app.get("/api/all-sugar-log", async (request, reply) => {
-    return await getAll("SELECT * FROM sugar_log");
+    return await getAll("SELECT * FROM sugar_log ORDER BY date ASC, time ASC");
 
 });
 
 app.get("/api/day-period-sugar-log", async (request, reply) => {
-    const limit = request.query.limit || 7;
+    const { from, to } = request.query;
+    if (!from || !to) {
+        return reply.code(400).send({ error: "from и to обязательны" });
+    }
     return await getAll(`
-        SELECT * FROM (
-            SELECT * FROM sugar_log 
-            ORDER BY id DESC LIMIT ?
-        ) AS sub
+        SELECT * FROM sugar_log
+        WHERE date BETWEEN ? AND ?
         ORDER BY id ASC
-    `, [limit]);
+    `, [from, to]);
 });
 
 app.get("/api/sugar-log-for-chart", async (request, reply) => {
     return await getAll(`
         SELECT * FROM (
             SELECT * FROM sugar_log 
-            ORDER BY id DESC LIMIT ?
+            ORDER BY date DESC, time DESC 
+            LIMIT ?
         ) AS sub
-        ORDER BY id ASC
+        ORDER BY date ASC, time ASC
     `, [50]);
 });
-
 app.get("/api/today-sugar-log", async (request, reply) => {
     const today = dayjs().format("YYYY-MM-DD");
 
