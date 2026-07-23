@@ -17,7 +17,7 @@ const wrapperVariants = {
 };
 
 function Endocrinologist(){
-    const {data: endocrinologist, isLoading} = useGetEndocrinologistInfoQuery()
+    const {data: endocrinologist, isLoading, refetch} = useGetEndocrinologistInfoQuery()
     const [popupOpen, setPopupOpen] = useState(false)
     const [formData, setFormData] = useState({
         day: '',
@@ -32,19 +32,28 @@ function Endocrinologist(){
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
-    const handleSave = () => {
+    const handleSave = async () => {
         console.log(formData)
+        const response = await fetch("http://localhost:5000/api/update-endocrinologist", {
+            method: "PUT",
+            headers: {
+                    "Content-Type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify(formData)
+        })
+        setFormData({day: '', month: '', time: '', name: ''})
         setPopupOpen(prev => !prev)
+        refetch()
     };
     return (
         <div className={style.endocrinologistSection}>
             <AnimatePresence mode="wait">
                 {popupOpen ? (
                     <motion.div className={style.appointmentDate} key="edit" style={{ overflow: "hidden" }} initial="closed" animate="open" exit="closed" variants={wrapperVariants}>
-                        <input name="day" value={formData.day} onChange={handleChange} placeholder={info.day}/>
-                        <input name="month" value={formData.month} onChange={handleChange} placeholder={info.month}/>
-                        <input name="time" value={formData.time} onChange={handleChange} placeholder={info.time}/>
-                        <input name="name" value={formData.name} onChange={handleChange} placeholder={info.name}/>
+                        <input name="day" value={formData.day} onChange={handleChange} placeholder={info.day} autoComplete="off"/>
+                        <input name="month" value={formData.month} onChange={handleChange} placeholder={info.month} autoComplete="off"/>
+                        <input name="time" value={formData.time} onChange={handleChange} placeholder={info.time} autoComplete="off"/>
+                        <input name="name" value={formData.name} onChange={handleChange} placeholder={info.name} autoComplete="off"/>
                         <button onClick={handleSave} className={style.addEntry}>Сохранить</button>
                         <button className={style.editButton} onClick={() => setPopupOpen(prev => !prev)}>
                             <UndoIcon fontSize="small"/>

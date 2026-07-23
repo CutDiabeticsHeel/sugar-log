@@ -254,4 +254,47 @@ async function deleteQuestions(ids) {
     });
 }
 
-export { addProduct, getInsulinAndXEBE, updateUserInfo, addSugarRecord, addQuestion, deleteQuestions};
+async function updateEndocrinologistInfo(name, day, month, time) {
+    return new Promise((resolve, reject) => {
+        const fields = [];
+        const values = [];
+
+        if (name !== "") {
+            fields.push("name = ?");
+            values.push(name);
+        }
+        if (day !== "") {
+            fields.push("day = ?");
+            values.push(day);
+        }
+        if (month !== "") {
+            fields.push("month = ?");
+            values.push(month);
+        }
+        if (time !== "") {
+            fields.push("time = ?");
+            values.push(time);
+        }
+        if (fields.length === 0) {
+            resolve(0);
+            return;
+        }
+
+        const sql = `
+            UPDATE endocrinologist
+            SET ${fields.join(", ")}
+        `;
+
+        db.run(sql, values, function (error) {
+            if (error) {
+                reject(error);
+                return;
+            }
+
+            resolve(this.changes);
+        });
+    });
+}
+
+export { addProduct, getInsulinAndXEBE, updateUserInfo, addSugarRecord, addQuestion, 
+    deleteQuestions, updateEndocrinologistInfo};

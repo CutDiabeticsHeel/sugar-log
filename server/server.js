@@ -4,7 +4,7 @@ import cors from "@fastify/cors";
 import fastifyStatic from "@fastify/static";
 import dayjs from "dayjs";
 import {addProduct, getInsulinAndXEBE, updateUserInfo, addSugarRecord, addQuestion,
-    deleteQuestions
+    deleteQuestions, updateEndocrinologistInfo
 } from "./database-function.js";
 
 const app = Fastify({
@@ -172,6 +172,18 @@ app.delete("/api/delete-question", async (request, reply) => {
         await deleteQuestions(ids)
         return {message: "Успешно"}
     } catch(err){
+        console.log(err)
+        reply.code(500)
+        return err
+    }
+})
+
+app.put("/api/update-endocrinologist", async (request, reply) => {
+    try {
+        const {name, day, month, time} = request.body;
+        await updateEndocrinologistInfo(name, day, month, time)
+        return {message: "Успешно"}
+    } catch (err) {
         console.log(err)
         reply.code(500)
         return err
