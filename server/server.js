@@ -3,7 +3,9 @@ import sqlite3 from "sqlite3";
 import cors from "@fastify/cors";
 import fastifyStatic from "@fastify/static";
 import dayjs from "dayjs";
-import {addProduct, getInsulinAndXEBE, updateUserInfo, addSugarRecord} from "./database-function.js";
+import {addProduct, getInsulinAndXEBE, updateUserInfo, addSugarRecord, addQuestion,
+    deleteQuestions
+} from "./database-function.js";
 
 const app = Fastify({
     logger: true,
@@ -11,7 +13,10 @@ const app = Fastify({
 
 const db = new sqlite3.Database("./server/database/sugar-log.db");
 
-app.register(cors);
+app.register(cors, {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+});
 
 function getAll(sql, params = []) {
     return new Promise((resolve, reject) => {
@@ -146,8 +151,31 @@ app.post("/api/changeUserInfo", async (request, reply) => {
         reply.code(500)
         return err
     }
-    console.log("Принял", request.body)
-    return {message: "Успешно"}
+})
+
+app.post("/api/add-question", async (request, reply) => {
+    try {
+        const {question} = request.body
+        console.log(question)
+        await addQuestion(question)
+        return {message: "Успешно"}
+    } catch(err){
+        console.log(err)
+        reply.code(500)
+        return err
+    }
+})
+
+app.delete("/api/delete-question", async (request, reply) => {
+    try {
+        const {ids} = request.body
+        await deleteQuestions(ids)
+        return {message: "Успешно"}
+    } catch(err){
+        console.log(err)
+        reply.code(500)
+        return err
+    }
 })
 
 const start = async () => {

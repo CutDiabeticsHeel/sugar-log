@@ -170,7 +170,7 @@ async function updateUserInfo(
     });
 }
 
-function addSugarRecord(entry) {
+async function addSugarRecord(entry) {
   return new Promise((resolve, reject) => {
     const foodList = Array.isArray(entry.food) ? entry.food : [];
 
@@ -206,4 +206,52 @@ function addSugarRecord(entry) {
   });
 }
 
-export { addProduct, getInsulinAndXEBE, updateUserInfo, addSugarRecord};
+async function addQuestion(question) {
+    return new Promise((resolve, reject) => {
+        if (!question || question === "") {
+            resolve(0);
+            return;
+        }
+
+        const sql = `
+            INSERT INTO questions (question)
+            VALUES (?)
+        `;
+
+        db.run(sql, [question], function (error) {
+            if (error) {
+                reject(error);
+                return;
+            }
+
+            resolve(this.lastID);
+        });
+    });
+}
+
+async function deleteQuestions(ids) {
+    return new Promise((resolve, reject) => {
+        if (!ids || ids.length === 0) {
+            resolve(0);
+            return;
+        }
+
+        const placeholders = ids.map(() => "?").join(", ");
+
+        const sql = `
+            DELETE FROM questions
+            WHERE id IN (${placeholders})
+        `;
+
+        db.run(sql, ids, function (error) {
+            if (error) {
+                reject(error);
+                return;
+            }
+
+            resolve(this.changes);
+        });
+    });
+}
+
+export { addProduct, getInsulinAndXEBE, updateUserInfo, addSugarRecord, addQuestion, deleteQuestions};
