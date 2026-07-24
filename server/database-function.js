@@ -187,7 +187,7 @@ async function addSugarRecord(entry) {
     }
 
     const activityText = Array.isArray(entry.activity) && entry.activity.length
-      ? `Активность: ${entry.activity.join(', ')}`
+      ? `Активности: ${entry.activity.join(', ')}`
       : '';
     const notes = [entry.notes, activityText].filter(Boolean).join('; ');
 
@@ -296,5 +296,17 @@ async function updateEndocrinologistInfo(name, day, month, time) {
     });
 }
 
+async function deleteSugarLogById(id) {
+    return new Promise((resolve, reject) => {
+        db.run('DELETE FROM sugar_log WHERE id = ?', [id], function (err) {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve(this.changes);
+        });
+    });
+}
+
 export { addProduct, getInsulinAndXEBE, updateUserInfo, addSugarRecord, addQuestion, 
-    deleteQuestions, updateEndocrinologistInfo};
+    deleteQuestions, updateEndocrinologistInfo, deleteSugarLogById};

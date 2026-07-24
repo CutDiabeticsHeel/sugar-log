@@ -4,7 +4,7 @@ import cors from "@fastify/cors";
 import fastifyStatic from "@fastify/static";
 import dayjs from "dayjs";
 import {addProduct, getInsulinAndXEBE, updateUserInfo, addSugarRecord, addQuestion,
-    deleteQuestions, updateEndocrinologistInfo
+    deleteQuestions, updateEndocrinologistInfo, deleteSugarLogById
 } from "./database-function.js";
 
 const app = Fastify({
@@ -73,16 +73,6 @@ app.get("/api/day-period-sugar-log", async (request, reply) => {
     `, [from, to]);
 });
 
-app.get("/api/sugar-log-for-chart", async (request, reply) => {
-    return await getAll(`
-        SELECT * FROM (
-            SELECT * FROM sugar_log 
-            ORDER BY date DESC, time DESC 
-            LIMIT ?
-        ) AS sub
-        ORDER BY date ASC, time ASC
-    `, [50]);
-});
 app.get("/api/today-sugar-log", async (request, reply) => {
     const today = dayjs().format("YYYY-MM-DD");
 
@@ -183,6 +173,17 @@ app.put("/api/update-endocrinologist", async (request, reply) => {
     try {
         const {name, day, month, time} = request.body;
         await updateEndocrinologistInfo(name, day, month, time)
+        return {message: "Успешно"}
+    } catch (err) {
+        console.log(err)
+        reply.code(500)
+        return err
+    }
+})
+
+app.delete("/api/delete-sugar-record", async (request, reply) => {
+    try {
+        await deleteSugarLogById(request.body)
         return {message: "Успешно"}
     } catch (err) {
         console.log(err)

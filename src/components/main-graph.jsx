@@ -1,11 +1,15 @@
 import ReactECharts from "echarts-for-react";
 import dayjs from "dayjs";
-import { useGetSugarLogForChartQuery } from "../store/api";
+import { useGetDayPeriodSugarLogQuery } from "../store/api";
 import style from "../css/components/main-graph.module.css";
 import {useState, useEffect} from "react";
 
 function MainGraph() {
-    const { data: sugarLog, isLoading } = useGetSugarLogForChartQuery();
+    const [defaultPeriod] = useState({
+        from: dayjs().subtract(6, "day").format("YYYY-MM-DD"),
+        to: dayjs().format("YYYY-MM-DD"),
+    });
+    const {data: sugarLog, isLoading} = useGetDayPeriodSugarLogQuery(defaultPeriod);
     const [isMobile, setIsMobile] = useState(window.innerWidth < 480);
     
     useEffect(() => {

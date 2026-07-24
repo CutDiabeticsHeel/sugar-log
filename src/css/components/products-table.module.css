@@ -19,11 +19,11 @@
     top: 0;
     z-index: 3;
     background: var(--secondary-background);
-    padding: 12px;
+    padding: 8px;
     border-bottom: 1px solid var(--border-color);
 }
 .productTable td {
-    padding: 12px;
+    padding: 8px;
     border-bottom: 1px solid var(--border-color);
 }
 .productTable th:first-child,

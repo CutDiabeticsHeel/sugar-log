@@ -9,10 +9,14 @@ function Welcome () {
         from: dayjs().subtract(6, "day").format("YYYY-MM-DD"),
         to: dayjs().format("YYYY-MM-DD"),
     });
-    const {data: iserInfo, isLoadingSecond} = useGetUserInfoQuery();
-    const {data: sugarLog, isLoading} = useGetDayPeriodSugarLogQuery(defaultPeriod);
-    if (isLoading || isLoadingSecond) {
+    const {data: iserInfo, isLoading: isLoadingUserInfo} = useGetUserInfoQuery();
+    const {data: sugarLog, isLoading: isLoadingSugarLog} = useGetDayPeriodSugarLogQuery(defaultPeriod);
+
+    if (isLoadingSugarLog || isLoadingUserInfo) {
         return <div className={style.welcomeSection}>Загрузка...</div>;
+    }
+    if (!iserInfo?.length || !sugarLog?.length) {
+        return <div className={style.welcomeSection}>Нет данных</div>;
     }
     const sugar = sugarLog.reduce((sum, item) => sum + item.sugar, 0)
     return (

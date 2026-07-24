@@ -12,7 +12,7 @@ import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import {useRef, useState, useEffect} from "react";
 import { motion } from "framer-motion";
-import { useGetProductsQuery } from "../store/api";
+import { useGetProductsQuery, useAddSugarRecordMutation  } from "../store/api";
 
 const formVariants = {
     closed: {
@@ -27,23 +27,17 @@ const formVariants = {
 
 function SugarForm() {
     const { register, handleSubmit, control, reset, setValue } = useForm()
-    const { data: allProduct, isLoading} = useGetProductsQuery()
+    const { data: allProduct, isLoading, refetch} = useGetProductsQuery()
+    const [addSugarRecord] = useAddSugarRecordMutation();
     const onSubmit = async (data) => {
         data.time = dayjs(data.time).format("HH:mm");
         data.date = dayjs(data.date).format("YYYY-MM-DD");
-        const response = await fetch(
-            "http://localhost:5000/api/addSugar", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json;charset=utf-8",
-                },
-                body: JSON.stringify(data)
-            }
-        );
-        if (!response.ok) {
-            throw new Error(`HTTP error: ${response.status}`);
+        try {
+            await addSugarRecord(data).unwrap();
+            reset();
+        } catch (err) {
+            console.error(err);
         }
-        reset();
     }
     if (isLoading) return <div>Загрузка...</div>
     const forEachProduct = allProduct.map((item)=> ({
@@ -198,18 +192,18 @@ function SugarForm() {
                     <span>Готовые паттерны активности</span>
                     <div className={style.activityPatterns}>
                         <label className={style.activityCheckbox}>
-                            <input type="checkbox" value="1" {...register("activity")} />
+                            <input type="checkbox" value="Тренировка" {...register("activity")} />
                             <FitnessCenterIcon />
                             Тренировка
                         </label>
                         <label className={style.activityCheckbox}>
-                            <input type="checkbox" value="2" {...register("activity")} />
+                            <input type="checkbox" value="Прогулка" {...register("activity")} />
                             <DirectionsWalkIcon />
                             Прогулка
                         </label>
                     </div>
                 </div>
-                <button className={style.addEntry} type="submit" >
+                <button className={style.addEntry} type="submit">
                     Добавить запись
                 </button>
                 

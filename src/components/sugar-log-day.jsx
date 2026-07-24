@@ -2,8 +2,11 @@ import {useGetDayPeriodSugarLogQuery} from "../store/api";
 import style from "../css/components/sugar-log-day.module.css";
 import dayjs from "dayjs";
 import {getSugarStatus} from "../utils/sugar-status.js"
-import {useState} from "react"
-
+import {useState, useEffect} from "react"
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteSugarRecord from "./delete-sugar-rerord.jsx";
+import EditSugarRecord from "./edit-sugar-record.jsx";
 
 function SugarLogDay({ period }) {
     dayjs.locale("ru");
@@ -12,10 +15,22 @@ function SugarLogDay({ period }) {
         to: dayjs().format("YYYY-MM-DD"),
     });
     const effectivePeriod = period?.from && period?.to ? period : defaultPeriod;
-
-    const {data: sugarLog, isLoading} = useGetDayPeriodSugarLogQuery(effectivePeriod, {
+    const {data: sugarLog, isLoading, refetch} = useGetDayPeriodSugarLogQuery(effectivePeriod, {
         skip: !effectivePeriod?.from || !effectivePeriod?.to,
     });
+    const [deletePopupId, setDeletePopupId] = useState(null)
+    useEffect(() => {
+        if (deletePopupId) {
+            document.body.classList.add('disable-scroll');
+        } else {
+            document.body.classList.remove('disable-scroll');
+            refetch()
+        }
+        return () => {
+            document.body.classList.remove('disable-scroll');
+        };
+    }, [deletePopupId]);
+
     if (isLoading || !sugarLog) {
         return <div>Загрузка...</div>;
     }
@@ -49,6 +64,7 @@ function SugarLogDay({ period }) {
         bitHigh: style.sugarBitHigh,
         high: style.sugarHigh,
     };
+
     return (
         <div className={style.dairyContainer}>
             {sugarLog.length === 0 ?
@@ -59,7 +75,7 @@ function SugarLogDay({ period }) {
                 return (
                 <div className={style.tableContainer} key={date}>
                         <table className={style.dayLog}>
-                            <caption className={`${style.caption} ${sugarStyles[getSugarStatus(avgSugar)]}`}>{dayjs(date).format("DD MMM, dddd")}: Средний сахар за этот день - {avgSugar}. Всего Б: {dayData.proteinSum} Ж: {dayData.fatSum} У: {dayData.carbSum} Ккал: {dayData.ccalSum}</caption>
+                            <caption className={`${style.caption} ${sugarStyles[getSugarStatus(avgSugar)]}`}>{dayjs(date).format("DD MMM, dddd")}: Средний сахар за этот день - {Number(avgSugar).toFixed(1)}. Всего Б: {Number(dayData.proteinSum).toFixed(0)} Ж: {Number(dayData.fatSum).toFixed(0)} У: {Number(dayData.carbSum).toFixed(0)} Ккал: {Number(dayData.ccalSum).toFixed(0)}</caption>
                             <thead className={style.headers}>
                                 <tr>
                                     <th>Время</th>
@@ -72,6 +88,7 @@ function SugarLogDay({ period }) {
                                     <th>Ккал</th>
                                     <th>Еда</th>
                                     <th>Заметки</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -87,6 +104,13 @@ function SugarLogDay({ period }) {
                                         <td>{record.ccal}</td>
                                         <td>{record.food}</td>
                                         <td>{record.notes}</td>
+                                        <td>
+                                            <EditIcon/>
+                                            <DeleteIcon onClick={() => setDeletePopupId(record.id)}/>
+                                                {deletePopupId === record.id && (
+                                                    <DeleteSugarRecord record={record} onClose={() => setDeletePopupId(null)}/>
+                                                )}
+                                        </td>
                                     </tr>
 
                                 ))}

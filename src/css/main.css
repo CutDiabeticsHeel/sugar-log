@@ -8,9 +8,9 @@
     grid-template-columns:1fr;
 }
 section {
-    padding: 40px;
+    padding: 20px;
     min-width: 0;
-    margin-left: 60px;
+    margin-left: 48px;
 }
 .disable-scroll {
     overflow: hidden;

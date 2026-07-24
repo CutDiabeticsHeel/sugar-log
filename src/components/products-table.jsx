@@ -2,7 +2,8 @@ import style from "../css/components/products-table.module.css";
 import {useGetProductsQuery} from "../store/api";
 import {useState, useMemo, useEffect} from "react";
 import SearchIcon from '@mui/icons-material/Search';
-
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function ProductsTable(){
     const {data: products, isLoading} = useGetProductsQuery();
@@ -58,6 +59,7 @@ function ProductsTable(){
                             <th>ХЕ</th>
                             <th>ХЕ + БЖЕ</th>
                             <th>Инсулина</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -73,6 +75,10 @@ function ProductsTable(){
                                 <td>{Number(product["ХЕ"]).toFixed(2)}</td>
                                 <td>{Number(product["ХЕ + БЖЕ"]).toFixed(2)}</td>
                                 <td>{Number(product["Всего инсулина"]).toFixed(2)}</td>
+                                <td>
+                                    <EditIcon/>
+                                    <DeleteIcon/>
+                                </td>
                             </tr>
                         ))}
                     </tbody>

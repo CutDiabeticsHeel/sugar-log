@@ -7,8 +7,9 @@
     border-radius: 20px;
     min-width: 550px;
     width: 100%;
-    border-spacing: 0px 15px;
+    border-spacing: 0;
     text-align: center;
+    vertical-align: baseline;
 }
 .dairyContainer {
     text-align: center;
@@ -22,7 +23,13 @@
 .headers {
     color: var(--text-secondary);
 }
+th {
+    padding: 8px 5px;
+    vertical-align: middle;
+}
 td {
+    vertical-align: middle;
+    padding: 8px 5px;
     border-top: 1px solid var(--border-color);
 }
 .caption {

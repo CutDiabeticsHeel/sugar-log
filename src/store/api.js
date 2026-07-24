@@ -2,10 +2,10 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const api = createApi({
     reducerPath: "api",
-
     baseQuery: fetchBaseQuery({
         baseUrl: "http://localhost:5000/api",
     }),
+    tagTypes: ["SugarLog"],
 
     endpoints: (builder) => ({
         getProducts: builder.query({
@@ -14,10 +14,12 @@ export const api = createApi({
 
         getAllSugarLog: builder.query({
             query: () => "/all-sugar-log",
+            providesTags: ["SugarLog"],
         }),
 
         getTodaySugarLog: builder.query({
             query: () => "/today-sugar-log",
+            providesTags: ["SugarLog"],
         }),
 
         getDayPeriodSugarLog: builder.query({
@@ -25,10 +27,7 @@ export const api = createApi({
                 url: "/day-period-sugar-log",
                 params: { from, to },
             }),
-        }),
-
-        getSugarLogForChart: builder.query({
-            query: () => "/sugar-log-for-chart",
+            providesTags: ["SugarLog"],
         }),
 
         getOnlySugar: builder.query({
@@ -46,6 +45,15 @@ export const api = createApi({
         getEndocrinologistInfo: builder.query({
             query: () => "/endocrinologist",
         }),
+
+        addSugarRecord: builder.mutation({
+            query: (data) => ({
+                url: "/addSugar",
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: ["SugarLog"],
+        }),
     }),
 });
 
@@ -54,9 +62,9 @@ export const {
     useGetAllSugarLogQuery,
     useGetTodaySugarLogQuery,
     useGetDayPeriodSugarLogQuery,
-    useGetSugarLogForChartQuery,
     useGetOnlySugarQuery,
     useGetUserInfoQuery,
     useGetUserQuestionsQuery,
-    useGetEndocrinologistInfoQuery
+    useGetEndocrinologistInfoQuery,
+    useAddSugarRecordMutation 
 } = api;
