@@ -68,7 +68,6 @@ function CalendarForm({ onChange }) {
             to: dayjs().format("YYYY-MM-DD"),
         });
         setPopupOpen(false)
-        console.log(days)
     };
 
     const onSubmit = async (data) => {

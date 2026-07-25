@@ -51,8 +51,13 @@ function Questions(){
             },
             body: JSON.stringify({ ids: selectedIds })
         })
-        setSelectedIds([]);
-        refetch();
+        if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+        } else {
+            setSelectedIds([]);
+            refetch();
+        }
+        
     }
     const addQuestion = async (data) => {
         const response = await fetch("http://localhost:5000/api/add-question", {
@@ -62,10 +67,13 @@ function Questions(){
             },
             body: JSON.stringify(data)
         })
-        reset();
-        refetch();
+        if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+        } else {
+            reset();
+            refetch();
+        }
     }
-    console.log(userQuestions.length)
     return (
         <div className={style.questionsSection}>
             <p>Вопросы для следующего приема</p>

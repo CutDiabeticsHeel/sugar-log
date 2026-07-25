@@ -72,11 +72,11 @@ function SugarForm() {
         })
         if (!response.ok) {
             throw new Error(`HTTP error: ${response.status}`);
+        } else {
+            const result = await response.json()
+            setValue("insulin", result.insulin)
+            setValue("XEBE", result.XEBE)
         }
-
-        const result = await response.json()
-        setValue("insulin", result.insulin)
-        setValue("XEBE", result.XEBE)
     }
 
     return (

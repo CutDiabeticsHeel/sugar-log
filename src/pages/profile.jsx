@@ -5,7 +5,7 @@ import style from "../css/pages/profile.module.css";
 
 function Profile() {
     return (
-        <section>
+        <section className="mainSection">
             <h1>Личные данные</h1>
             <div className={style.profileSection}>
                 <ProfileInfo/>

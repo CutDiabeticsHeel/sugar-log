@@ -64,3 +64,11 @@ td {
 .icon {
     cursor: pointer;
 }
+.emptyDay {
+    padding: 16px;
+    text-align: center;
+    color: var(--text-secondary, #888);
+    background: var(--secondary-background);
+    border-radius: 20px;
+    margin-top: 10px;
+}

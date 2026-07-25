@@ -1,6 +1,9 @@
 .statsSection {
     display: grid;
     gap: 30px;
+    padding: 20px;
+    min-width: 0;
+    margin-left: 48px;
 }
 .metricsList,
 .inRangeBars,

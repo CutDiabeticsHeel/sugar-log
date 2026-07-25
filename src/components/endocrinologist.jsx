@@ -33,7 +33,6 @@ function Endocrinologist(){
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
     const handleSave = async () => {
-        console.log(formData)
         const response = await fetch("http://localhost:5000/api/update-endocrinologist", {
             method: "PUT",
             headers: {
@@ -41,9 +40,14 @@ function Endocrinologist(){
             },
             body: JSON.stringify(formData)
         })
-        setFormData({day: '', month: '', time: '', name: ''})
-        setPopupOpen(prev => !prev)
-        refetch()
+        if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+        } else {
+            setFormData({day: '', month: '', time: '', name: ''})
+            setPopupOpen(prev => !prev)
+            refetch()
+        }
+        
     };
     return (
         <div className={style.endocrinologistSection}>
@@ -60,7 +64,7 @@ function Endocrinologist(){
                         </button>
                     </motion.div>
                 ) : (
-                <motion.div className={style.endocrinologistSection} key="view"  initial="closed" animate="open" exit="closed" variants={wrapperVariants}>
+                <motion.div className={style.endocrinologistStaticSection} key="view"  initial="closed" animate="open" exit="closed" variants={wrapperVariants}>
                     <p>Когда к врачу <br/>
                         <span className={style.endocrinologistText}>Плановый прием эндокринолога</span>
                     </p>

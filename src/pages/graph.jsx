@@ -1,9 +1,10 @@
 import MainGraph from "../components/main-graph";
 import DailyProfile from "../components/daily-profile"
 
+
 function Graph() {
     return (
-        <section>
+        <section className="mainSection">
             <h1>Графики сахаров</h1>
             <MainGraph/>
             <DailyProfile/>

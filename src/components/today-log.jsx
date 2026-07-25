@@ -45,11 +45,16 @@ function TodayLog() {
     if (isLoading) {
         return <div className={style.welcomeSection}>Загрузка...</div>;
     }
+    const welcomePhrase = function(length) {
+        if (length === 0) return "Сегодня вы не сделали ни одной записи";
+        if (length === 1) return "Запись";
+        if (length < 5) return "Записи";
+        else return "Записей";
+    }
     return (
         <div className={`${style.todayLog} ${smallLog ? style.todaySmallLog: "" }`}ref={todayLogElement}>
             <p>Сахара сегодня</p>
-            <span className={style.entryCount}>{todaySugarLog.length} записи</span>
-
+            <span className={style.entryCount}>{todaySugarLog.length} {welcomePhrase(todaySugarLog.length)}</span>
             <div className={style.list}>
                 {todaySugarLog.map((entry) => (
                     <div key={entry.id} className={`${style.row} ${smallLog ? style.smallRow: "" }`}>

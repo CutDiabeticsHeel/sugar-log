@@ -15,8 +15,6 @@ function Stats() {
     }))
     const metrics = calculateMetrics(sugarData)
 
-    console.log(sugarData, metrics)
-
     return (
         <section className={style.statsSection}>
             <MetricsBlock metrics={metrics}/>

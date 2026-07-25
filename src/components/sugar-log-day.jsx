@@ -1,12 +1,15 @@
 import {useGetDayPeriodSugarLogQuery} from "../store/api";
 import style from "../css/components/sugar-log-day.module.css";
 import dayjs from "dayjs";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import {getSugarStatus} from "../utils/sugar-status.js"
-import {useState, useEffect} from "react"
+import {useState, useEffect, useMemo} from "react"
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteSugarRecord from "./delete-sugar-record.jsx";
 import EditSugarRecord from "./edit-sugar-record.jsx";
+
+dayjs.extend(isSameOrBefore);
 
 function SugarLogDay({ period }) {
     dayjs.locale("ru");
@@ -20,6 +23,7 @@ function SugarLogDay({ period }) {
     });
     const [deletePopupId, setDeletePopupId] = useState(null)
     const [editPopupId, setEditPopupId] = useState(null)
+
     useEffect(() => {
         if (deletePopupId || editPopupId) {
             document.body.classList.add('disable-scroll');
@@ -32,9 +36,21 @@ function SugarLogDay({ period }) {
         };
     }, [deletePopupId, editPopupId]);
 
+    const allDates = useMemo(() => {
+        const dates = [];
+        let current = dayjs(effectivePeriod.from);
+        const end = dayjs(effectivePeriod.to);
+        while (current.isSameOrBefore(end, "day")) {
+            dates.push(current.format("YYYY-MM-DD"));
+            current = current.add(1, "day");
+        }
+        return dates.reverse();
+    }, [effectivePeriod.from, effectivePeriod.to]);
+
     if (isLoading || !sugarLog) {
         return <div>Загрузка...</div>;
     }
+
     const groupedByDate = sugarLog.reduce((acc, record) => {
         const date = record.date;
         if (!acc[date]) {
@@ -59,22 +75,33 @@ function SugarLogDay({ period }) {
         acc[date].insulinSum += record.insulin ?? 0
         return acc;
     }, {});
+
     const sugarStyles = {
         low: style.sugarLow,
         normal: style.sugarNormal,
         bitHigh: style.sugarBitHigh,
         high: style.sugarHigh,
     };
+    console.log(groupedByDate)
 
     return (
         <div className={style.dairyContainer}>
-            {sugarLog.length === 0 ?
-            <span className={style.zeroDairy}>Записей для выбранного периода нет</span>
-            :
-            Object.entries(groupedByDate).map(([date, dayData]) => {
+            {allDates.map((date) => {
+                const dayData = groupedByDate[date];
+
+                if (!dayData) {
+                    return (
+                        <div className={style.tableContainer} key={date}>
+                            <div className={style.emptyDay}>
+                                {dayjs(date).format("DD MMM, dddd")}: записей нет
+                            </div>
+                        </div>
+                    );
+                }
+
                 const avgSugar = Number(dayData.sugarSum / dayData.records.length).toFixed(1);
                 return (
-                <div className={style.tableContainer} key={date}>
+                    <div className={style.tableContainer} key={date}>
                         <table className={style.dayLog}>
                             <caption className={`${style.caption} ${sugarStyles[getSugarStatus(avgSugar)]}`}> {dayjs(date).format("DD MMM, dddd")}: Средний сахар за этот день - {Number(avgSugar).toFixed(1)}. Всего Б: {Number(dayData.proteinSum).toFixed(0)} Ж: {Number(dayData.fatSum).toFixed(0)} У: {Number(dayData.carbSum).toFixed(0)} Ккал: {Number(dayData.ccalSum).toFixed(0)}</caption>
                             <thead className={style.headers}>
@@ -116,11 +143,10 @@ function SugarLogDay({ period }) {
                                                 )}
                                         </td>
                                     </tr>
-
                                 ))}
                             </tbody>
                         </table>
-                </div>
+                    </div>
                 )
             })}
         </div>

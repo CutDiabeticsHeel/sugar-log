@@ -9,7 +9,11 @@ function DeleteSugarRecord({ record, onClose }) {
             },
             body: JSON.stringify(id)
         })
-        onClose()
+        if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+        } else {
+            onClose()
+        }
     }
 
     return (

@@ -19,7 +19,6 @@ function DailyProfile() {
         window.addEventListener("resize", onResize);
         return () => window.removeEventListener("resize", onResize);
     }, []);
-    console.log(isMobile)
 
     if (isLoading) return <div>Загрузка...</div>;
 

@@ -11,7 +11,11 @@ function DeleteProductRecord({ product, onClose }) {
             },
             body: JSON.stringify(id)
         })
-        onClose()
+        if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+        } else {
+            onClose()
+        }
     }
     return createPortal(
         <div className={style.overlay}>

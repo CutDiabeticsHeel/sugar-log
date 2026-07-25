@@ -38,10 +38,11 @@ function ProfileInfo(){
         })
         if (!response.ok) {
             throw new Error(`HTTP error: ${response.status}`);
+        } else {
+            await refetch();
+            setPopupOpen(false)
+            setHeight(""); setWeight(""); setShortInsulin(""); setLongInsulin(""); setName("");
         }
-        await refetch();
-        setPopupOpen(false)
-        setHeight(""); setWeight(""); setShortInsulin(""); setLongInsulin(""); setName("");
     }
     return (
         <div className={style.userInfoSection}>
