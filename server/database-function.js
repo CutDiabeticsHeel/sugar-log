@@ -308,5 +308,17 @@ async function deleteSugarLogById(id) {
     });
 }
 
+async function deleteProductById(id) {
+    return new Promise((resolve, reject) => {
+        db.run('DELETE FROM products WHERE id = ?', [id], function (err) {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve(this.changes);
+        });
+    });
+}
+
 export { addProduct, getInsulinAndXEBE, updateUserInfo, addSugarRecord, addQuestion, 
-    deleteQuestions, updateEndocrinologistInfo, deleteSugarLogById};
+    deleteQuestions, updateEndocrinologistInfo, deleteSugarLogById, deleteProductById};

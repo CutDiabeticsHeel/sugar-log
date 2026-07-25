@@ -5,7 +5,7 @@ import {getSugarStatus} from "../utils/sugar-status.js"
 import {useState, useEffect} from "react"
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import DeleteSugarRecord from "./delete-sugar-rerord.jsx";
+import DeleteSugarRecord from "./delete-sugar-record.jsx";
 import EditSugarRecord from "./edit-sugar-record.jsx";
 
 function SugarLogDay({ period }) {
@@ -19,8 +19,9 @@ function SugarLogDay({ period }) {
         skip: !effectivePeriod?.from || !effectivePeriod?.to,
     });
     const [deletePopupId, setDeletePopupId] = useState(null)
+    const [editPopupId, setEditPopupId] = useState(null)
     useEffect(() => {
-        if (deletePopupId) {
+        if (deletePopupId || editPopupId) {
             document.body.classList.add('disable-scroll');
         } else {
             document.body.classList.remove('disable-scroll');
@@ -29,7 +30,7 @@ function SugarLogDay({ period }) {
         return () => {
             document.body.classList.remove('disable-scroll');
         };
-    }, [deletePopupId]);
+    }, [deletePopupId, editPopupId]);
 
     if (isLoading || !sugarLog) {
         return <div>Загрузка...</div>;
@@ -75,7 +76,7 @@ function SugarLogDay({ period }) {
                 return (
                 <div className={style.tableContainer} key={date}>
                         <table className={style.dayLog}>
-                            <caption className={`${style.caption} ${sugarStyles[getSugarStatus(avgSugar)]}`}>{dayjs(date).format("DD MMM, dddd")}: Средний сахар за этот день - {Number(avgSugar).toFixed(1)}. Всего Б: {Number(dayData.proteinSum).toFixed(0)} Ж: {Number(dayData.fatSum).toFixed(0)} У: {Number(dayData.carbSum).toFixed(0)} Ккал: {Number(dayData.ccalSum).toFixed(0)}</caption>
+                            <caption className={`${style.caption} ${sugarStyles[getSugarStatus(avgSugar)]}`}> {dayjs(date).format("DD MMM, dddd")}: Средний сахар за этот день - {Number(avgSugar).toFixed(1)}. Всего Б: {Number(dayData.proteinSum).toFixed(0)} Ж: {Number(dayData.fatSum).toFixed(0)} У: {Number(dayData.carbSum).toFixed(0)} Ккал: {Number(dayData.ccalSum).toFixed(0)}</caption>
                             <thead className={style.headers}>
                                 <tr>
                                     <th>Время</th>
@@ -105,8 +106,11 @@ function SugarLogDay({ period }) {
                                         <td>{record.food}</td>
                                         <td>{record.notes}</td>
                                         <td>
-                                            <EditIcon/>
-                                            <DeleteIcon onClick={() => setDeletePopupId(record.id)}/>
+                                            <EditIcon className={style.icon} onClick={() => setEditPopupId(record.id)}/>
+                                                {editPopupId === record.id && (
+                                                        <EditSugarRecord record={record} onClose={() => setEditPopupId(null)}/>
+                                                    )}
+                                            <DeleteIcon className={style.icon} onClick={() => setDeletePopupId(record.id)}/>
                                                 {deletePopupId === record.id && (
                                                     <DeleteSugarRecord record={record} onClose={() => setDeletePopupId(null)}/>
                                                 )}

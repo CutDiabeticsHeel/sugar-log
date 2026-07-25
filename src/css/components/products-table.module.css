@@ -61,6 +61,9 @@
     border: 1px solid var(--border-color);
     background: var(--paper-soft);
 }
+.icon {
+    cursor: pointer;
+}
 @media (max-width: 700px) {
     .productTable th:first-child,
     .productTable td:first-child {

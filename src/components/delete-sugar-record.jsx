@@ -1,4 +1,4 @@
-import style from "../css/components/delete-sugar-rerord.module.css";
+import style from "../css/components/delete-sugar-record.module.css";
 
 function DeleteSugarRecord({ record, onClose }) {
     const deleteRecord = async (id) => {

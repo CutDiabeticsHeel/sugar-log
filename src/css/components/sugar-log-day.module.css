@@ -61,3 +61,6 @@ td {
     color: var(--danger);
     background-color: var(--danger-bg);
 }
+.icon {
+    cursor: pointer;
+}
