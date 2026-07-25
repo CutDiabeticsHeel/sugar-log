@@ -91,7 +91,8 @@ app.post("/api/addSugar", async (request, reply) => {
 
 app.post("/api/addProduct", async (request, reply) => {
     try {
-        const { nameProduct, protein, fat, carbs, weigth } = request.body;
+        console.log(request.body)
+        const { id, nameProduct, protein, fat, carbs, weigth } = request.body;
 
         if (!nameProduct || !protein || !fat || !carbs || !weigth) {
             return reply.status(400).send({ error: "Missing required fields" });

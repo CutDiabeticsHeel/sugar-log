@@ -20,7 +20,7 @@ function calculateNutrition({ protein, fat, carbs, weight }) {
     };
 }
 
-async function addProduct({ nameProduct, protein, fat, carbs, weigth }) {
+async function addProduct({ id, nameProduct, protein, fat, carbs, weigth }) {
     const parsed = {
         protein: toNumber(protein),
         fat: toNumber(fat),
@@ -32,11 +32,22 @@ async function addProduct({ nameProduct, protein, fat, carbs, weigth }) {
 
     const sql = `
         INSERT INTO products
-            ("Продукт", "Белки", "Жиры", "Углеводы", "Вес продукта", "ккал", "БЖЕ", "ХЕ", "ХЕ + БЖЕ")
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            (id, "Продукт", "Белки", "Жиры", "Углеводы", "Вес продукта", "ккал", "БЖЕ", "ХЕ", "ХЕ + БЖЕ")
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(id) DO UPDATE SET
+            "Продукт" = excluded."Продукт",
+            "Белки" = excluded."Белки",
+            "Жиры" = excluded."Жиры",
+            "Углеводы" = excluded."Углеводы",
+            "Вес продукта" = excluded."Вес продукта",
+            "ккал" = excluded."ккал",
+            "БЖЕ" = excluded."БЖЕ",
+            "ХЕ" = excluded."ХЕ",
+            "ХЕ + БЖЕ" = excluded."ХЕ + БЖЕ"
     `;
 
     const params = [
+        id ?? null,
         nameProduct,
         parsed.protein.toFixed(2),
         parsed.fat.toFixed(2),
@@ -59,7 +70,7 @@ async function addProduct({ nameProduct, protein, fat, carbs, weigth }) {
     });
 
     return {
-        id: info.lastID,
+        id: id ?? info.lastID,
         nameProduct,
         kkal,
         bzhu,

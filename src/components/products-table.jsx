@@ -4,7 +4,8 @@ import {useState, useMemo, useEffect} from "react";
 import SearchIcon from '@mui/icons-material/Search';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import DeleteProductRecord from "./delete-product";
+import DeleteProduct from "./delete-product";
+import EditProduct from "./edit-product";
 
 function ProductsTable(){
     const {data: products, isLoading, refetch} = useGetProductsQuery();
@@ -15,16 +16,16 @@ function ProductsTable(){
     const [editPopupId, setEditPopupId] = useState(null)
 
     useEffect(() => {
-            if (deletePopupId || editPopupId) {
-                document.body.classList.add('disable-scroll');
-            } else {
-                document.body.classList.remove('disable-scroll');
-                refetch()
-            }
-            return () => {
-                document.body.classList.remove('disable-scroll');
-            };
-        }, [deletePopupId, editPopupId]);
+        if (deletePopupId || editPopupId) {
+            document.body.classList.add('disable-scroll');
+        } else {
+            document.body.classList.remove('disable-scroll');
+            refetch()
+        }
+        return () => {
+            document.body.classList.remove('disable-scroll');
+        };
+    }, [deletePopupId, editPopupId]);
     useEffect(() => {
         const timer = setTimeout(() => {
             setDebounceValue(searchedVal)
@@ -90,10 +91,13 @@ function ProductsTable(){
                                 <td>{Number(product["ХЕ + БЖЕ"]).toFixed(2)}</td>
                                 <td>{Number(product["Всего инсулина"]).toFixed(2)}</td>
                                 <td>
-                                    <EditIcon className={style.icon}/>
+                                    <EditIcon className={style.icon} onClick={() => setEditPopupId(product.id)}/>
+                                        {editPopupId === product.id && (
+                                            <EditProduct product={product} onClose={() => setEditPopupId(null)}/>
+                                        )}
                                     <DeleteIcon className={style.icon} onClick={() => setDeletePopupId(product.id)}/>
                                         {deletePopupId === product.id && (
-                                            <DeleteProductRecord product={product} onClose={() => setDeletePopupId(null)}/>
+                                            <DeleteProduct product={product} onClose={() => setDeletePopupId(null)}/>
                                         )}
                                 </td>
                             </tr>

@@ -2,6 +2,7 @@ import { useForm, Controller  } from "react-hook-form"
 import style from "../css/components/product-form.module.css";
 import { motion } from "framer-motion";
 import {useRef, useState, useEffect} from "react";
+import {useGetUserInfoQuery} from "../store/api";
 
 const formVariants = {
     closed: {
@@ -14,8 +15,17 @@ const formVariants = {
     }
 };
 
-function ProductForm() {
-    const {register, handleSubmit, watch, reset} = useForm()
+function ProductForm({defaultValue, onClose}) {
+    const {data: userInfo, isLoading, refetch} = useGetUserInfoQuery();
+    const {register, handleSubmit, watch, reset} = useForm({
+        defaultValues: {
+            nameProduct: defaultValue?.["Продукт"] ?? "",
+            protein: defaultValue?.["Белки"] ?? "",
+            fat: defaultValue?.["Жиры"] ?? "",
+            carbs: defaultValue?.["Углеводы"] ?? "",
+            weigth: defaultValue?.["Вес продукта"] ?? "",
+        }
+    })
     const toNumber = (value) => Number(String(value).replace(",", ".")) || 0;
     const [smallForm, setSmallForm] = useState(false)
     const [width, setWidth] = useState();
@@ -27,7 +37,8 @@ function ProductForm() {
     const weight = toNumber(watch("weigth"));
 
     const XEBEValue = Number((((protein * 4 * weight) + (fat * 9 * weight)) / 10000).toFixed(2));
-    const XEValue = Number(((carbs * weight / 100) / 12).toFixed(2));
+    const XEValue = Number((((carbs * weight / 100)) / 12).toFixed(2));
+
 
     const onSubmit = async (data) =>{
         const responce = await fetch("http://localhost:5000/api/addProduct",{
@@ -35,33 +46,42 @@ function ProductForm() {
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify({
+                ...data,
+                id: defaultValue?.id ?? null,
+            })
         })
+        onClose?.();
         reset();
     }
+
     useEffect(() => {
-            const element = formElement.current;
-        
-            if (!element) return;
-        
-            const observer = new ResizeObserver(([entry]) => {
-                setWidth(entry.contentRect.width);
-            });
+        const element = formElement.current;
     
-            observer.observe(element);
+        if (!element) return;
         
-            return () => {
-                observer.disconnect();
-            };
-        }, []);
+        const observer = new ResizeObserver(([entry]) => {
+            setWidth(entry.contentRect.width);
+        });
+    
+        observer.observe(element);
+    
+        return () => {
+            observer.disconnect();
+        };
+    }, []);
         
-        useEffect(() => {
-            if (width < 469) {
-                setSmallForm(true)
-            } else {
-                setSmallForm(false)
-            }
-        }, [width]);
+    useEffect(() => {
+        if (width < 469) {
+            setSmallForm(true)
+        } else {
+            setSmallForm(false)
+        }
+    }, [width]);
+
+    if (isLoading) {
+        return (<div>Загрузка....</div>)
+    }
 
 
     return (
@@ -69,32 +89,32 @@ function ProductForm() {
                 <motion.form onSubmit={handleSubmit(onSubmit)} autoComplete="off" className={`${style.productForm } ${smallForm ? style.productSmallForm : "" }`} autoComplete="off" ref={formElement} variants={formVariants}>
                     <label className={style.nameProductConrainer} >
                         Название продукта
-                        <input type="text" {...register("nameProduct")} required/>
+                        <input type="text" {...register("nameProduct")} required placeholder={defaultValue ? defaultValue["Продукт"] : ""}/>
                     </label>
                     <label className={style.proteinConrainer}>
                         Белки, г
-                        <input type="text" {...register("protein")} required/>
+                        <input type="text" {...register("protein")} required placeholder={defaultValue ? defaultValue["Белки"] : ""}/>
                     </label>
                     <label className={style.fatConrainer}>
                         Жиры, г
-                        <input type="text" {...register("fat")} required/>
+                        <input type="text" {...register("fat")} required placeholder={defaultValue ? defaultValue["Жиры"] : ""}/>
                     </label>
                     <label className={style.carbsConrainer}>
                         Углеводы, г
-                        <input type="text" {...register("carbs")} required/>
+                        <input type="text" {...register("carbs")} required placeholder={defaultValue ? defaultValue["Углеводы"] : ""}/>
                     </label>
                     <label className={style.weigthConrainer}>
                         Вес продукта, г
-                        <input type="text" {...register("weigth")} required/>
+                        <input type="text" {...register("weigth")} required placeholder={defaultValue ? defaultValue["Вес продукта"] : ""}/>
                     </label>
                     <div className={style.valueContainer}>
                         <p ><span>БЖЕ</span>{XEBEValue}</p>
                         <p><span>ХЕ</span>{XEValue}</p>
                         <p><span>ХЕ + БЖЕ</span>{Number((XEValue + XEBEValue).toFixed(2))}</p>
-                        <p><span>Инсулин, ед</span>{Number(((XEValue + XEBEValue) * 1).toFixed(2))}</p>
+                        <p><span>Инсулин, ед</span>{Number(((XEValue + XEBEValue) * userInfo[0]["short_insulin"]).toFixed(2))}</p>
                     </div>
                     <button className={style.addEntry} type="submit" >
-                        Добавить продукт
+                        {defaultValue ? "Изменить продукт" : "Добавить продукт"}
                     </button>
                 </motion.form>
         </section>
