@@ -7,12 +7,14 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import {useRef, useState, useEffect} from "react";
 import { motion } from "framer-motion";
 import { useGetProductsQuery, useAddSugarRecordMutation  } from "../store/api";
+dayjs.extend(customParseFormat);
 
 const formVariants = {
     closed: { opacity: 0, transition: { duration: 0.15 } },

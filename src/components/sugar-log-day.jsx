@@ -132,14 +132,18 @@ function SugarLogDay({ period }) {
                                         <td>{record.food}</td>
                                         <td>{`${record.notes ? `${record.notes}.` : ""} ${record.activity ?  `Активности: ${record.activity}` : ""}`}</td>
                                         <td>
-                                            <EditIcon className={style.icon} onClick={() => setEditPopupId(record.id)}/>
+                                            <button className={style.icon}>
+                                                <EditIcon  onClick={() => setEditPopupId(record.id)} sx={{ fill: "#013567" }}/>
                                                 {editPopupId === record.id && (
-                                                        <EditSugarRecord record={record} onClose={() => setEditPopupId(null)}/>
-                                                    )}
-                                            <DeleteIcon className={style.icon} onClick={() => setDeletePopupId(record.id)}/>
+                                                    <EditSugarRecord record={record} onClose={() => setEditPopupId(null)}/>
+                                                )}
+                                            </button>
+                                            <button className={style.icon}>
+                                                <DeleteIcon onClick={() => setDeletePopupId(record.id)} sx={{ fill: "#013567" }}/>
                                                 {deletePopupId === record.id && (
                                                     <DeleteSugarRecord record={record} onClose={() => setDeletePopupId(null)}/>
                                                 )}
+                                            </button>
                                         </td>
                                     </tr>
                                 ))}

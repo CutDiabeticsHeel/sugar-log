@@ -1,5 +1,4 @@
 .userInfoSection {
-    gap: 10px;
     background-color: var(--secondary-background);
     padding: 10px;
     border-radius: 20px;
@@ -65,11 +64,23 @@ input {
     padding: 5px;
     font-size: var(--second-medium-text);
     border: 1px solid var(--border-color);
+    width: 80%;
+}
+.editButton {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    border: none;
+    background-color: var(--third-element-background);
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 5px;
 }
 .changeName {
     display: grid;
     grid-template-columns: 1fr 1fr ;
     gap: 10px;
+    position: relative;
 }
 
 @media (max-width: 560px) {

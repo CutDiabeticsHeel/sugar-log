@@ -27,7 +27,7 @@ th {
     padding: 8px 5px;
     vertical-align: middle;
 }
-td {
+.dayLog td {
     vertical-align: middle;
     padding: 8px 5px;
     border-top: 1px solid var(--border-color);
@@ -63,6 +63,8 @@ td {
 }
 .icon {
     cursor: pointer;
+    border: none;
+    background-color: inherit;
 }
 .emptyDay {
     padding: 16px;

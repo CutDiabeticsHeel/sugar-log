@@ -18,8 +18,8 @@ function DeleteProductRecord({ product, onClose }) {
         }
     }
     return createPortal(
-        <div className={style.overlay}>
-            <div className={style.deleteProduct}>
+        <div className={style.overlay} onClick={onClose}>
+            <div className={style.deleteProduct} onClick={(e) => e.stopPropagation()}>
                 <h3>Вы точно хотите удалить этот продукт?</h3>
                 <div className={`${tableStyle.tableContainer} ${style.scrollableTable}`}>
                     <table className={tableStyle.productTable}>
@@ -35,7 +35,6 @@ function DeleteProductRecord({ product, onClose }) {
                                 <th>ХЕ</th>
                                 <th>ХЕ + БЖЕ</th>
                                 <th>Инсулина</th>
-                                <th></th>
                             </tr>
                         </thead>
                         <tbody>

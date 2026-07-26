@@ -26,6 +26,7 @@
     width: 80vw;
     box-sizing: border-box;
     overflow-y: auto;
+    cursor: default;
 }
 .button {
     align-self: center;

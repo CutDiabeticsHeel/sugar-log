@@ -91,14 +91,18 @@ function ProductsTable(){
                                 <td>{Number(product["ХЕ + БЖЕ"]).toFixed(2)}</td>
                                 <td>{Number(product["Всего инсулина"]).toFixed(2)}</td>
                                 <td>
-                                    <EditIcon className={style.icon} onClick={() => setEditPopupId(product.id)}/>
+                                    <button className={style.icon}>
+                                        <EditIcon  onClick={() => setEditPopupId(product.id)} sx={{ fill: "#013567" }}/>
                                         {editPopupId === product.id && (
                                             <EditProduct product={product} onClose={() => setEditPopupId(null)}/>
                                         )}
-                                    <DeleteIcon className={style.icon} onClick={() => setDeletePopupId(product.id)}/>
+                                    </button>
+                                    <button className={style.icon} >
+                                        <DeleteIcon  onClick={() => setDeletePopupId(product.id)} sx={{ fill: "#013567" }}/>
                                         {deletePopupId === product.id && (
                                             <DeleteProduct product={product} onClose={() => setDeletePopupId(null)}/>
                                         )}
+                                    </button>
                                 </td>
                             </tr>
                         ))}

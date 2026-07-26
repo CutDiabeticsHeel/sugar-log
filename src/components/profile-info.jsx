@@ -3,6 +3,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import style from "../css/components/profile-info.module.css";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import UndoIcon from '@mui/icons-material/Undo';
 
 const wrapperVariants = {
     closed: {
@@ -50,22 +51,25 @@ function ProfileInfo(){
                 {popupOpen ? (
                     <motion.div className={style.changeName} key="edit" initial="closed" animate="open" exit="closed" variants={wrapperVariants}>
                         <label className={style.userName}>Имя 
-                            <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+                            <input type="text" value={name} placeholder={info.name} onChange={(e) => setName(e.target.value)} />
                         </label>
                         <label>Рост, см 
-                            <input type="text" value={height} onChange={(e) => setHeight(e.target.value)} />
+                            <input type="text" value={height} placeholder={info.height} onChange={(e) => setHeight(e.target.value)} />
                         </label>
                         <label>Вес, кг 
-                            <input type="text" value={weight} onChange={(e) => setWeight(e.target.value)} />
+                            <input type="text" value={weight} placeholder={info.weight} onChange={(e) => setWeight(e.target.value)} />
                         </label>
                         <label>Инсулин на 1 ХЕ, ед 
-                            <input type="text" value={shortInsulin} onChange={(e) => setShortInsulin(e.target.value)} />
+                            <input type="text" value={shortInsulin} placeholder={info.short_insulin} onChange={(e) => setShortInsulin(e.target.value)} />
                         </label>
                         <label>Длинный инсулин, ед/сутки 
-                            <input type="text" value={longInsulin} onChange={(e) => setLongInsulin(e.target.value)} />
+                            <input type="text" value={longInsulin} placeholder={info.long_insulin} onChange={(e) => setLongInsulin(e.target.value)} />
                         </label>
                         <button className={style.addEntry} onClick={changeUserInfo}>
                             Сохранить изменения
+                        </button>
+                        <button className={style.editButton} onClick={() => setPopupOpen(prev => !prev)}>
+                            <UndoIcon fontSize="small"/>
                         </button>
                     </motion.div>
                 ) : (

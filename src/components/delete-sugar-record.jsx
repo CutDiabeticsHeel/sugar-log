@@ -1,3 +1,4 @@
+import { createPortal } from "react-dom";
 import style from "../css/components/delete-sugar-record.module.css";
 
 function DeleteSugarRecord({ record, onClose }) {
@@ -16,9 +17,9 @@ function DeleteSugarRecord({ record, onClose }) {
         }
     }
 
-    return (
-        <div className={style.overlay}>
-            <div className={style.deleteSugarRecord}>
+    return createPortal(
+        <div className={style.overlay} onClick={onClose}>
+            <div className={style.deleteSugarRecord} onClick={(e) => e.stopPropagation()}>
                 <h3>Вы точно хотите удалить эту запись?</h3>
                 <div className={style.tableWrapper}>
                     <table className={style.dayLog}>
@@ -59,7 +60,8 @@ function DeleteSugarRecord({ record, onClose }) {
                     <button className={style.button} onClick={onClose}>Нет</button>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }
 

@@ -21,9 +21,11 @@
     background: var(--secondary-background);
     padding: 8px;
     border-bottom: 1px solid var(--border-color);
+    border-right: 1px solid var(--border-color);
 }
 .productTable td {
     padding: 8px;
+    border-right: 1px solid var(--border-color);
     border-bottom: 1px solid var(--border-color);
 }
 .productTable th:first-child,
@@ -63,6 +65,8 @@
 }
 .icon {
     cursor: pointer;
+    border: none;
+    background-color: inherit;
 }
 @media (max-width: 700px) {
     .productTable th:first-child,
