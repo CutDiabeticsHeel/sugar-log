@@ -82,7 +82,6 @@ function SugarLogDay({ period }) {
         bitHigh: style.sugarBitHigh,
         high: style.sugarHigh,
     };
-    console.log(groupedByDate)
 
     return (
         <div className={style.dairyContainer}>
@@ -131,7 +130,7 @@ function SugarLogDay({ period }) {
                                         <td>{record.carb}</td>
                                         <td>{record.ccal}</td>
                                         <td>{record.food}</td>
-                                        <td>{record.notes}</td>
+                                        <td>{`${record.notes ? `${record.notes}.` : ""} ${record.activity ?  `Активности: ${record.activity}` : ""}`}</td>
                                         <td>
                                             <EditIcon className={style.icon} onClick={() => setEditPopupId(record.id)}/>
                                                 {editPopupId === record.id && (

@@ -11,31 +11,31 @@
     box-sizing: border-box;
     overflow-y: auto; 
 }
+.overlay .sugarForm {
+    padding: 0;
+}
 .editSugarRecord {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: center;
+    align-items: stretch;
     background-color: var(--secondary-background);
     border-radius: 20px;
     padding: 20px;
     max-height: 90vh;
-    min-width: 226px;
+    width: 80vw;
     box-sizing: border-box;
     overflow-y: auto;
 }
-.buttons {
-    display: flex;
-    margin-top: 10px;
-    gap: 20px
-}
 .button {
+    align-self: center;
+    display: inline-block;
     cursor: pointer;
-    border: none;
     border-radius: 10px;
     background-color: var(--primary-element-background);
     color: #ffffff;
     padding: 10px;
     font-size: var(--second-medium-text);
     border: 1px solid var(--border-color);
+    width: fit-content;
 }

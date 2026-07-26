@@ -184,11 +184,7 @@ async function updateUserInfo(
 async function addSugarRecord(entry) {
   return new Promise((resolve, reject) => {
     const foodList = Array.isArray(entry.food) ? entry.food : [];
-
-    const foodName = entry.foodText && entry.foodText.trim()
-      ? entry.foodText.trim()
-      : foodList.map(f => f.label).join(', ');
-
+    const foodName = entry.foodText && entry.foodText.trim() ? entry.foodText.trim() : foodList.map(f => f.label).join(', ');
     let protein = 0, fat = 0, carb = 0, ccal = 0;
     for (const f of foodList) {
       protein += Number(f.protein) || 0;
@@ -196,24 +192,41 @@ async function addSugarRecord(entry) {
       carb += Number(f.carbs) || 0;
       ccal += parseFloat(f.kcal) || 0;
     }
+    ccal = Math.round(ccal);
 
-    const activityText = Array.isArray(entry.activity) && entry.activity.length
-      ? `Активности: ${entry.activity.join(', ')}`
-      : '';
-    const notes = [entry.notes, activityText].filter(Boolean).join('; ');
+    const autoFood = foodList.map(f => f.value).join(',');
+    const activity = Array.isArray(entry.activity) ? entry.activity.join(',') : '';
 
-    const sql = `INSERT INTO sugar_log (date, time, sugar, insulin, XEBE, food, notes, protein, fat, carb, ccal)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    const notes = entry.notes || '';
 
-    const params = [
-      entry.date, entry.time, entry.sugar, entry.insulin, entry.XEBE,
-      foodName, notes, protein, fat, carb, ccal
-    ];
+    if (entry.id) {
+      const sql = `UPDATE sugar_log
+                   SET date = ?, time = ?, sugar = ?, insulin = ?, XEBE = ?, food = ?, notes = ?, protein = ?, fat = ?, carb = ?, ccal = ?, auto_food = ?, activity = ?
+                   WHERE id = ?`;
 
-    db.run(sql, params, function (err) {
-      if (err) return reject(err);
-      resolve(this.lastID);
-    });
+      const params = [
+        entry.date, entry.time, entry.sugar, entry.insulin, entry.XEBE,
+        foodName, notes, protein, fat, carb, ccal, autoFood, activity, entry.id
+      ];
+
+      db.run(sql, params, function (err) {
+        if (err) return reject(err);
+        resolve(entry.id);
+      });
+    } else {
+      const sql = `INSERT INTO sugar_log (date, time, sugar, insulin, XEBE, food, notes, protein, fat, carb, ccal, auto_food, activity)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+      const params = [
+        entry.date, entry.time, entry.sugar, entry.insulin, entry.XEBE,
+        foodName, notes, protein, fat, carb, ccal, autoFood, activity
+      ];
+
+      db.run(sql, params, function (err) {
+        if (err) return reject(err);
+        resolve(this.lastID);
+      });
+    }
   });
 }
 

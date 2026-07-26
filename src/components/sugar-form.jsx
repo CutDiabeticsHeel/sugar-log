@@ -15,32 +15,14 @@ import { motion } from "framer-motion";
 import { useGetProductsQuery, useAddSugarRecordMutation  } from "../store/api";
 
 const formVariants = {
-    closed: {
-        opacity: 0,
-        transition: { duration: 0.15 }
-    },
-    open: {
-        opacity: 1,
-        transition: { duration: 0.25, delay: 0.35 }
-    }
+    closed: { opacity: 0, transition: { duration: 0.15 } },
+    open: { opacity: 1, transition: { duration: 0.25, delay: 0.35 } }
 };
 
-function SugarForm() {
-    const { register, handleSubmit, control, reset, setValue } = useForm()
+function SugarForm({defaultValue, onClose}) {
     const { data: allProduct, isLoading, refetch} = useGetProductsQuery()
     const [addSugarRecord] = useAddSugarRecordMutation();
-    const onSubmit = async (data) => {
-        data.time = dayjs(data.time).format("HH:mm");
-        data.date = dayjs(data.date).format("YYYY-MM-DD");
-        try {
-            await addSugarRecord(data).unwrap();
-            reset();
-        } catch (err) {
-            console.error(err);
-        }
-    }
-    if (isLoading) return <div>Загрузка...</div>
-    const forEachProduct = allProduct.map((item)=> ({
+    const forEachProduct = (allProduct ?? []).map((item)=> ({
         value: item.id, 
         label: item["Продукт"],
         kcal: item["ккал"],
@@ -48,6 +30,36 @@ function SugarForm() {
         fat: item["Жиры"],
         carbs: item["Углеводы"]
     }))
+    const autoFoodIds = defaultValue?.auto_food ? String(defaultValue.auto_food).split(',').map(id => Number(id.trim())) : [];
+    const defaultFood = autoFoodIds.map(id => forEachProduct.find(p => p.value === id)).filter(Boolean);
+    const defaultActivity = defaultValue?.activity ? String(defaultValue.activity).split(',').map(a => a.trim()).filter(Boolean): [];
+    const { register, handleSubmit, control, reset, setValue } = useForm({
+        defaultValues: {
+            time: defaultValue?.time ? dayjs(defaultValue.time, "HH:mm") : dayjs(),
+            date: defaultValue?.date ? dayjs(defaultValue.date) : dayjs(),
+            sugar: defaultValue?.sugar ?? "",
+            insulin: defaultValue?.insulin ?? "",
+            XEBE: defaultValue?.XEBE ?? "",
+            foodText: defaultValue?.foodText ?? "",
+            notes: defaultValue?.notes ?? "",
+            activity: defaultActivity,
+            food: defaultFood,
+        }
+    })
+
+    if (isLoading) return <div>Загрузка...</div>
+
+    const onSubmit = async (data) => {
+        data.time = dayjs(data.time).format("HH:mm");
+        data.date = dayjs(data.date).format("YYYY-MM-DD");
+        try {
+            await addSugarRecord({...data, id: defaultValue?.id ?? null}).unwrap();
+            onClose?.();
+            reset();
+        } catch (err) {
+            console.error(err);
+        }
+    }
 
     const filterColors = (inputValue) => {
         return forEachProduct.filter((i) =>
@@ -87,7 +99,7 @@ function SugarForm() {
                         <Controller
                             name="time"
                             control={control}
-                            defaultValue={dayjs()}
+                            defaultValue={defaultValue?.time ? dayjs(defaultValue.time, "HH:mm") : dayjs()}
                             render={({ field }) => (
                                 <TimeField
                                     label="Выберите время"
@@ -104,7 +116,7 @@ function SugarForm() {
                         <Controller
                             name="date"
                             control={control}
-                            defaultValue={dayjs()}
+                            defaultValue={defaultValue?.date ? dayjs(defaultValue.date) : dayjs()}
                             render={({ field }) => (
                                 <DatePicker
                                     label="Выберите дату"
@@ -118,7 +130,7 @@ function SugarForm() {
                 </label>
                 <label className={style.sugarInputContainer}>
                     Cахар
-                    <input className={style.sugarInput} {...register("sugar")} required/>
+                    <input className={style.sugarInput} {...register("sugar")}/>
                 </label>
                 <label className={style.insulinInputContainer}>
                     Инсулин
@@ -130,10 +142,9 @@ function SugarForm() {
                 </label>
                 <label className={style.foodSelectContainer}>
                     <span>Выберите продукт для автоподсчета</span>
-                    <Controller
-                        name="food"
+                    <Controller name="food"
                         control={control}
-                        defaultValue={[]}
+                        defaultValue={defaultFood}
                         render={({ field }) => (
                             <AsyncSelect
                                 isMulti
@@ -204,9 +215,8 @@ function SugarForm() {
                     </div>
                 </div>
                 <button className={style.addEntry} type="submit">
-                    Добавить запись
+                    {defaultValue?.id ? "Изменить запись" : "Добавить запись"}
                 </button>
-                
             </motion.form>
         </section>
     )

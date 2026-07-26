@@ -91,7 +91,6 @@ app.post("/api/addSugar", async (request, reply) => {
 
 app.post("/api/addProduct", async (request, reply) => {
     try {
-        console.log(request.body)
         const { id, nameProduct, protein, fat, carbs, weigth } = request.body;
 
         if (!nameProduct || !protein || !fat || !carbs || !weigth) {
@@ -102,14 +101,13 @@ app.post("/api/addProduct", async (request, reply) => {
 
         reply.status(201).send(result);
     } catch (err) {
-        console.error(err);
+        console.log(err);
         reply.status(500).send({ error: "Database write failed" });
     }
 });
 
 app.post("/api/selectPeriod", async (request, reply) => {
     const data = request.body.dateRange
-    console.log("Принял", data)
     return {message: "Успешно"}
 })
 
@@ -148,7 +146,6 @@ app.post("/api/changeUserInfo", async (request, reply) => {
 app.post("/api/add-question", async (request, reply) => {
     try {
         const {question} = request.body
-        console.log(question)
         await addQuestion(question)
         return {message: "Успешно"}
     } catch(err){
@@ -195,7 +192,6 @@ app.delete("/api/delete-sugar-record", async (request, reply) => {
 
 app.delete("/api/delete-product", async (request, reply) => {
     try {
-        console.log(request.body)
         await deleteProductById(request.body)
         return {message: "Успешно"}
     } catch (err) {

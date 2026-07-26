@@ -7,7 +7,6 @@
     flex-direction: column;
     container-type: inline-size;
     container-name: sugarForm;
-    min-width: 220px;
     box-sizing: border-box;
 }
 .sugarForm {
