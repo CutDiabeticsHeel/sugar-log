@@ -101,7 +101,7 @@ app.post("/api/addProduct", async (request, reply) => {
 
         reply.status(201).send(result);
     } catch (err) {
-        console.log(err);
+        console.log (err);
         reply.status(500).send({ error: "Database write failed" });
     }
 });
