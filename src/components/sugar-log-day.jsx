@@ -8,6 +8,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteSugarRecord from "./delete-sugar-record.jsx";
 import EditSugarRecord from "./edit-sugar-record.jsx";
+import Preloader from "./preloader.jsx";
 
 dayjs.extend(isSameOrBefore);
 
@@ -48,7 +49,7 @@ function SugarLogDay({ period }) {
     }, [effectivePeriod.from, effectivePeriod.to]);
 
     if (isLoading || !sugarLog) {
-        return <div>Загрузка...</div>;
+        return <Preloader/>
     }
 
     const groupedByDate = sugarLog.reduce((acc, record) => {

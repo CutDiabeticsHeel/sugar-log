@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 import { useGetDayPeriodSugarLogQuery } from "../store/api";
 import {useState, useEffect} from "react";
 import style from "../css/components/daily-profile.module.css";
+import Preloader from "./preloader";
 
 function DailyProfile() {
     dayjs.locale("ru")
@@ -20,7 +21,7 @@ function DailyProfile() {
         return () => window.removeEventListener("resize", onResize);
     }, []);
 
-    if (isLoading) return <div>Загрузка...</div>;
+    if (isLoading) return (<Preloader/>);
 
     const grouped = sugarLog.reduce((acc, row) => {
         const date = row.date;

@@ -3,11 +3,12 @@ import calculateMetrics from "../utils/metrics";
 import style from "../css/pages/stats.module.css";
 import MetricsBlock from "../components/metrics-block";
 import MetricsChart from "../components/metrics-chart";
+import Preloader from "../components/preloader";
 
 function Stats() {
     const {data: onlySugar, isLoading} = useGetOnlySugarQuery()
 
-    if (isLoading) return <div>Загрузка...</div>
+    if (isLoading) return (<Preloader/>)
     
     const sugarData = onlySugar.map(item => ({
         sugar: item.sugar,

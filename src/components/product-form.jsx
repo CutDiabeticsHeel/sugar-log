@@ -3,6 +3,7 @@ import style from "../css/components/product-form.module.css";
 import { motion } from "framer-motion";
 import {useRef, useState, useEffect} from "react";
 import {useGetUserInfoQuery} from "../store/api";
+import Preloader from "./preloader";
 
 const formVariants = {
     closed: {
@@ -79,10 +80,7 @@ function ProductForm({defaultValue, onClose}) {
         }
     }, [width]);
 
-    if (isLoading) {
-        return (<div>Загрузка....</div>)
-    }
-
+    if (isLoading) return (<Preloader/>)
 
     return (
         <section className={style.productAddSection} >

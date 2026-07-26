@@ -3,6 +3,7 @@ import style from "../css/pages/home.module.css";
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
 import {useState} from "react"
+import Preloader from "./preloader";
 
 function Welcome () {
     const [defaultPeriod] = useState({
@@ -13,7 +14,7 @@ function Welcome () {
     const {data: sugarLog, isLoading: isLoadingSugarLog} = useGetDayPeriodSugarLogQuery(defaultPeriod);
 
     if (isLoadingSugarLog || isLoadingUserInfo) {
-        return <div className={style.welcomeSection}>Загрузка...</div>;
+        return <Preloader/>;
     }
     if (!iserInfo?.length || !sugarLog?.length) {
         return <div className={style.welcomeSection}>Нет данных</div>;

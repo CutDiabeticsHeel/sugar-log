@@ -3,6 +3,7 @@ import style from "../css/components/sugar-log-today.module.css"
 import dayjs from "dayjs";
 import { getSugarStatus } from "../utils/sugar-status.js";
 import {useRef, useState, useEffect} from "react";
+import Preloader from "./preloader.jsx";
 
 function TodayLog() {
     const {data: todaySugarLog, isLoading} = useGetTodaySugarLogQuery();
@@ -42,9 +43,8 @@ function TodayLog() {
         }
     }, [width]);
     
-    if (isLoading) {
-        return <div className={style.welcomeSection}>Загрузка...</div>;
-    }
+    if (isLoading) return (<Preloader/>)
+
     const welcomePhrase = function(length) {
         if (length === 0) return "Сегодня вы не сделали ни одной записи";
         if (length === 1) return "Запись";

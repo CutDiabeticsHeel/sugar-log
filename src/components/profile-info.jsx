@@ -4,6 +4,7 @@ import style from "../css/components/profile-info.module.css";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import UndoIcon from '@mui/icons-material/Undo';
+import Preloader from "./preloader";
 
 const wrapperVariants = {
     closed: {
@@ -24,9 +25,8 @@ function ProfileInfo(){
     const [weight, setWeight] = useState("");
     const [shortInsulin, setShortInsulin] = useState("");
     const [longInsulin, setLongInsulin] = useState("");
-    if (isLoading) {
-        return (<div>Загрузка....</div>)
-    }
+    if (isLoading) return (<Preloader/>)
+
     const info = userInfo?.[0];
     const changeUserInfo = async () => {
         const data = {name, height, weight, shortInsulin, longInsulin}

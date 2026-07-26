@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 import { useGetDayPeriodSugarLogQuery } from "../store/api";
 import style from "../css/components/main-graph.module.css";
 import {useState, useEffect} from "react";
+import Preloader from "./preloader";
 
 function MainGraph() {
     const [defaultPeriod] = useState({
@@ -18,7 +19,7 @@ function MainGraph() {
         return () => window.removeEventListener("resize", onResize);
     }, []);
 
-    if (isLoading) return <div>Загрузка...</div>;
+    if (isLoading) return (<Preloader/>);
     const data = sugarLog.map(row => [
         `${row.date} ${row.time}`,
         row.sugar

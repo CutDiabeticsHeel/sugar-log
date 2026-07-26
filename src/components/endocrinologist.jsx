@@ -4,6 +4,7 @@ import UndoIcon from '@mui/icons-material/Undo';
 import style from "../css/components/endocrinologist.module.css";
 import {useState, useEffect} from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Preloader from "./preloader";
 
 const wrapperVariants = {
     closed: {
@@ -26,9 +27,7 @@ function Endocrinologist(){
         name: ''
     });
     const info = endocrinologist?.[0];
-    if (isLoading) {
-        return (<div>Загрузка....</div>)
-    }
+    if (isLoading) return (<Preloader/>)
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };

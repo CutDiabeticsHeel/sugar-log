@@ -14,6 +14,7 @@ import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import {useRef, useState, useEffect} from "react";
 import { motion } from "framer-motion";
 import { useGetProductsQuery, useAddSugarRecordMutation  } from "../store/api";
+import Preloader from "./preloader";
 dayjs.extend(customParseFormat);
 
 const formVariants = {
@@ -49,7 +50,7 @@ function SugarForm({defaultValue, onClose}) {
         }
     })
 
-    if (isLoading) return <div>Загрузка...</div>
+    if (isLoading) return (<Preloader/>)
 
     const onSubmit = async (data) => {
         data.time = dayjs(data.time).format("HH:mm");

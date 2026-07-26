@@ -6,6 +6,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteProduct from "./delete-product";
 import EditProduct from "./edit-product";
+import Preloader from "./preloader";
 
 function ProductsTable(){
     const {data: products, isLoading, refetch} = useGetProductsQuery();
@@ -44,9 +45,7 @@ function ProductsTable(){
     }, [products, debounceValue, searchedVal])
 
 
-    if (isLoading) {
-        return <div>Загрузка...</div>;
-    }
+    if (isLoading) return (<Preloader/>)
 
     return (
         <div>

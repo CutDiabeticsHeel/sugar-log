@@ -4,6 +4,7 @@ import style from "../css/components/questions.module.css";
 import {useState} from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useForm} from "react-hook-form"
+import Preloader from "./preloader";
 
 const wrapperVariants = {
     closed: {
@@ -35,9 +36,8 @@ function Questions(){
     const { register, handleSubmit, reset } = useForm();
     const [selectedIds, setSelectedIds] = useState([]);
 
-    if (isLoading) {
-        return (<div>Загрузка...</div>)
-    }
+    if (isLoading) return (<Preloader/>)
+
     const toggleQuestion = (id) => {
         setSelectedIds(prev =>
             prev.includes(id) ? prev.filter(qId => qId !== id) : [...prev, id]
