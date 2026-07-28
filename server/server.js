@@ -11,7 +11,7 @@ const app = Fastify({
 });
 
 app.register(cors, {
-    origin: ["http://localhost:4000", "https://sugar-log-feeb.onrender.com"],
+    origin: ["http://localhost:4000", "https://sugar-log-feeb.onrender.com", "https://sugar-log-k53m.onrender.com"],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
 });
 
