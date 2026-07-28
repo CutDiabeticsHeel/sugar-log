@@ -8,6 +8,7 @@ import style from "../css/components/calendar-form.module.css";
 import { motion, AnimatePresence } from "framer-motion";
 import useOutsideClick from "../hooks/close-popup";
 
+const API_URL = import.meta.env.VITE_API_URL;
 const wrapperVariants = {
     closed: {
         height: 0,
@@ -26,7 +27,6 @@ const wrapperVariants = {
         }
     }
 };
-
 const childVariants = {
     closed: {
         opacity: 0,
@@ -45,7 +45,6 @@ function CalendarForm({ onChange }) {
     const [popupOpen, setPopupOpen] = useState(false);
     const [displayDays, setDisplayDays]  = useState(7);
     const wrapperRef = useRef(null);
-    useOutsideClick(wrapperRef, () => setPopupOpen(false));
     const defaultSelected = {
         from: dayjs().toDate(),
         to: dayjs().toDate(),
@@ -81,7 +80,7 @@ function CalendarForm({ onChange }) {
             from: dayjs(data.dateRange.from).format('YYYY-MM-DD'),
             to: dayjs(data.dateRange.to).format('YYYY-MM-DD')
         });
-        const responce = await fetch("http://localhost:5000/api/selectPeriod",{
+        const responce = await fetch(`${API_URL}/selectPeriod`,{
             method: "POST",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",

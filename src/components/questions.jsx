@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useForm} from "react-hook-form"
 import Preloader from "./preloader";
 
+const API_URL = import.meta.env.VITE_API_URL;
 const wrapperVariants = {
     closed: {
         height: 0,
@@ -44,7 +45,7 @@ function Questions(){
         );
     };
     const deleteQuestion = async () => {
-        const response = await fetch("http://localhost:5000/api/delete-question", {
+        const response = await fetch(`${API_URL}/delete-question`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
@@ -60,7 +61,7 @@ function Questions(){
         
     }
     const addQuestion = async (data) => {
-        const response = await fetch("http://localhost:5000/api/add-question", {
+        const response = await fetch(`${API_URL}/add-question`, {
             method: "post",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",

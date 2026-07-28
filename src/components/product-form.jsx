@@ -5,6 +5,7 @@ import {useRef, useState, useEffect} from "react";
 import {useGetUserInfoQuery} from "../store/api";
 import Preloader from "./preloader";
 
+const API_URL = import.meta.env.VITE_API_URL;
 const formVariants = {
     closed: {
         opacity: 0,
@@ -42,7 +43,7 @@ function ProductForm({defaultValue, onClose}) {
 
 
     const onSubmit = async (data) =>{
-        const responce = await fetch("http://localhost:5000/api/addProduct",{
+        const responce = await fetch(`${API_URL}/addProduct`,{
             method: "POST",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",

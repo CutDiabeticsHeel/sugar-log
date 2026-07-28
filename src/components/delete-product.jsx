@@ -2,9 +2,11 @@ import style from "../css/components/delete-product.module.css";
 import tableStyle from "../css/components/products-table.module.css";
 import { createPortal } from "react-dom";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 function DeleteProductRecord({ product, onClose }) {
     const deleteProduct= async (id) => {
-        const response = await fetch("http://localhost:5000/api/delete-product", {
+        const response = await fetch(`${API_URL}/delete-product`, {
             method: "DELETE",
             headers: {
                     "Content-Type": "application/json;charset=utf-8",

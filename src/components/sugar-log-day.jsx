@@ -30,7 +30,6 @@ function SugarLogDay({ period }) {
             document.body.classList.add('disable-scroll');
         } else {
             document.body.classList.remove('disable-scroll');
-            refetch()
         }
         return () => {
             document.body.classList.remove('disable-scroll');

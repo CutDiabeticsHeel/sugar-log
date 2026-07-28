@@ -1,6 +1,10 @@
-import sqlite3 from "sqlite3";
+import { createClient } from "@libsql/client";
+import 'dotenv/config';
 
-const db = new sqlite3.Database("./server/database/sugar-log.db");
+const db = createClient({
+    url: process.env.TURSO_DATABASE_URL,
+    authToken: process.env.TURSO_AUTH_TOKEN,
+});
 
 function toNumber(value) {
     return parseFloat(String(value).replace(",", "."));
@@ -18,6 +22,10 @@ function calculateNutrition({ protein, fat, carbs, weight }) {
         xe: xe.toFixed(2),
         xeBzhu: xeBzhu.toFixed(2),
     };
+}
+async function getAll(sql, params = []) {
+    const result = await db.execute({ sql, args: params });
+    return result.rows;
 }
 
 async function addProduct({ id, nameProduct, protein, fat, carbs, weigth }) {
@@ -59,18 +67,10 @@ async function addProduct({ id, nameProduct, protein, fat, carbs, weigth }) {
         xeBzhu
     ];
 
-    const info = await new Promise((resolve, reject) => {
-        db.run(sql, params, function (err) {
-            if (err) {
-                reject(err);
-                return;
-            }
-            resolve({ lastID: this.lastID, changes: this.changes });
-        });
-    });
+    const result = await db.execute({ sql, args: params });
 
     return {
-        id: id ?? info.lastID,
+        id: id ?? Number(result.lastInsertRowid),
         nameProduct,
         kkal,
         bzhu,
@@ -80,48 +80,43 @@ async function addProduct({ id, nameProduct, protein, fat, carbs, weigth }) {
 }
 
 async function getInsulinAndXEBE(foodItems) {
-    return new Promise((resolve, reject) => {
-        if (!foodItems || foodItems.length === 0) {
-            return resolve({ insulin: 0, XEBE: 0 });
+    if (!foodItems || foodItems.length === 0) {
+        return { insulin: 0, XEBE: 0 };
+    }
+
+    const ids = foodItems.map(item => item.value);
+    const placeholders = ids.map(() => '?').join(',');
+
+    const query = `
+        SELECT id, "ХЕ + БЖЕ" as xebe, "Всего инсулина" as insulin
+        FROM products
+        WHERE id IN (${placeholders})
+    `;
+
+    const result = await db.execute({ sql: query, args: ids });
+    const rows = result.rows;
+
+    let calculatedInsulin = 0;
+    let calculatedXEBE = 0;
+
+    for (const item of foodItems) {
+        const row = rows.find(r => r.id === item.value);
+        if (!row) {
+            console.warn(`Продукт с id=${item.value} не найден в БД`);
+            continue;
         }
 
-        const ids = foodItems.map(item => item.value);
-        const placeholders = ids.map(() => '?').join(',');
+        const xebe = parseFloat(String(row.xebe).replace(',', '.')) || 0;
+        const insulin = parseFloat(String(row.insulin).replace(',', '.')) || 0;
 
-        const query = `
-            SELECT id, "ХЕ + БЖЕ" as xebe, "Всего инсулина" as insulin
-            FROM products
-            WHERE id IN (${placeholders})
-        `;
+        calculatedXEBE += xebe;
+        calculatedInsulin += insulin;
+    }
 
-        db.all(query, ids, (err, rows) => {
-            if (err) {
-                return reject(err);
-            }
-
-            let calculatedInsulin = 0;
-            let calculatedXEBE = 0;
-
-            for (const item of foodItems) {
-                const row = rows.find(r => r.id === item.value);
-                if (!row) {
-                    console.warn(`Продукт с id=${item.value} не найден в БД`);
-                    continue;
-                }
-
-                const xebe = parseFloat(String(row.xebe).replace(',', '.')) || 0;
-                const insulin = parseFloat(String(row.insulin).replace(',', '.')) || 0;
-
-                calculatedXEBE += xebe;
-                calculatedInsulin += insulin;
-            }
-
-            resolve({
-                insulin: parseFloat(calculatedInsulin.toFixed(2)),
-                XEBE: parseFloat(calculatedXEBE.toFixed(2)),
-            });
-        });
-    });
+    return {
+        insulin: parseFloat(calculatedInsulin.toFixed(2)),
+        XEBE: parseFloat(calculatedXEBE.toFixed(2)),
+    };
 }
 
 async function updateUserInfo(
@@ -131,66 +126,56 @@ async function updateUserInfo(
     shortInsulin,
     longInsulin
 ) {
-    return new Promise((resolve, reject) => {
-        const fields = [];
-        const values = [];
+    const fields = [];
+    const values = [];
 
-        if (name !== "") {
-            fields.push("name = ?");
-            values.push(name);
-        }
+    if (name !== "") {
+        fields.push("name = ?");
+        values.push(name);
+    }
 
-        if (height !== "") {
-            fields.push("height = ?");
-            values.push(height);
-        }
+    if (height !== "") {
+        fields.push("height = ?");
+        values.push(height);
+    }
 
-        if (weight !== "") {
-            fields.push("weight = ?");
-            values.push(weight);
-        }
+    if (weight !== "") {
+        fields.push("weight = ?");
+        values.push(weight);
+    }
 
-        if (shortInsulin !== "") {
-            fields.push("short_insulin = ?");
-            values.push(shortInsulin);
-        }
+    if (shortInsulin !== "") {
+        fields.push("short_insulin = ?");
+        values.push(shortInsulin);
+    }
 
-        if (longInsulin !== "") {
-            fields.push("long_insulin = ?");
-            values.push(longInsulin);
-        }
+    if (longInsulin !== "") {
+        fields.push("long_insulin = ?");
+        values.push(longInsulin);
+    }
 
-        if (fields.length === 0) {
-            resolve(0);
-            return;
-        }
+    if (fields.length === 0) {
+        return 0;
+    }
 
-        const sql = `
-            UPDATE user_info
-            SET ${fields.join(", ")}
-        `;
+    const sql = `
+        UPDATE user_info
+        SET ${fields.join(", ")}
+    `;
 
-        db.run(sql, values, function (error) {
-            if (error) {
-                reject(error);
-                return;
-            }
-
-            resolve(this.changes);
-        });
-    });
+    const result = await db.execute({ sql, args: values });
+    return result.rowsAffected;
 }
 
 async function addSugarRecord(entry) {
-  return new Promise((resolve, reject) => {
     const foodList = Array.isArray(entry.food) ? entry.food : [];
     const foodName = entry.foodText && entry.foodText.trim() ? entry.foodText.trim() : foodList.map(f => f.label).join(', ');
     let protein = 0, fat = 0, carb = 0, ccal = 0;
     for (const f of foodList) {
-      protein += Number(f.protein) || 0;
-      fat += Number(f.fat) || 0;
-      carb += Number(f.carbs) || 0;
-      ccal += parseFloat(f.kcal) || 0;
+        protein += Number(f.protein) || 0;
+        fat += Number(f.fat) || 0;
+        carb += Number(f.carbs) || 0;
+        ccal += parseFloat(f.kcal) || 0;
     }
     ccal = Math.round(ccal);
 
@@ -200,149 +185,103 @@ async function addSugarRecord(entry) {
     const notes = entry.notes || '';
 
     if (entry.id) {
-      const sql = `UPDATE sugar_log
-                   SET date = ?, time = ?, sugar = ?, insulin = ?, XEBE = ?, food = ?, notes = ?, protein = ?, fat = ?, carb = ?, ccal = ?, auto_food = ?, activity = ?
-                   WHERE id = ?`;
+        const sql = `UPDATE sugar_log
+                     SET date = ?, time = ?, sugar = ?, insulin = ?, XEBE = ?, food = ?, notes = ?, protein = ?, fat = ?, carb = ?, ccal = ?, auto_food = ?, activity = ?
+                     WHERE id = ?`;
 
-      const params = [
-        entry.date, entry.time, entry.sugar, entry.insulin, entry.XEBE,
-        foodName, notes, protein, fat, carb, ccal, autoFood, activity, entry.id
-      ];
+        const params = [
+            entry.date, entry.time, entry.sugar, entry.insulin, entry.XEBE,
+            foodName, notes, protein, fat, carb, ccal, autoFood, activity, entry.id
+        ];
 
-      db.run(sql, params, function (err) {
-        if (err) return reject(err);
-        resolve(entry.id);
-      });
+        await db.execute({ sql, args: params });
+        return entry.id;
     } else {
-      const sql = `INSERT INTO sugar_log (date, time, sugar, insulin, XEBE, food, notes, protein, fat, carb, ccal, auto_food, activity)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        const sql = `INSERT INTO sugar_log (date, time, sugar, insulin, XEBE, food, notes, protein, fat, carb, ccal, auto_food, activity)
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
-      const params = [
-        entry.date, entry.time, entry.sugar, entry.insulin, entry.XEBE,
-        foodName, notes, protein, fat, carb, ccal, autoFood, activity
-      ];
+        const params = [
+            entry.date, entry.time, entry.sugar, entry.insulin, entry.XEBE,
+            foodName, notes, protein, fat, carb, ccal, autoFood, activity
+        ];
 
-      db.run(sql, params, function (err) {
-        if (err) return reject(err);
-        resolve(this.lastID);
-      });
+        const result = await db.execute({ sql, args: params });
+        return Number(result.lastInsertRowid);
     }
-  });
 }
 
 async function addQuestion(question) {
-    return new Promise((resolve, reject) => {
-        if (!question || question === "") {
-            resolve(0);
-            return;
-        }
+    if (!question || question === "") {
+        return 0;
+    }
 
-        const sql = `
-            INSERT INTO questions (question)
-            VALUES (?)
-        `;
+    const sql = `
+        INSERT INTO questions (question)
+        VALUES (?)
+    `;
 
-        db.run(sql, [question], function (error) {
-            if (error) {
-                reject(error);
-                return;
-            }
-
-            resolve(this.lastID);
-        });
-    });
+    const result = await db.execute({ sql, args: [question] });
+    return Number(result.lastInsertRowid);
 }
 
 async function deleteQuestions(ids) {
-    return new Promise((resolve, reject) => {
-        if (!ids || ids.length === 0) {
-            resolve(0);
-            return;
-        }
+    if (!ids || ids.length === 0) {
+        return 0;
+    }
 
-        const placeholders = ids.map(() => "?").join(", ");
+    const placeholders = ids.map(() => "?").join(", ");
 
-        const sql = `
-            DELETE FROM questions
-            WHERE id IN (${placeholders})
-        `;
+    const sql = `
+        DELETE FROM questions
+        WHERE id IN (${placeholders})
+    `;
 
-        db.run(sql, ids, function (error) {
-            if (error) {
-                reject(error);
-                return;
-            }
-
-            resolve(this.changes);
-        });
-    });
+    const result = await db.execute({ sql, args: ids });
+    return result.rowsAffected;
 }
 
 async function updateEndocrinologistInfo(name, day, month, time) {
-    return new Promise((resolve, reject) => {
-        const fields = [];
-        const values = [];
+    const fields = [];
+    const values = [];
 
-        if (name !== "") {
-            fields.push("name = ?");
-            values.push(name);
-        }
-        if (day !== "") {
-            fields.push("day = ?");
-            values.push(day);
-        }
-        if (month !== "") {
-            fields.push("month = ?");
-            values.push(month);
-        }
-        if (time !== "") {
-            fields.push("time = ?");
-            values.push(time);
-        }
-        if (fields.length === 0) {
-            resolve(0);
-            return;
-        }
+    if (name !== "") {
+        fields.push("name = ?");
+        values.push(name);
+    }
+    if (day !== "") {
+        fields.push("day = ?");
+        values.push(day);
+    }
+    if (month !== "") {
+        fields.push("month = ?");
+        values.push(month);
+    }
+    if (time !== "") {
+        fields.push("time = ?");
+        values.push(time);
+    }
+    if (fields.length === 0) {
+        return 0;
+    }
 
-        const sql = `
-            UPDATE endocrinologist
-            SET ${fields.join(", ")}
-        `;
+    const sql = `
+        UPDATE endocrinologist
+        SET ${fields.join(", ")}
+    `;
 
-        db.run(sql, values, function (error) {
-            if (error) {
-                reject(error);
-                return;
-            }
-
-            resolve(this.changes);
-        });
-    });
+    const result = await db.execute({ sql, args: values });
+    return result.rowsAffected;
 }
 
 async function deleteSugarLogById(id) {
-    return new Promise((resolve, reject) => {
-        db.run('DELETE FROM sugar_log WHERE id = ?', [id], function (err) {
-            if (err) {
-                reject(err);
-                return;
-            }
-            resolve(this.changes);
-        });
-    });
+    const result = await db.execute({ sql: 'DELETE FROM sugar_log WHERE id = ?', args: [id] });
+    return result.rowsAffected;
 }
 
 async function deleteProductById(id) {
-    return new Promise((resolve, reject) => {
-        db.run('DELETE FROM products WHERE id = ?', [id], function (err) {
-            if (err) {
-                reject(err);
-                return;
-            }
-            resolve(this.changes);
-        });
-    });
+    const result = await db.execute({ sql: 'DELETE FROM products WHERE id = ?', args: [id] });
+    return result.rowsAffected;
 }
 
-export { addProduct, getInsulinAndXEBE, updateUserInfo, addSugarRecord, addQuestion, 
-    deleteQuestions, updateEndocrinologistInfo, deleteSugarLogById, deleteProductById};
+export { getAll, addProduct, getInsulinAndXEBE, updateUserInfo, addSugarRecord, addQuestion,
+    deleteQuestions, updateEndocrinologistInfo, deleteSugarLogById, deleteProductById };

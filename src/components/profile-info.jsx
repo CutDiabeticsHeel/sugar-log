@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import UndoIcon from '@mui/icons-material/Undo';
 import Preloader from "./preloader";
 
+const API_URL = import.meta.env.VITE_API_URL;
 const wrapperVariants = {
     closed: {
         opacity: 0,
@@ -30,7 +31,7 @@ function ProfileInfo(){
     const info = userInfo?.[0];
     const changeUserInfo = async () => {
         const data = {name, height, weight, shortInsulin, longInsulin}
-        const response = await fetch("http://localhost:5000/api/changeUserInfo", {
+        const response = await fetch(`${API_URL}/changeUserInfo`, {
             method: "POST",
             headers: {
                     "Content-Type": "application/json;charset=utf-8",

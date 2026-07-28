@@ -1,9 +1,8 @@
 import Fastify from "fastify";
-import sqlite3 from "sqlite3";
 import cors from "@fastify/cors";
 import fastifyStatic from "@fastify/static";
 import dayjs from "dayjs";
-import {addProduct, getInsulinAndXEBE, updateUserInfo, addSugarRecord, addQuestion,
+import {getAll, addProduct, getInsulinAndXEBE, updateUserInfo, addSugarRecord, addQuestion,
     deleteQuestions, updateEndocrinologistInfo, deleteSugarLogById, deleteProductById
 } from "./database-function.js";
 
@@ -11,25 +10,10 @@ const app = Fastify({
     logger: true,
 });
 
-const db = new sqlite3.Database("./server/database/sugar-log.db");
-
 app.register(cors, {
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:4000", "https://sugar-log-feeb.onrender.com"],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
 });
-
-function getAll(sql, params = []) {
-    return new Promise((resolve, reject) => {
-        db.all(sql, params, (err, rows) => {
-            if (err) {
-                reject(err);
-                return;
-            }
-
-            resolve(rows);
-        });
-    });
-}
 
 app.get("/api/user-info", async (request, reply) => {
     return await getAll("SELECT * FROM user_info");
@@ -76,7 +60,7 @@ app.get("/api/day-period-sugar-log", async (request, reply) => {
 app.get("/api/today-sugar-log", async (request, reply) => {
     const today = dayjs().format("YYYY-MM-DD");
 
-    return await getAll("SELECT * FROM sugar_log WHERE date= ?", today);
+    return await getAll("SELECT * FROM sugar_log WHERE date= ?", [today]);
 });
 
 app.post("/api/addSugar", async (request, reply) => {

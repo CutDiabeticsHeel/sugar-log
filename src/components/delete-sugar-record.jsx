@@ -1,9 +1,10 @@
 import { createPortal } from "react-dom";
 import style from "../css/components/delete-sugar-record.module.css";
+const API_URL = import.meta.env.VITE_API_URL;
 
 function DeleteSugarRecord({ record, onClose }) {
     const deleteRecord = async (id) => {
-        const response = await fetch("http://localhost:5000/api/delete-sugar-record", {
+        const response = await fetch(`${API_URL}/delete-sugar-record`, {
             method: "DELETE",
             headers: {
                     "Content-Type": "application/json;charset=utf-8",

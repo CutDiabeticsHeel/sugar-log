@@ -17,6 +17,8 @@ import { useGetProductsQuery, useAddSugarRecordMutation  } from "../store/api";
 import Preloader from "./preloader";
 dayjs.extend(customParseFormat);
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const formVariants = {
     closed: { opacity: 0, transition: { duration: 0.15 } },
     open: { opacity: 1, transition: { duration: 0.25, delay: 0.35 } }
@@ -78,7 +80,7 @@ function SugarForm({defaultValue, onClose}) {
     });
 
     const handleFoodAutoChange = async (selectedOptions) =>{
-        const response = await fetch("http://localhost:5000/api/foodAuto",{
+        const response = await fetch(`${API_URL}/foodAuto`,{
             method: "POST",
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
