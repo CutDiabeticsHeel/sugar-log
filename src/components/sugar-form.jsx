@@ -15,6 +15,7 @@ import {useRef, useState, useEffect} from "react";
 import { motion } from "framer-motion";
 import { useGetProductsQuery, useAddSugarRecordMutation  } from "../store/api";
 import Preloader from "./preloader";
+import { sugarEntrySchema } from "../utils/sugar-form-validate";
 dayjs.extend(customParseFormat);
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -45,24 +46,34 @@ function SugarForm({defaultValue, onClose}) {
             sugar: defaultValue?.sugar ?? "",
             insulin: defaultValue?.insulin ?? "",
             XEBE: defaultValue?.XEBE ?? "",
-            foodText: defaultValue?.foodText ?? "",
+            foodText: defaultValue?.food_text ?? "",
             notes: defaultValue?.notes ?? "",
             activity: defaultActivity,
             food: defaultFood,
+            carb: defaultValue?.carb ?? "",
+            protein: defaultValue?.protein ?? "",
+            fat: defaultValue?.fat ?? "", 
+            ccal: defaultValue?.ccal ?? "",
         }
     })
+    console.log(defaultValue)
 
     if (isLoading) return (<Preloader/>)
 
     const onSubmit = async (data) => {
         data.time = dayjs(data.time).format("HH:mm");
         data.date = dayjs(data.date).format("YYYY-MM-DD");
+        const parsed = sugarEntrySchema.safeParse(data)
+        if (!parsed.success) {
+            console.error(parsed.error.flatten());
+            return;
+        }
         try {
-            await addSugarRecord({...data, id: defaultValue?.id ?? null}).unwrap();
+            await addSugarRecord({...parsed.data, id: defaultValue?.id ?? null}).unwrap();
             onClose?.();
             reset();
         } catch (err) {
-            console.error(err);
+            console.error({ error: err.message });
         }
     }
 
@@ -145,6 +156,20 @@ function SugarForm({defaultValue, onClose}) {
                     ХЕ и БЖЕ
                     <input className={style.XEBEInput} {...register("XEBE")} required/>
                 </label>
+                <div className={style.macrosContainer}>
+                    <label className={style.proteinConrainer}>
+                        Белки, г
+                        <input {...register("protein")}  />
+                    </label>
+                    <label className={style.fatConrainer}>
+                        Жиры, г
+                        <input {...register("fat")} />
+                    </label>
+                    <label className={style.carbsConrainer}>
+                        Углеводы, г
+                        <input {...register("carb")}  />
+                    </label>
+                </div>
                 <label className={style.foodSelectContainer}>
                     <span>Выберите продукт для автоподсчета</span>
                     <Controller name="food"

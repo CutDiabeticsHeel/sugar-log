@@ -28,6 +28,20 @@
     flex-direction: column;
     gap: 10px
 }
+.macrosContainer {
+    grid-column: 1/3;
+    grid-row: 4;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+}
+.proteinConrainer,
+.fatConrainer,
+.carbsConrainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
 .timeInputContainer {
     grid-column: 1/2;
     grid-row: 1;
@@ -140,5 +154,8 @@
     .foodInputContainer{
         display: flex;
         flex-direction: column;
+    }
+    .macrosContainer {
+        grid-template-columns: 1fr;
     }
 }
