@@ -108,14 +108,15 @@ async function getInsulinAndXEBE(foodItems) {
 
         const xebe = parseFloat(String(row.xebe).replace(',', '.')) || 0;
         const insulin = parseFloat(String(row.insulin).replace(',', '.')) || 0;
+        const amount = item.amount;
 
-        calculatedXEBE += xebe;
-        calculatedInsulin += insulin;
+        calculatedXEBE += xebe * amount;
+        calculatedInsulin += insulin * amount;
     }
 
     return {
         insulin: parseFloat(calculatedInsulin.toFixed(2)),
-        XEBE: parseFloat(calculatedXEBE.toFixed(2)),
+        XEBE: parseFloat(calculatedXEBE.toFixed(2))
     };
 }
 
@@ -169,16 +170,16 @@ async function updateUserInfo(
 
 async function addSugarRecord(entry) {
     const foodList = Array.isArray(entry.food) ? entry.food : [];
-    const autoNames = foodList.map(f => f.label).filter(Boolean);
+    const autoNames = foodList.map(food =>  `${food.label} x ${food.amount}`).filter(Boolean);
     const manualText = entry.foodText && entry.foodText.trim() ? entry.foodText.trim() : '';
     const foodName = [manualText, ...autoNames].filter(Boolean).join(', ');
 
     let autoProtein = 0, autoFat = 0, autoCarb = 0, autoCcal = 0;
-    for (const f of foodList) {
-        autoProtein += Number(f.protein) || 0;
-        autoFat += Number(f.fat) || 0;
-        autoCarb += Number(f.carbs) || 0;
-        autoCcal += parseFloat(f.kcal) || 0;
+    for (const food of foodList) {
+        autoProtein += Number(food.protein * food.amount) || 0;
+        autoFat += Number(food.fat * food.amount) || 0;
+        autoCarb += Number(food.carbs * food.amount) || 0;
+        autoCcal += parseFloat(food.kcal * food.amount) || 0;
     }
 
     const autoFood = foodList.map(f => f.value).join(',');

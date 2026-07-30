@@ -97,7 +97,7 @@ app.post("/api/selectPeriod", async (request, reply) => {
 
 app.post("/api/foodAuto", async (request, reply) => {
     try {
-        const { insulin, XEBE } = await getInsulinAndXEBE(request.body)
+        const { insulin, XEBE} = await getInsulinAndXEBE(request.body)
 
         return {
             insulin,

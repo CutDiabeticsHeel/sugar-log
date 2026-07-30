@@ -11,6 +11,9 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import DeleteIcon from '@mui/icons-material/Delete';
 import {useRef, useState, useEffect} from "react";
 import { motion } from "framer-motion";
 import { useGetProductsQuery, useAddSugarRecordMutation  } from "../store/api";
@@ -39,56 +42,28 @@ function SugarForm({defaultValue, onClose}) {
     const autoFoodIds = defaultValue?.auto_food ? String(defaultValue.auto_food).split(',').map(id => Number(id.trim())) : [];
     const defaultFood = autoFoodIds.map(id => forEachProduct.find(p => p.value === id)).filter(Boolean);
     const defaultActivity = defaultValue?.activity ? String(defaultValue.activity).split(',').map(a => a.trim()).filter(Boolean): [];
-    const { register, handleSubmit, control, reset, setValue } = useForm({
-        defaultValues: {
-            time: defaultValue?.time ? dayjs(defaultValue.time, "HH:mm") : dayjs(),
-            date: defaultValue?.date ? dayjs(defaultValue.date) : dayjs(),
-            sugar: defaultValue?.sugar ?? "",
-            insulin: defaultValue?.insulin ?? "",
-            XEBE: defaultValue?.XEBE ?? "",
-            foodText: defaultValue?.food_text ?? "",
-            notes: defaultValue?.notes ?? "",
-            activity: defaultActivity,
-            food: defaultFood,
-            carb: defaultValue?.carb ?? "",
-            protein: defaultValue?.protein ?? "",
-            fat: defaultValue?.fat ?? "", 
-            ccal: defaultValue?.ccal ?? "",
-        }
+    const { register, handleSubmit, control, watch, reset, setValue } = useForm({
+        // defaultValues: {
+        //     time: defaultValue?.time ? dayjs(defaultValue.time, "HH:mm") : dayjs(),
+        //     date: defaultValue?.date ? dayjs(defaultValue.date) : dayjs(),
+        //     sugar: defaultValue?.sugar ?? "",
+        //     insulin: defaultValue?.insulin ?? "",
+        //     XEBE: defaultValue?.XEBE ?? "",
+        //     foodText: defaultValue?.food_text ?? "",
+        //     notes: defaultValue?.notes ?? "",
+        //     activity: defaultActivity,
+        //     food: defaultFood,
+        //     carb: defaultValue?.carb ?? "",
+        //     protein: defaultValue?.protein ?? "",
+        //     fat: defaultValue?.fat ?? "", 
+        //     ccal: defaultValue?.ccal ?? "",
+        // }
     })
-    console.log(defaultValue)
-
-    if (isLoading) return (<Preloader/>)
-
-    const onSubmit = async (data) => {
-        data.time = dayjs(data.time).format("HH:mm");
-        data.date = dayjs(data.date).format("YYYY-MM-DD");
-        const parsed = sugarEntrySchema.safeParse(data)
-        if (!parsed.success) {
-            console.error(parsed.error.flatten());
-            return;
-        }
-        try {
-            await addSugarRecord({...parsed.data, id: defaultValue?.id ?? null}).unwrap();
-            onClose?.();
-            reset();
-        } catch (err) {
-            console.error({ error: err.message });
-        }
-    }
-
-    const filterColors = (inputValue) => {
-        return forEachProduct.filter((i) =>
-            i.label.toLowerCase().includes(inputValue.toLowerCase())
-        );
-    };
-
-    const promiseOptions = (inputValue) =>
-        new Promise((resolve) => {
-            setTimeout(() => {
-                resolve(filterColors(inputValue));
-            }, 228);
-    });
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [foodList, setFoodList] = useState([]);
+    const Min = 0; 
+    const Max = 100;
+    const foodAmount = watch("foodAmount")
 
     const handleFoodAutoChange = async (selectedOptions) =>{
         const response = await fetch(`${API_URL}/foodAuto`,{
@@ -107,6 +82,63 @@ function SugarForm({defaultValue, onClose}) {
         }
     }
 
+    useEffect(() => {
+        handleFoodAutoChange(foodList);
+    }, [foodList]);
+    
+    if (isLoading) return (<Preloader/>)
+
+    const onSubmit = async (data) => {
+        data.food = foodList;
+        data.time = dayjs(data.time).format("HH:mm");
+        data.date = dayjs(data.date).format("YYYY-MM-DD");
+        const parsed = sugarEntrySchema.safeParse(data)
+        if (!parsed.success) {
+            console.error(parsed.error.flatten());
+            return;
+        }
+        try {
+            await addSugarRecord({...parsed.data, id: defaultValue?.id ?? null}).unwrap();
+            onClose?.();
+            reset();
+            setFoodList([])
+        } catch (err) {
+            console.error({ error: err.message });
+        }
+    }
+
+    const filterProducts= (inputValue) => {
+        return forEachProduct.filter((i) =>
+            i.label.toLowerCase().includes(inputValue.toLowerCase())
+        );
+    };
+
+    const promiseOptions = (inputValue) =>
+        new Promise((resolve) => {
+            setTimeout(() => {
+                resolve(filterProducts(inputValue));
+            }, 228);
+    });
+
+    const increment = (value) =>
+        Math.min(Max, Number((Number(value) + 1).toFixed(1)));
+
+    const decrement = (value) =>
+        Math.max(Min, Number((Number(value) - 1).toFixed(1)));
+
+    const addProduct = () => {
+        if (!selectedProduct) return;
+
+        setFoodList(prev => [
+            ...prev,
+            {
+                ...selectedProduct,
+                amount: 1,
+            },
+        ]);
+
+        setSelectedProduct(null);
+    };
     return (
         <section className={style.sugarAddSection} >
             <motion.form onSubmit={handleSubmit(onSubmit)} className={style.sugarForm} autoComplete="off" variants={formVariants}>
@@ -150,11 +182,11 @@ function SugarForm({defaultValue, onClose}) {
                 </label>
                 <label className={style.insulinInputContainer}>
                     Инсулин
-                    <input className={style.insulinInput} {...register("insulin")} required/>
+                    <input className={style.insulinInput} {...register("insulin")} />
                 </label>
                 <label className={style.XEBEInputContainer}>
                     ХЕ и БЖЕ
-                    <input className={style.XEBEInput} {...register("XEBE")} required/>
+                    <input className={style.XEBEInput} {...register("XEBE")}/>
                 </label>
                 <div className={style.macrosContainer}>
                     <label className={style.proteinConrainer}>
@@ -171,55 +203,57 @@ function SugarForm({defaultValue, onClose}) {
                     </label>
                 </div>
                 <label className={style.foodSelectContainer}>
-                    <span>Выберите продукт для автоподсчета</span>
-                    <Controller name="food"
-                        control={control}
-                        defaultValue={defaultFood}
-                        render={({ field }) => (
-                            <AsyncSelect
-                                isMulti
-                                hideSelectedOptions={false}
-                                isOptionDisabled={() => false}
-                                isOptionSelected={() => false}
-                                value={field.value}
-                                cacheOptions
-                                defaultOptions
-                                loadOptions={promiseOptions}
-                                className={style.foodSelect}
-                                styles={{
-                                    control: (base, state) => ({
-                                        ...base,
-                                        backgroundColor: "var(--paper-soft)",
-                                        outline: state.isFocused ? "2px solid #000000" : "none",
-                                        border: "1px solid var(--border-color)",
-                                        borderRadius: "10px",
-                                        boxShadow: "none",
-                                    }),
-                                    menu: (base) => ({
-                                        ...base,
-                                        backgroundColor: "var(--paper-soft)",
-                                    }),
-                                    multiValue: (base) => ({
-                                        ...base,
-                                        backgroundColor: "var(--primary-element-background)",
-                                    }),
-                                    multiValueLabel: (base) => ({
-                                        ...base,
-                                        color: "#000000",
-                                    }),
-                                }}
-                                onChange={(newValue, actionMeta) => {
-                                    const updatedValue =
-                                        actionMeta.action === "select-option"
-                                            ? [...(field.value || []), actionMeta.option]
-                                            : newValue;
-
-                                    field.onChange(updatedValue);
-                                    handleFoodAutoChange(updatedValue);
-                                }}
-                            />
-                        )}
+                    <span>Выберите продукт и количество в порциях для автоподсчета</span>
+                    <AsyncSelect
+                        value={selectedProduct}
+                        cacheOptions
+                        defaultOptions
+                        loadOptions={promiseOptions}
+                        className={style.foodSelect}
+                        styles={{
+                            control: (base, state) => ({
+                                ...base,
+                                backgroundColor: "var(--paper-soft)",
+                                outline: state.isFocused ? "2px solid #000000" : "none",
+                                border: "1px solid var(--border-color)",
+                                borderRadius: "10px",
+                                boxShadow: "none",
+                            }),
+                            menu: (base) => ({
+                                ...base,
+                                backgroundColor: "var(--paper-soft)",
+                            }),
+                        }}
+                        onChange={setSelectedProduct}
                     />
+                    <button type="button" className={style.addEntry} onClick={addProduct}>Добавить продукт</button>
+                    <ul className={style.productsList}>
+                        {foodList.map((product, index) => (
+                            <li key={index} className={style.foodItem}>
+                                <span>{product.label}</span>
+                                <button type="button" onClick={() => setFoodList(prev => prev.map((item, i) => i === index ? { ...item, amount: decrement(item.amount) } : item))}>
+                                    <RemoveIcon />
+                                </button>
+                                <input
+                                    className={style.foodAmount}
+                                    name="foodAmount"
+                                    value={product.amount}
+                                    onChange={(e) => {
+                                        const raw = e.target.value.replace(",", ".");
+                                        if (/^\d*\.?\d?$/.test(raw))
+                                            setFoodList(prev => prev.map((item, i) => i === index ? { ...item, amount: raw === "" ? "" : raw } : item));
+                                    }}
+                                    onBlur={() => setFoodList(prev => prev.map((item, i) => i === index ? { ...item, amount: isNaN(parseFloat(item.amount)) ? 1 : parseFloat(item.amount) } : item))}
+                                />
+                                <button type="button" onClick={() => setFoodList(prev => prev.map((item, i) => i === index ? { ...item, amount: increment(item.amount) } : item))}>
+                                    <AddIcon />
+                                </button>
+                                <button type="button" onClick={() => setFoodList(prev => prev.filter((_, i) => i !== index))}>
+                                    <DeleteIcon/>
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
                 </label>
                 <label className={style.foodInputContainer}>
                     <span>Или введите вручную, что вы съели</span>
