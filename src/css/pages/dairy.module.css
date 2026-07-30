@@ -11,7 +11,8 @@
 .dairyAddEntry {
     border: none;
     border-radius: 20px;
-    background-color: var(--secondary-background);
+    background-color: var(--secondary-element-background);
+    color: #ffffff;
     padding: 10px;
     height: 100%;
     font-size: var(--medium-text);

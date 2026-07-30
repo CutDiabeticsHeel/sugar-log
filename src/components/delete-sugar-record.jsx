@@ -57,8 +57,8 @@ function DeleteSugarRecord({ record, onClose }) {
                     </table>
                 </div>
                 <div className={style.buttons}>
-                    <button className={style.button} onClick={() => deleteRecord(record.id)}>Да</button>
-                    <button className={style.button} onClick={onClose}>Нет</button>
+                    <button className={style.button} onClick={() => deleteRecord(record.id)}>Удалить</button>
+                    <button className={style.button} onClick={onClose}>Не удалять</button>
                 </div>
             </div>
         </div>,

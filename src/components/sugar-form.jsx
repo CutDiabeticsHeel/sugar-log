@@ -39,28 +39,39 @@ function SugarForm({defaultValue, onClose}) {
         fat: item["Жиры"],
         carbs: item["Углеводы"]
     }))
-    const autoFoodIds = defaultValue?.auto_food ? String(defaultValue.auto_food).split(',').map(id => Number(id.trim())) : [];
-    const defaultFood = autoFoodIds.map(id => forEachProduct.find(p => p.value === id)).filter(Boolean);
+    const autoFoodPairs = defaultValue?.auto_food
+    ? String(defaultValue.auto_food).split(',').map(pair => {
+        const [id, amount] = pair.trim().split(':');
+        return { id: Number(id), amount: Number(amount) };
+    })
+    : [];
+    const defaultFoodList = autoFoodPairs
+    .map(({ id, amount }) => {
+        const product = forEachProduct.find(p => p.value === id);
+        return product ? { ...product, amount } : null;
+    })
+    .filter(Boolean);
+    console.log(defaultFoodList)
     const defaultActivity = defaultValue?.activity ? String(defaultValue.activity).split(',').map(a => a.trim()).filter(Boolean): [];
     const { register, handleSubmit, control, watch, reset, setValue } = useForm({
-        // defaultValues: {
-        //     time: defaultValue?.time ? dayjs(defaultValue.time, "HH:mm") : dayjs(),
-        //     date: defaultValue?.date ? dayjs(defaultValue.date) : dayjs(),
-        //     sugar: defaultValue?.sugar ?? "",
-        //     insulin: defaultValue?.insulin ?? "",
-        //     XEBE: defaultValue?.XEBE ?? "",
-        //     foodText: defaultValue?.food_text ?? "",
-        //     notes: defaultValue?.notes ?? "",
-        //     activity: defaultActivity,
-        //     food: defaultFood,
-        //     carb: defaultValue?.carb ?? "",
-        //     protein: defaultValue?.protein ?? "",
-        //     fat: defaultValue?.fat ?? "", 
-        //     ccal: defaultValue?.ccal ?? "",
-        // }
+        defaultValues: {
+            time: defaultValue?.time ? dayjs(defaultValue.time, "HH:mm") : dayjs(),
+            date: defaultValue?.date ? dayjs(defaultValue.date) : dayjs(),
+            sugar: defaultValue?.sugar ?? "",
+            insulin: defaultValue?.insulin ?? "",
+            XEBE: defaultValue?.XEBE ?? "",
+            foodText: defaultValue?.food_text ?? "",
+            notes: defaultValue?.notes ?? "",
+            activity: defaultActivity,
+            carb: defaultValue?.carb ?? "",
+            protein: defaultValue?.protein ?? "",
+            fat: defaultValue?.fat ?? "", 
+            ccal: defaultValue?.ccal ?? "",
+        }
     })
+    console.log(defaultValue)
     const [selectedProduct, setSelectedProduct] = useState(null);
-    const [foodList, setFoodList] = useState([]);
+    const [foodList, setFoodList] = useState(defaultValue ? defaultFoodList : []);
     const Min = 0; 
     const Max = 100;
     const foodAmount = watch("foodAmount")
@@ -83,7 +94,9 @@ function SugarForm({defaultValue, onClose}) {
     }
 
     useEffect(() => {
-        handleFoodAutoChange(foodList);
+        if (foodList.length > 0) {
+            handleFoodAutoChange(foodList);
+        }
     }, [foodList]);
     
     if (isLoading) return (<Preloader/>)
@@ -136,7 +149,6 @@ function SugarForm({defaultValue, onClose}) {
                 amount: 1,
             },
         ]);
-
         setSelectedProduct(null);
     };
     return (

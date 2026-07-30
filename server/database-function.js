@@ -182,7 +182,7 @@ async function addSugarRecord(entry) {
         autoCcal += parseFloat(food.kcal * food.amount) || 0;
     }
 
-    const autoFood = foodList.map(f => f.value).join(',');
+    const autoFood = foodList.map(food => `${food.value}:${food.amount}`).join(',');
     const activity = Array.isArray(entry.activity) ? entry.activity.join(',') : '';
     const notes = entry.notes;
 

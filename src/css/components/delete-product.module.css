@@ -46,3 +46,9 @@
     font-size: var(--second-medium-text);
     border: 1px solid var(--border-color);
 }
+.button:first-child {
+    background-color: var(--success);
+}
+.button:last-child {
+    background-color: var(--danger);
+}

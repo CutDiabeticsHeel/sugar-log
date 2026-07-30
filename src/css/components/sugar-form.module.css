@@ -120,6 +120,9 @@
     grid-column: 1/3;
     gap: 10px;
 }
+.foodSelectContainer button {
+    background-color: var(--primary-element-background);
+}
 .foodInputContainer {
     display: flex;
     align-items: flex-start;
@@ -163,7 +166,7 @@
     grid-column: 1/3;
     border: none;
     border-radius: 10px;
-    background-color: var(--primary-element-background);
+    background-color: var(--success);
     color: #ffffff;
     padding: 5px;
     font-size: var(--second-medium-text);

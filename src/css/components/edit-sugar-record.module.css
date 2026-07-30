@@ -30,13 +30,12 @@
 }
 .button {
     align-self: center;
-    display: inline-block;
+    width: 100%;
     cursor: pointer;
     border-radius: 10px;
-    background-color: var(--primary-element-background);
+    background-color: var(--danger);
     color: #ffffff;
     padding: 10px;
     font-size: var(--second-medium-text);
     border: 1px solid var(--border-color);
-    width: fit-content;
 }
