@@ -19,6 +19,7 @@ import { motion } from "framer-motion";
 import { useGetProductsQuery, useAddSugarRecordMutation  } from "../store/api";
 import Preloader from "./preloader";
 import { sugarEntrySchema } from "../utils/sugar-form-validate";
+import SubmitingBlock from "./submiting";
 dayjs.extend(customParseFormat);
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -40,18 +41,17 @@ function SugarForm({defaultValue, onClose}) {
         carbs: item["Углеводы"]
     }))
     const autoFoodPairs = defaultValue?.auto_food
-    ? String(defaultValue.auto_food).split(',').map(pair => {
-        const [id, amount] = pair.trim().split(':');
-        return { id: Number(id), amount: Number(amount) };
-    })
-    : [];
+        ? String(defaultValue.auto_food).split(',').map(pair => {
+            const [id, amount] = pair.trim().split(':');
+            return { id: Number(id), amount: Number(amount) };
+        })
+        : [];
     const defaultFoodList = autoFoodPairs
-    .map(({ id, amount }) => {
-        const product = forEachProduct.find(p => p.value === id);
-        return product ? { ...product, amount } : null;
-    })
-    .filter(Boolean);
-    console.log(defaultFoodList)
+        .map(({ id, amount }) => {
+            const product = forEachProduct.find(p => p.value === id);
+            return product ? { ...product, amount } : null;
+        })
+        .filter(Boolean);
     const defaultActivity = defaultValue?.activity ? String(defaultValue.activity).split(',').map(a => a.trim()).filter(Boolean): [];
     const { register, handleSubmit, control, watch, reset, setValue } = useForm({
         defaultValues: {
@@ -69,12 +69,12 @@ function SugarForm({defaultValue, onClose}) {
             ccal: defaultValue?.ccal ?? "",
         }
     })
-    console.log(defaultValue)
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [foodList, setFoodList] = useState(defaultValue ? defaultFoodList : []);
     const Min = 0; 
     const Max = 100;
     const foodAmount = watch("foodAmount")
+    const [isLoad, setIsLoading] = useState(false)
 
     const handleFoodAutoChange = async (selectedOptions) =>{
         const response = await fetch(`${API_URL}/foodAuto`,{
@@ -110,6 +110,7 @@ function SugarForm({defaultValue, onClose}) {
             console.error(parsed.error.flatten());
             return;
         }
+        setIsLoading(true)
         try {
             await addSugarRecord({...parsed.data, id: defaultValue?.id ?? null}).unwrap();
             onClose?.();
@@ -117,6 +118,8 @@ function SugarForm({defaultValue, onClose}) {
             setFoodList([])
         } catch (err) {
             console.error({ error: err.message });
+        } finally {
+            setIsLoading(false)
         }
     }
 
@@ -293,6 +296,9 @@ function SugarForm({defaultValue, onClose}) {
                 <button className={style.addEntry} type="submit">
                     {defaultValue?.id ? "Изменить запись" : "Добавить запись"}
                 </button>
+                {isLoad && (
+                    <SubmitingBlock operation={["Запись добавляется в Дневник Сахаров"]}/>
+                )}
             </motion.form>
         </section>
     )

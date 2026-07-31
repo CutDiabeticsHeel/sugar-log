@@ -5,6 +5,7 @@ import style from "../css/components/endocrinologist.module.css";
 import {useState, useEffect} from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Preloader from "./preloader";
+import SubmitingBlock from "./submiting";
 
 const API_URL = import.meta.env.VITE_API_URL;
 const wrapperVariants = {
@@ -28,26 +29,31 @@ function Endocrinologist(){
         name: ''
     });
     const info = endocrinologist?.[0];
+    const [isLoad, setIsLoading] = useState(false);
+
     if (isLoading) return (<Preloader/>)
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
     const handleSave = async () => {
-        const response = await fetch(`${API_URL}/update-endocrinologist`, {
-            method: "PUT",
-            headers: {
-                    "Content-Type": "application/json;charset=utf-8",
-            },
-            body: JSON.stringify(formData)
-        })
-        if (!response.ok) {
-            throw new Error(`HTTP error: ${response.status}`);
-        } else {
+        setIsLoading(true)
+        try {
+            const response = await fetch(`${API_URL}/update-endocrinologist`, {
+                method: "PUT",
+                headers: {
+                        "Content-Type": "application/json;charset=utf-8",
+                },
+                body: JSON.stringify(formData)
+            })
             setFormData({day: '', month: '', time: '', name: ''})
             setPopupOpen(prev => !prev)
             refetch()
-        }
-        
+        } catch (err) {
+            console.error({ error: err.message });
+        } finally {
+            setIsLoading(false)
+        }     
     };
     return (
         <div className={style.endocrinologistSection}>
@@ -75,7 +81,10 @@ function Endocrinologist(){
                     </button>
                 </motion.div>
                 )}
-            </AnimatePresence>   
+            </AnimatePresence>
+            {isLoad && (
+                <SubmitingBlock operation={["изменение ифнормации о приёме"]}/>
+            )}   
         </div>
     )
 }

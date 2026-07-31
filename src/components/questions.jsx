@@ -5,6 +5,7 @@ import {useState} from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useForm} from "react-hook-form"
 import Preloader from "./preloader";
+import SubmitingBlock from "./submiting";
 
 const API_URL = import.meta.env.VITE_API_URL;
 const wrapperVariants = {
@@ -36,6 +37,8 @@ function Questions(){
     const [popupOpen, setPopupOpen] = useState(false)
     const { register, handleSubmit, reset } = useForm();
     const [selectedIds, setSelectedIds] = useState([]);
+    const [isLoad, setIsLoading] = useState(false);
+    const [title, setTitle] = useState("");
 
     if (isLoading) return (<Preloader/>)
 
@@ -45,35 +48,42 @@ function Questions(){
         );
     };
     const deleteQuestion = async () => {
-        const response = await fetch(`${API_URL}/delete-question`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json;charset=utf-8",
-            },
-            body: JSON.stringify({ ids: selectedIds })
-        })
-        if (!response.ok) {
-            throw new Error(`HTTP error: ${response.status}`);
-        } else {
+        setTitle("удаление вопроса")
+        setIsLoading(true)
+        try {
+            const response = await fetch(`${API_URL}/delete-question`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json;charset=utf-8",
+                },
+                body: JSON.stringify({ ids: selectedIds })
+            })
             setSelectedIds([]);
             refetch();
-        }
-        
+        }catch (err) {
+            console.error({ error: err.message });
+        } finally {
+            setIsLoading(false)
+        }      
     }
     const addQuestion = async (data) => {
-        const response = await fetch(`${API_URL}/add-question`, {
-            method: "post",
-            headers: {
-                "Content-Type": "application/json;charset=utf-8",
-            },
-            body: JSON.stringify(data)
-        })
-        if (!response.ok) {
-            throw new Error(`HTTP error: ${response.status}`);
-        } else {
+        setTitle("добавление вопроса")
+        setIsLoading(true) 
+        try {
+            const response = await fetch(`${API_URL}/add-question`, {
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json;charset=utf-8",
+                },
+                body: JSON.stringify(data)
+            })
             reset();
             refetch();
-        }
+        }catch (err) {
+            console.error({ error: err.message });
+        } finally {
+            setIsLoading(false)
+        }    
     }
     return (
         <div className={style.questionsSection}>
@@ -111,6 +121,9 @@ function Questions(){
                     </motion.form>
                 }
             </AnimatePresence>
+            {isLoad && (
+                <SubmitingBlock operation={title}/>
+            )}
         </div>
     )
 }

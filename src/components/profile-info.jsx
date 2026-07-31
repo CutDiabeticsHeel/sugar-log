@@ -5,6 +5,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import UndoIcon from '@mui/icons-material/Undo';
 import Preloader from "./preloader";
+import SubmitingBlock from "./submiting";
 
 const API_URL = import.meta.env.VITE_API_URL;
 const wrapperVariants = {
@@ -26,24 +27,28 @@ function ProfileInfo(){
     const [weight, setWeight] = useState("");
     const [shortInsulin, setShortInsulin] = useState("");
     const [longInsulin, setLongInsulin] = useState("");
+    const [isLoad, setIsLoading] = useState(false)
     if (isLoading) return (<Preloader/>)
 
     const info = userInfo?.[0];
     const changeUserInfo = async () => {
-        const data = {name, height, weight, shortInsulin, longInsulin}
-        const response = await fetch(`${API_URL}/changeUserInfo`, {
-            method: "POST",
-            headers: {
-                    "Content-Type": "application/json;charset=utf-8",
-            },
-            body: JSON.stringify(data)
-        })
-        if (!response.ok) {
-            throw new Error(`HTTP error: ${response.status}`);
-        } else {
+        setIsLoading(true)
+        try {
+            const data = {name, height, weight, shortInsulin, longInsulin}
+            const response = await fetch(`${API_URL}/changeUserInfo`, {
+                method: "POST",
+                headers: {
+                        "Content-Type": "application/json;charset=utf-8",
+                },
+                body: JSON.stringify(data)
+            })
             await refetch();
             setPopupOpen(false)
             setHeight(""); setWeight(""); setShortInsulin(""); setLongInsulin(""); setName("");
+        }catch (err) {
+            console.error({ error: err.message });
+        } finally {
+            setIsLoading(false)
         }
     }
     return (
@@ -104,6 +109,9 @@ function ProfileInfo(){
                     </motion.div>
                 )}
             </AnimatePresence>
+            {isLoad && (
+                <SubmitingBlock operation={["Информация о вас меняется"]}/>
+            )}
         </div>
     )
 }

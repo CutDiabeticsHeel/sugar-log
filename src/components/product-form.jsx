@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import {useRef, useState, useEffect} from "react";
 import {useGetUserInfoQuery} from "../store/api";
 import Preloader from "./preloader";
+import SubmitingBlock from "./submiting";
 
 const API_URL = import.meta.env.VITE_API_URL;
 const formVariants = {
@@ -40,21 +41,28 @@ function ProductForm({defaultValue, onClose}) {
 
     const XEBEValue = Number((((protein * 4 * weight) + (fat * 9 * weight)) / 10000).toFixed(2));
     const XEValue = Number((((carbs * weight / 100)) / 12).toFixed(2));
-
+    const [isLoad, setIsLoading] = useState(false)
 
     const onSubmit = async (data) =>{
-        const responce = await fetch(`${API_URL}/addProduct`,{
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json;charset=utf-8",
-            },
-            body: JSON.stringify({
-                ...data,
-                id: defaultValue?.id ?? null,
+        setIsLoading(true)
+        try {
+            const responce = await fetch(`${API_URL}/addProduct`,{
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json;charset=utf-8",
+                },
+                body: JSON.stringify({
+                    ...data,
+                    id: defaultValue?.id ?? null,
+                })
             })
-        })
-        onClose?.();
-        reset();
+            onClose?.();
+            reset();
+        }catch (err) {
+            console.error({ error: err.message });
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     useEffect(() => {
@@ -116,6 +124,9 @@ function ProductForm({defaultValue, onClose}) {
                         {defaultValue ? "Изменить продукт" : "Добавить продукт"}
                     </button>
                 </motion.form>
+                {isLoad && (
+                    <SubmitingBlock operation={["Продукт добавляется в Список Продуктов"]}/>
+                )}
         </section>
     )
 }
