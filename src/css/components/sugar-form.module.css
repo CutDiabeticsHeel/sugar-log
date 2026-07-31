@@ -173,6 +173,9 @@
     font-size: var(--second-medium-text);
     border: 1px solid var(--border-color)
 }
+.errorText {
+    color: var(--danger)
+}
 
 @container sugarForm (max-width: 504px) {
     .sugarForm {

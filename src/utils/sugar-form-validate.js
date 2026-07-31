@@ -27,21 +27,21 @@ export const sugarEntrySchema = z.object({
         { message: 'Некорректное время, ожидается формат HH:mm' }
     ),
     sugar: numericField(
-        z.number({ invalid_type_error: 'Сахар должен быть числом' })
-         .gt(1, { message: 'Сахар должен быть больше 1' })
-         .lt(40, { message: 'Сахар должен быть меньше 40' })
+        z.number({ error: 'Сахар должен быть числом' })
+         .gt(1, { message: 'Сахар должен быть больше 1 ммоль' })
+         .lt(40, { message: 'Сахар должен быть меньше 40 ммоль/л' })
     ),
     insulin: numericField(
-        z.number({ invalid_type_error: 'Инсулин должен быть числом' })
+        z.number({ error: 'Инсулин должен быть числом' })
          .min(0).optional()
     ),
     XEBE: numericField(
-        z.number({ invalid_type_error: 'ХЕ должно быть числом' })
+        z.number({ error: 'ХЕ должно быть числом' })
          .min(0).optional()
     ),
-    protein: numericField(z.number({ invalid_type_error: ' должно быть числом' }).optional()),
-    fat: numericField(z.number({ invalid_type_error: ' должно быть числом' }).optional()),
-    carb: numericField(z.number({ invalid_type_error: ' должно быть числом' }).optional()),
+    protein: numericField(z.number({ error: 'Значение должно быть числом' }).optional()),
+    fat: numericField(z.number({ error: 'Значение должно быть числом' }).optional()),
+    carb: numericField(z.number({ error: 'Значение должно быть числом' }).optional()),
     food: z.any(),
     foodText: z.any(),
     activity: z.any(),

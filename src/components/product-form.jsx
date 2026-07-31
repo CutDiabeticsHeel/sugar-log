@@ -5,6 +5,7 @@ import {useRef, useState, useEffect} from "react";
 import {useGetUserInfoQuery} from "../store/api";
 import Preloader from "./preloader";
 import SubmitingBlock from "./submiting";
+import { productEntrySchema } from "../utils/product-form-validate";
 
 const API_URL = import.meta.env.VITE_API_URL;
 const formVariants = {
@@ -20,7 +21,7 @@ const formVariants = {
 
 function ProductForm({defaultValue, onClose}) {
     const {data: userInfo, isLoading, refetch} = useGetUserInfoQuery();
-    const {register, handleSubmit, watch, reset} = useForm({
+    const {register, handleSubmit, watch, reset, setError, formState: { errors },} = useForm({
         defaultValues: {
             nameProduct: defaultValue?.["Продукт"] ?? "",
             protein: defaultValue?.["Белки"] ?? "",
@@ -44,6 +45,17 @@ function ProductForm({defaultValue, onClose}) {
     const [isLoad, setIsLoading] = useState(false)
 
     const onSubmit = async (data) =>{
+        const parsed = productEntrySchema.safeParse(data)
+        if (!parsed.success) {
+            const fieldErrors = parsed.error.flatten().fieldErrors;
+            console.log(fieldErrors)
+            Object.entries(fieldErrors).forEach(([field, messages]) => {
+                if (messages?.length) {
+                    setError(field, { type: "manual", message: messages[0]});
+                }
+            })
+            return;
+        }
         setIsLoading(true)
         try {
             const responce = await fetch(`${API_URL}/addProduct`,{
@@ -96,23 +108,28 @@ function ProductForm({defaultValue, onClose}) {
                 <motion.form onSubmit={handleSubmit(onSubmit)} autoComplete="off" className={`${style.productForm } ${smallForm ? style.productSmallForm : "" }`} autoComplete="off" ref={formElement} variants={formVariants}>
                     <label className={style.nameProductConrainer} >
                         Название продукта
-                        <input type="text" {...register("nameProduct")} required placeholder={defaultValue ? defaultValue["Продукт"] : ""}/>
+                        <input type="text" {...register("nameProduct")}  placeholder={defaultValue ? defaultValue["Продукт"] : ""}/>
+                        {errors.nameProduct && <span className={style.errorText}>{errors.nameProduct.message}</span>}
                     </label>
                     <label className={style.proteinConrainer}>
                         Белки, г
-                        <input type="text" {...register("protein")} required placeholder={defaultValue ? defaultValue["Белки"] : ""}/>
+                        <input type="text" {...register("protein")}  placeholder={defaultValue ? defaultValue["Белки"] : ""}/>
+                        {errors.protein && <span className={style.errorText}>{errors.protein.message}</span>}
                     </label>
                     <label className={style.fatConrainer}>
                         Жиры, г
-                        <input type="text" {...register("fat")} required placeholder={defaultValue ? defaultValue["Жиры"] : ""}/>
+                        <input type="text" {...register("fat")}  placeholder={defaultValue ? defaultValue["Жиры"] : ""}/>
+                        {errors.fat && <span className={style.errorText}>{errors.fat.message}</span>}
                     </label>
                     <label className={style.carbsConrainer}>
                         Углеводы, г
-                        <input type="text" {...register("carbs")} required placeholder={defaultValue ? defaultValue["Углеводы"] : ""}/>
+                        <input type="text" {...register("carbs")}  placeholder={defaultValue ? defaultValue["Углеводы"] : ""}/>
+                        {errors.carbs && <span className={style.errorText}>{errors.carbs.message}</span>}
                     </label>
                     <label className={style.weigthConrainer}>
                         Вес продукта, г
-                        <input type="text" {...register("weigth")} required placeholder={defaultValue ? defaultValue["Вес продукта"] : ""}/>
+                        <input type="text" {...register("weigth")}  placeholder={defaultValue ? defaultValue["Вес продукта"] : ""}/>
+                        {errors.weigth && <span className={style.errorText}>{errors.weigth.message}</span>}
                     </label>
                     <div className={style.valueContainer}>
                         <p ><span>БЖЕ</span>{XEBEValue}</p>
@@ -125,7 +142,7 @@ function ProductForm({defaultValue, onClose}) {
                     </button>
                 </motion.form>
                 {isLoad && (
-                    <SubmitingBlock operation={["Продукт добавляется в Список Продуктов"]}/>
+                    <SubmitingBlock operation="Продукт добавляется в Список Продуктов"/>
                 )}
         </section>
     )

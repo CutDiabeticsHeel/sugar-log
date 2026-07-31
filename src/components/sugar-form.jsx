@@ -53,7 +53,7 @@ function SugarForm({defaultValue, onClose}) {
         })
         .filter(Boolean);
     const defaultActivity = defaultValue?.activity ? String(defaultValue.activity).split(',').map(a => a.trim()).filter(Boolean): [];
-    const { register, handleSubmit, control, watch, reset, setValue } = useForm({
+    const { register, handleSubmit, control, setError, formState: { errors }, watch, reset, setValue } = useForm({
         defaultValues: {
             time: defaultValue?.time ? dayjs(defaultValue.time, "HH:mm") : dayjs(),
             date: defaultValue?.date ? dayjs(defaultValue.date) : dayjs(),
@@ -107,7 +107,13 @@ function SugarForm({defaultValue, onClose}) {
         data.date = dayjs(data.date).format("YYYY-MM-DD");
         const parsed = sugarEntrySchema.safeParse(data)
         if (!parsed.success) {
-            console.error(parsed.error.flatten());
+            const fieldErrors = parsed.error.flatten().fieldErrors;
+            console.log(fieldErrors)
+            Object.entries(fieldErrors).forEach(([field, messages]) => {
+                if (messages?.length) {
+                    setError(field, { type: "manual", message: messages[0]});
+                }
+            })
             return;
         }
         setIsLoading(true)
@@ -117,7 +123,7 @@ function SugarForm({defaultValue, onClose}) {
             reset();
             setFoodList([])
         } catch (err) {
-            console.error({ error: err.message });
+            console.error(err);
         } finally {
             setIsLoading(false)
         }
@@ -173,7 +179,8 @@ function SugarForm({defaultValue, onClose}) {
                             )}
                         />
                     </LocalizationProvider>
-                </label>
+                    {errors.time && <span className={style.errorText}>{errors.time.message}</span>}
+                </label>               
                 <label className={style.dateInputContainer}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <Controller
@@ -190,31 +197,38 @@ function SugarForm({defaultValue, onClose}) {
                             )}
                         />
                     </LocalizationProvider>
+                    {errors.date && <span className={style.errorText}>{errors.date.message}</span>}
                 </label>
                 <label className={style.sugarInputContainer}>
                     Cахар
                     <input className={style.sugarInput} {...register("sugar")}/>
+                    {errors.sugar && <span className={style.errorText}>{errors.sugar.message}</span>}
                 </label>
                 <label className={style.insulinInputContainer}>
                     Инсулин
                     <input className={style.insulinInput} {...register("insulin")} />
+                    {errors.insulin && <span className={style.errorText}>{errors.insulin.message}</span>}        
                 </label>
                 <label className={style.XEBEInputContainer}>
                     ХЕ и БЖЕ
                     <input className={style.XEBEInput} {...register("XEBE")}/>
+                    {errors.XEBE && <span className={style.errorText}>{errors.XEBE.message}</span>}
                 </label>
                 <div className={style.macrosContainer}>
                     <label className={style.proteinConrainer}>
                         Белки, г
                         <input {...register("protein")}  />
+                        {errors.protein && <span className={style.errorText}>{errors.protein.message}</span>}
                     </label>
                     <label className={style.fatConrainer}>
                         Жиры, г
                         <input {...register("fat")} />
+                        {errors.fat && <span className={style.errorText}>{errors.fat.message}</span>}
                     </label>
                     <label className={style.carbsConrainer}>
                         Углеводы, г
                         <input {...register("carb")}  />
+                        {errors.carb && <span className={style.errorText}>{errors.carb.message}</span>}
                     </label>
                 </div>
                 <label className={style.foodSelectContainer}>
@@ -297,7 +311,7 @@ function SugarForm({defaultValue, onClose}) {
                     {defaultValue?.id ? "Изменить запись" : "Добавить запись"}
                 </button>
                 {isLoad && (
-                    <SubmitingBlock operation={["Запись добавляется в Дневник Сахаров"]}/>
+                    <SubmitingBlock operation={["добавлание записи в Дневник Сахаров"]}/>
                 )}
             </motion.form>
         </section>
