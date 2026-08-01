@@ -41,15 +41,17 @@ function DailyProfile() {
     const maxSugar = Math.max(...sugarLog.map(item => item.sugar));
     const minSugar = Math.min(...sugarLog.map(item => item.sugar));
 
-    const series = Object.entries(grouped).map(([date, data]) => ({
-        name: dayjs(date).format("DD MMM"),
-        type: "line",
-        smooth: false,
-        symbol: "circle",
-        symbolSize: 7,
-        data,
-        connectNulls: false
-    }));
+    const series = Object.entries(grouped)
+        .sort(([dateA], [dateB]) => dateA.localeCompare(dateB))
+        .map(([date, data]) => ({
+            name: dayjs(date).format("DD MMM"),
+            type: "line",
+            smooth: false,
+            symbol: "circle",
+            symbolSize: 7,
+            data,
+            connectNulls: false
+        }));
     const visibleSeries = series.slice(-days);
 
     if (visibleSeries.length > 0) {

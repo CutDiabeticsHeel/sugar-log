@@ -2,7 +2,7 @@ import { createPortal } from "react-dom";
 import style from "../css/components/delete-sugar-record.module.css";
 const API_URL = import.meta.env.VITE_API_URL;
 
-function DeleteSugarRecord({ record, onClose }) {
+function DeleteSugarRecord({ record, onClose, onDeleted }) {
     const deleteRecord = async (id) => {
         const response = await fetch(`${API_URL}/delete-sugar-record`, {
             method: "DELETE",
@@ -14,7 +14,8 @@ function DeleteSugarRecord({ record, onClose }) {
         if (!response.ok) {
             throw new Error(`HTTP error: ${response.status}`);
         } else {
-            onClose()
+            onDeleted?.();
+            onClose();
         }
     }
 

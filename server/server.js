@@ -66,11 +66,11 @@ app.get("/api/today-sugar-log", async (request, reply) => {
 app.post("/api/addSugar", async (request, reply) => {
     try {
         await addSugarRecord(request.body)
+        return {message: "Успешно"}
     } catch (err) {
         console.log(err)
-        reply.status(500).send({error: "Database write failed"})
+        return reply.status(500).send({error: "Database write failed"})
     }
-    return {message: "Успешно"}
 })
 
 app.post("/api/addProduct", async (request, reply) => {

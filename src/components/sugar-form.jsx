@@ -63,9 +63,9 @@ function SugarForm({defaultValue, onClose}) {
             foodText: defaultValue?.food_text ?? "",
             notes: defaultValue?.notes ?? "",
             activity: defaultActivity,
-            carb: defaultValue?.carb ?? "",
-            protein: defaultValue?.protein ?? "",
-            fat: defaultValue?.fat ?? "", 
+            carb: defaultValue?.manual_carb ?? "",
+            protein: defaultValue?.manual_protein ?? "",
+            fat: defaultValue?.manual_fat ?? "",
             ccal: defaultValue?.ccal ?? "",
         }
     })
@@ -108,7 +108,6 @@ function SugarForm({defaultValue, onClose}) {
         const parsed = sugarEntrySchema.safeParse(data)
         if (!parsed.success) {
             const fieldErrors = parsed.error.flatten().fieldErrors;
-            console.log(fieldErrors)
             Object.entries(fieldErrors).forEach(([field, messages]) => {
                 if (messages?.length) {
                     setError(field, { type: "manual", message: messages[0]});

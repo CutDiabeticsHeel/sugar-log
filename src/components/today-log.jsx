@@ -63,7 +63,7 @@ function TodayLog() {
                         <div className={style.content}>
                             <span className={style.food}>{entry.food}</span>
                             <span className={style.meta}>
-                                {entry.insulin} ед короткого на {entry.XEBE} ХЕ-БЖЕ
+                                {entry.insulin} ед короткого {entry.XEBE === 0 ? "" : `на ${entry.XEBE} ХЕ-БЖЕ`}
                             </span>
                         </div>
 

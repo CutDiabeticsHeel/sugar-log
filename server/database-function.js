@@ -170,7 +170,7 @@ async function updateUserInfo(
 
 async function addSugarRecord(entry) {
     const foodList = Array.isArray(entry.food) ? entry.food : [];
-    const autoNames = foodList.map(food =>  `${food.label} x ${food.amount}`).filter(Boolean);
+    const autoNames = foodList.map(food => ` "${food.label}" x ${food.amount}`).filter(Boolean);
     const manualText = entry.foodText && entry.foodText.trim() ? entry.foodText.trim() : '';
     const foodName = [manualText, ...autoNames].filter(Boolean).join(', ');
 
@@ -186,40 +186,47 @@ async function addSugarRecord(entry) {
     const activity = Array.isArray(entry.activity) ? entry.activity.join(',') : '';
     const notes = entry.notes;
 
-    const manulProtein = entry.protein || 0;
-    const manulFat = entry.fat || 0;
-    const manulCarb = entry.carb || 0;
+    const manulProtein = Number(entry.protein) || 0;
+    const manulFat = Number(entry.fat) || 0;
+    const manulCarb = Number(entry.carb) || 0;
 
-    const protein = manulProtein + autoProtein;
-    const fat = manulFat + autoFat;
-    const carb = manulCarb + autoCarb;
+    const protein = Number(manulProtein + autoProtein).toFixed(0);
+    const fat = Number(manulFat + autoFat).toFixed(0);
+    const carb = Number(manulCarb + autoCarb).toFixed(0);
     const ccal = Math.round(manulProtein * 4 + manulFat * 9 + manulCarb * 4 + autoCcal);
+    const insulin = entry.insulin === undefined || entry.insulin === null ? '' : entry.insulin;
+    const XEBE = entry.XEBE === undefined || entry.XEBE === null ? '' : entry.XEBE;
 
     if (entry.id) {
         const sql = `UPDATE sugar_log
-                     SET date = ?, time = ?, sugar = ?, insulin = ?, XEBE = ?, food = ?, protein = ?, fat = ?, carb = ?, ccal = ?, notes = ?, auto_food = ?, activity = ?, food_text = ?
+                     SET date = ?, time = ?, sugar = ?, insulin = ?, XEBE = ?, food = ?, protein = ?, fat = ?, carb = ?, ccal = ?, notes = ?, auto_food = ?, activity = ?, food_text = ?,
+                         manual_protein = ?, manual_fat = ?, manual_carb = ?
                      WHERE id = ?`;
 
         const params = [
-            entry.date, entry.time, entry.sugar, entry.insulin, entry.XEBE, foodName,
-            protein, fat, carb, ccal, notes, autoFood, activity, manualText, entry.id
+            entry.date, entry.time, entry.sugar, insulin, XEBE, foodName,
+            protein, fat, carb, ccal, notes, autoFood, activity, manualText,
+            manulProtein, manulFat, manulCarb,
+            entry.id
         ];
 
         await db.execute({ sql, args: params });
         return entry.id;
     } else {
-        const sql = `INSERT INTO sugar_log (date, time, sugar, insulin, XEBE, food, protein, fat, carb, ccal, notes, auto_food, activity, food_text)
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        const sql = `INSERT INTO sugar_log (date, time, sugar, insulin, XEBE, food, protein, fat, carb, ccal, notes, auto_food, activity, food_text, manual_protein, manual_fat, manual_carb)
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
         const params = [
-            entry.date, entry.time, entry.sugar, entry.insulin, entry.XEBE, foodName,
-            protein, fat, carb, ccal, notes, autoFood, activity, manualText
+            entry.date, entry.time, entry.sugar, insulin, XEBE, foodName,
+            protein, fat, carb, ccal, notes, autoFood, activity, manualText,
+            manulProtein, manulFat, manulCarb
         ];
 
         const result = await db.execute({ sql, args: params });
         return Number(result.lastInsertRowid);
     }
 }
+
 async function addQuestion(question) {
     if (!question || question === "") {
         return 0;

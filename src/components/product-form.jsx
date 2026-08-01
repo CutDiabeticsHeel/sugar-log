@@ -48,7 +48,6 @@ function ProductForm({defaultValue, onClose}) {
         const parsed = productEntrySchema.safeParse(data)
         if (!parsed.success) {
             const fieldErrors = parsed.error.flatten().fieldErrors;
-            console.log(fieldErrors)
             Object.entries(fieldErrors).forEach(([field, messages]) => {
                 if (messages?.length) {
                     setError(field, { type: "manual", message: messages[0]});

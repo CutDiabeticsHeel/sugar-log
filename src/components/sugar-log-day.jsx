@@ -102,7 +102,7 @@ function SugarLogDay({ period }) {
                 return (
                     <div className={style.tableContainer} key={date}>
                         <table className={style.dayLog}>
-                            <caption className={`${style.caption} ${sugarStyles[getSugarStatus(avgSugar)]}`}> {dayjs(date).format("DD MMM, dddd")}: Средний сахар за этот день - {Number(avgSugar).toFixed(1)}. Всего Б: {Number(dayData.proteinSum).toFixed(0)} Ж: {Number(dayData.fatSum).toFixed(0)} У: {Number(dayData.carbSum).toFixed(0)} Ккал: {Number(dayData.ccalSum).toFixed(0)}</caption>
+                            <caption className={`${style.caption} ${sugarStyles[getSugarStatus(avgSugar)]}`}> {dayjs(date).format("DD MMMM, dddd")}: Средний сахар за этот день - {Number(avgSugar).toFixed(1)}. Всего Б: {Number(dayData.proteinSum).toFixed(0)} Ж: {Number(dayData.fatSum).toFixed(0)} У: {Number(dayData.carbSum).toFixed(0)} Ккал: {Number(dayData.ccalSum).toFixed(0)}</caption>
                             <thead className={style.headers}>
                                 <tr>
                                     <th>Время</th>
@@ -141,7 +141,7 @@ function SugarLogDay({ period }) {
                                             <button className={style.icon}>
                                                 <DeleteIcon onClick={() => setDeletePopupId(record.id)} sx={{ fill: "#013567" }}/>
                                                 {deletePopupId === record.id && (
-                                                    <DeleteSugarRecord record={record} onClose={() => setDeletePopupId(null)}/>
+                                                    <DeleteSugarRecord record={record} onClose={() => setDeletePopupId(null)} onDeleted={refetch}/>
                                                 )}
                                             </button>
                                         </td>
