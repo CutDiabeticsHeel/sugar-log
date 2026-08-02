@@ -19,7 +19,7 @@
     background-color: var(--secondary-background);
     border-radius: 20px;
     padding: 20px;
-    z-index: 1000;
+    z-index: 1001;
 }
 .submitingBlock span {
     display: inline-block;

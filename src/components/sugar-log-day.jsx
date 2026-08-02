@@ -101,54 +101,58 @@ function SugarLogDay({ period }) {
                 const avgSugar = Number(dayData.sugarSum / dayData.records.length).toFixed(1);
                 return (
                     <div className={style.tableContainer} key={date}>
-                        <table className={style.dayLog}>
-                            <caption className={`${style.caption} ${sugarStyles[getSugarStatus(avgSugar)]}`}> {dayjs(date).format("DD MMMM, dddd")}: Средний сахар за этот день - {Number(avgSugar).toFixed(1)}. Всего Б: {Number(dayData.proteinSum).toFixed(0)} Ж: {Number(dayData.fatSum).toFixed(0)} У: {Number(dayData.carbSum).toFixed(0)} Ккал: {Number(dayData.ccalSum).toFixed(0)}</caption>
-                            <thead className={style.headers}>
-                                <tr>
-                                    <th>Время</th>
-                                    <th>Сахар</th>
-                                    <th>Инсулин</th>
-                                    <th>ХЕ + БЖЕ</th>
-                                    <th>Б</th>
-                                    <th>Ж</th>
-                                    <th>У</th>
-                                    <th>Ккал</th>
-                                    <th>Еда</th>
-                                    <th>Заметки</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {dayData.records.map((record) => (
-                                    <tr key={record.id}>
-                                        <td>{record.time}</td>
-                                        <td>{record.sugar}</td>
-                                        <td>{record.insulin}</td>
-                                        <td>{record.XEBE}</td>
-                                        <td>{record.protein}</td>
-                                        <td>{record.fat}</td>
-                                        <td>{record.carb}</td>
-                                        <td>{record.ccal}</td>
-                                        <td>{record.food}</td>
-                                        <td>{`${record.notes ? `${record.notes}.` : ""} ${record.activity ?  `Активности: ${record.activity}` : ""}`}</td>
-                                        <td>
-                                            <button className={style.icon}>
-                                                <EditIcon  onClick={() => setEditPopupId(record.id)} sx={{ fill: "#013567" }}/>
-                                                {editPopupId === record.id && (
-                                                    <EditSugarRecord record={record} onClose={() => setEditPopupId(null)}/>
-                                                )}
-                                            </button>
-                                            <button className={style.icon}>
-                                                <DeleteIcon onClick={() => setDeletePopupId(record.id)} sx={{ fill: "#013567" }}/>
-                                                {deletePopupId === record.id && (
-                                                    <DeleteSugarRecord record={record} onClose={() => setDeletePopupId(null)} onDeleted={refetch}/>
-                                                )}
-                                            </button>
-                                        </td>
+                        <details className={style.dayLog} open>
+                            <summary className={`${style.caption} ${sugarStyles[getSugarStatus(avgSugar)]}`}>
+                                {dayjs(date).format("DD MMMM, dddd")}: Средний сахар за этот день - {Number(avgSugar).toFixed(1)}. Всего Б: {Number(dayData.proteinSum).toFixed(0)} Ж: {Number(dayData.fatSum).toFixed(0)} У: {Number(dayData.carbSum).toFixed(0)} Ккал: {Number(dayData.ccalSum).toFixed(0)}
+                            </summary>
+                            <table className={style.dayLog}>
+                                <thead className={style.headers}>
+                                    <tr>
+                                        <th>Время</th>
+                                        <th>Сахар</th>
+                                        <th>Инсулин</th>
+                                        <th>ХЕ + БЖЕ</th>
+                                        <th>Б</th>
+                                        <th>Ж</th>
+                                        <th>У</th>
+                                        <th>Ккал</th>
+                                        <th>Еда</th>
+                                        <th>Заметки</th>
+                                        <th></th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    {dayData.records.map((record) => (
+                                        <tr key={record.id}>
+                                            <td>{record.time}</td>
+                                            <td>{record.sugar}</td>
+                                            <td>{record.insulin}</td>
+                                            <td>{record.XEBE}</td>
+                                            <td>{record.protein}</td>
+                                            <td>{record.fat}</td>
+                                            <td>{record.carb}</td>
+                                            <td>{record.ccal}</td>
+                                            <td>{record.food}</td>
+                                            <td>{`${record.notes ? `${record.notes}.` : ""} ${record.activity ?  `Активности: ${record.activity}` : ""}`}</td>
+                                            <td>
+                                                <button className={style.icon}>
+                                                    <EditIcon  onClick={() => setEditPopupId(record.id)} sx={{ fill: "#013567" }}/>
+                                                    {editPopupId === record.id && (
+                                                        <EditSugarRecord record={record} onClose={() => setEditPopupId(null)}/>
+                                                    )}
+                                                </button>
+                                                <button className={style.icon}>
+                                                    <DeleteIcon onClick={() => setDeletePopupId(record.id)} sx={{ fill: "#013567" }}/>
+                                                    {deletePopupId === record.id && (
+                                                        <DeleteSugarRecord record={record} onClose={() => setDeletePopupId(null)} onDeleted={refetch}/>
+                                                    )}
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </details>
                     </div>
                 )
             })}

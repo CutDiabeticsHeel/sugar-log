@@ -63,10 +63,9 @@ function TodayLog() {
                         <div className={style.content}>
                             <span className={style.food}>{entry.food}</span>
                             <span className={style.meta}>
-                                {entry.insulin} ед короткого {entry.XEBE === 0 ? "" : `на ${entry.XEBE} ХЕ-БЖЕ`}
+                                {entry.insulin ? `${entry.insulin} ед короткого` : ""} {entry.XEBE ? `на ${entry.XEBE} ХЕ-БЖЕ` : ""}
                             </span>
                         </div>
-
                         <span className={sugarStyles[getSugarStatus(parseSugar(entry.sugar))]}>
                             {entry.sugar}
                         </span>

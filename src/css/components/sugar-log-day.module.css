@@ -1,5 +1,6 @@
 .tableContainer {
     overflow-x: auto;
+    margin: 10px 0px;
 }
 .dayLog {
     background-color: var(--secondary-background);
@@ -33,7 +34,6 @@ th {
     border-top: 1px solid var(--border-color);
 }
 .caption {
-    margin: 10px 0px;
     padding: 0px 10px;
     text-align: left;
 }
