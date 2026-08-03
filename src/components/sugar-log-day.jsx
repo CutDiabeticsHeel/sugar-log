@@ -105,7 +105,7 @@ function SugarLogDay({ period }) {
                             <summary className={`${style.caption} ${sugarStyles[getSugarStatus(avgSugar)]}`}>
                                 {dayjs(date).format("DD MMMM, dddd")}: Средний сахар за этот день - {Number(avgSugar).toFixed(1)}. Всего Б: {Number(dayData.proteinSum).toFixed(0)} Ж: {Number(dayData.fatSum).toFixed(0)} У: {Number(dayData.carbSum).toFixed(0)} Ккал: {Number(dayData.ccalSum).toFixed(0)}
                             </summary>
-                            <table className={style.dayLog}>
+                            <table className={style.dayLogTable}>
                                 <thead className={style.headers}>
                                     <tr>
                                         <th>Время</th>

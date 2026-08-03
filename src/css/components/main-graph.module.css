@@ -3,8 +3,32 @@
     border-radius: 20px;
     padding: 20px;
     margin: 20px 0px;
+    position: relative;
 }
 .mainGraph span {
+    display: inline-flex;
     font-size: var(--large-text);
     font-style: italic;
+    width: 80%;
+}
+.screenButton {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin: 10px;
+    color: var(--secondary-element-background);
+    background-color: inherit;
+    border: none;
+}
+.rotated {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 94vh;
+    height: 77vw;
+    transform: translate(-47%, -55%) rotate(90deg);
+    transform-origin: center center;
+    z-index: 9999;
+    background-color: var(--secondary-background);
+    overflow: auto;
 }

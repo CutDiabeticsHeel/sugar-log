@@ -110,7 +110,7 @@ function ProfileInfo(){
                 )}
             </AnimatePresence>
             {isLoad && (
-                <SubmitingBlock operation={["Информация о вас меняется"]}/>
+                <SubmitingBlock operation="изменение информации о вас"/>
             )}
         </div>
     )

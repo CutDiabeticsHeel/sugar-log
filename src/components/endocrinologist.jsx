@@ -83,7 +83,7 @@ function Endocrinologist(){
                 )}
             </AnimatePresence>
             {isLoad && (
-                <SubmitingBlock operation={["изменение ифнормации о приёме"]}/>
+                <SubmitingBlock operation={["изменение информации о приёме"]}/>
             )}   
         </div>
     )

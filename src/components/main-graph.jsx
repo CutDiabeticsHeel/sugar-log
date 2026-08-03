@@ -2,8 +2,10 @@ import ReactECharts from "echarts-for-react";
 import dayjs from "dayjs";
 import { useGetDayPeriodSugarLogQuery } from "../store/api";
 import style from "../css/components/main-graph.module.css";
-import {useState, useEffect} from "react";
+import {useState, useEffect, useRef} from "react";
 import Preloader from "./preloader";
+import FullscreenIcon from '@mui/icons-material/Fullscreen';
+import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 
 function MainGraph() {
     const [defaultPeriod] = useState({
@@ -12,6 +14,9 @@ function MainGraph() {
     });
     const {data: sugarLog, isLoading} = useGetDayPeriodSugarLogQuery(defaultPeriod);
     const [isMobile, setIsMobile] = useState(window.innerWidth < 480);
+    const chart = useRef(null)
+    const [isRotated, setIsRotated] = useState(false);
+    const toggleRotate = () => setIsRotated(r => !r);
     
     useEffect(() => {
         const onResize = () => setIsMobile(window.innerWidth < 480);
@@ -27,7 +32,6 @@ function MainGraph() {
 
     const maxSugar = Math.max(...sugarLog.map(i => i.sugar));
     const minSugar = Math.min(...sugarLog.map(i => i.sugar));
-
 
     const option = {
         grid: {
@@ -126,11 +130,16 @@ function MainGraph() {
     };
 
     return (
-        <div className={style.mainGraph}>
+        <div  className={`${style.mainGraph} ${isRotated ? style.rotated : ""}`} ref={chart}>
+            {isMobile && (
+                <button onClick={toggleRotate} className={style.screenButton}> 
+                    {isRotated ? <FullscreenExitIcon fontSize="large"/> : <FullscreenIcon fontSize="large"/>}
+                </button>
+            )}
             <span>Общий график сахаров</span>
             <ReactECharts
                 option={option}
-                style={{ width: "100%", height: 500 }}
+                style={{ width: "100%", height: isRotated ? "70vw" : 500 }}
             />
         </div>
     );

@@ -141,7 +141,7 @@ function ProductForm({defaultValue, onClose}) {
                     </button>
                 </motion.form>
                 {isLoad && (
-                    <SubmitingBlock operation="Продукт добавляется в Список Продуктов"/>
+                    <SubmitingBlock operation="добавление в Список Продуктов"/>
                 )}
         </section>
     )

@@ -6,6 +6,7 @@
     border-radius: 20px;
     padding: 20px;
     min-width: 0;
+    position: relative;
 }
 .dayChoice {
     display: flex;
@@ -14,8 +15,31 @@
     width: 100%;
 }
 .dailyProfile span {
+    display: inline-flex;
     font-size: var(--large-text);
     font-style: italic;
+    width: 80%;
+}
+.screenButton {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin: 10px;
+    color: var(--secondary-element-background);
+    background-color: inherit;
+    border: none;
+}
+.rotated {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 94vh;
+    height: 77vw;
+    transform: translate(-47%, -51%) rotate(90deg);
+    transform-origin: center center;
+    z-index: 9999;
+    background-color: var(--secondary-background);
+    overflow: auto;
 }
 .dayItem {
     display: flex;
@@ -31,7 +55,6 @@
     width: 18px;
     position: relative;
 }
-
 input[type='radio']::before {
   content: '';
   position: absolute;
@@ -44,7 +67,6 @@ input[type='radio']::before {
   background-color: white;
   border: 2px solid var(--primary-element-background);
 }
-
 input[type='radio']:checked::after {
   content: '';
   position: absolute;
