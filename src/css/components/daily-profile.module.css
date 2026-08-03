@@ -40,6 +40,8 @@
     z-index: 9999;
     background-color: var(--secondary-background);
     overflow: auto;
+    display: grid;
+    grid-column: 1fr 1fr;
 
 }
 .dayItem {
