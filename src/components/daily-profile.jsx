@@ -4,8 +4,6 @@ import { useGetDayPeriodSugarLogQuery } from "../store/api";
 import {useState, useEffect, useRef} from "react";
 import style from "../css/components/daily-profile.module.css";
 import Preloader from "./preloader";
-import FullscreenIcon from '@mui/icons-material/Fullscreen';
-import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 
 function DailyProfile() {
     dayjs.locale("ru")
@@ -16,9 +14,6 @@ function DailyProfile() {
     const { data: sugarLog, isLoading } = useGetDayPeriodSugarLogQuery(defaultPeriod);
     const [days, setDays] = useState(7)
     const [isMobile, setIsMobile] = useState(window.innerWidth < 480);
-    const chart = useRef(null)
-    const [isRotated, setIsRotated] = useState(false);
-    const toggleRotate = () => setIsRotated(r => !r);
 
     useEffect(() => {
         const onResize = () => setIsMobile(window.innerWidth < 480);
@@ -145,13 +140,8 @@ function DailyProfile() {
     };
 
     return (
-        <div className={`${style.dailyProfile} ${isRotated ? style.rotated : ""}`}>
+        <div className={style.dailyProfile}>
             <span>Выберите кол-во дней для графика суточных профилей</span>
-            {isMobile && (
-                <button onClick={toggleRotate} className={style.screenButton}> 
-                    {isRotated ? <FullscreenExitIcon fontSize="large"/> : <FullscreenIcon fontSize="large"/>}
-                </button>
-            )}
             <div className={style.dayChoice}>
                 <label className={style.dayItem}>
                     <input
