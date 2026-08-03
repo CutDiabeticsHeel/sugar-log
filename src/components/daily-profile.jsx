@@ -148,10 +148,10 @@ function DailyProfile() {
         <div className={`${style.dailyProfile} ${isRotated ? style.rotated : ""}`}>
             <span>Выберите кол-во дней для графика суточных профилей</span>
             {isMobile && (
-                            <button onClick={toggleRotate} className={style.screenButton}> 
-                                {isRotated ? <FullscreenExitIcon fontSize="large"/> : <FullscreenIcon fontSize="large"/>}
-                            </button>
-                        )}
+                <button onClick={toggleRotate} className={style.screenButton}> 
+                    {isRotated ? <FullscreenExitIcon fontSize="large"/> : <FullscreenIcon fontSize="large"/>}
+                </button>
+            )}
             <div className={style.dayChoice}>
                 <label className={style.dayItem}>
                     <input
@@ -195,6 +195,7 @@ function DailyProfile() {
                 </label>
             </div>
             <ReactECharts
+                className={style.chart}
                 option={option}
                 notMerge={true}
                 lazyUpdate={false}

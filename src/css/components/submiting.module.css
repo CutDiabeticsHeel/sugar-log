@@ -20,10 +20,12 @@
     background-color: var(--secondary-background);
     border-radius: 20px;
     padding: 20px;
+    max-width: 80%;
 }
 .submitingBlock span {
     display: inline-block;
     text-align: center;
+    overflow-wrap: break-word; 
 }
 .loader {
     --color-1: #ffffff;

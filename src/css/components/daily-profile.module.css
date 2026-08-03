@@ -33,13 +33,14 @@
     position: fixed;
     top: 50%;
     left: 50%;
-    width: 94vh;
-    height: 77vw;
+    width: 92vh;
+    height: 70vw;
     transform: translate(-47%, -51%) rotate(90deg);
     transform-origin: center center;
     z-index: 9999;
     background-color: var(--secondary-background);
     overflow: auto;
+
 }
 .dayItem {
     display: flex;

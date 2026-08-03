@@ -59,7 +59,6 @@ function TodayLog() {
                 {todaySugarLog.map((entry) => (
                     <div key={entry.id} className={`${style.row} ${smallLog ? style.smallRow: "" }`}>
                         <span className={style.time}>{entry.time}</span>
-
                         <div className={style.content}>
                             <span className={style.food}>{entry.food}</span>
                             <span className={style.meta}>
