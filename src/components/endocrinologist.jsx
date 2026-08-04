@@ -6,6 +6,7 @@ import {useState, useEffect} from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Preloader from "./preloader";
 import SubmitingBlock from "./submiting";
+import SuccessBlock from "./success-block";
 
 const API_URL = import.meta.env.VITE_API_URL;
 const wrapperVariants = {
@@ -30,6 +31,7 @@ function Endocrinologist(){
     });
     const info = endocrinologist?.[0];
     const [isLoad, setIsLoading] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false)
 
     if (isLoading) return (<Preloader/>)
 
@@ -49,8 +51,12 @@ function Endocrinologist(){
             setFormData({day: '', month: '', time: '', name: ''})
             setPopupOpen(prev => !prev)
             refetch()
+            setIsSuccess(true)
+            setTimeout(() => {
+                setIsSuccess(false);
+            }, 505)
         } catch (err) {
-            console.error({ error: err.message });
+            console.error(err)
         } finally {
             setIsLoading(false)
         }     
@@ -83,8 +89,11 @@ function Endocrinologist(){
                 )}
             </AnimatePresence>
             {isLoad && (
-                <SubmitingBlock operation={["изменение информации о приёме"]}/>
+                <SubmitingBlock operation="изменение информации о приёме"/>
             )}   
+            {isSuccess && (
+                <SuccessBlock operation="Информация о приеме успешно изменена"/>
+            )}
         </div>
     )
 }

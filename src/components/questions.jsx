@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useForm} from "react-hook-form"
 import Preloader from "./preloader";
 import SubmitingBlock from "./submiting";
+import SuccessBlock from "./success-block";
 
 const API_URL = import.meta.env.VITE_API_URL;
 const wrapperVariants = {
@@ -39,6 +40,8 @@ function Questions(){
     const [selectedIds, setSelectedIds] = useState([]);
     const [isLoad, setIsLoading] = useState(false);
     const [title, setTitle] = useState("");
+    const [isSuccess, setIsSuccess] = useState(false)
+    const [titleSuccess, setTitleSuccess] = useState("");
 
     if (isLoading) return (<Preloader/>)
 
@@ -49,6 +52,7 @@ function Questions(){
     };
     const deleteQuestion = async () => {
         setTitle("удаление вопроса")
+        setTitleSuccess("Вопрос успешно удален")
         setIsLoading(true)
         try {
             const response = await fetch(`${API_URL}/delete-question`, {
@@ -58,6 +62,10 @@ function Questions(){
                 },
                 body: JSON.stringify({ ids: selectedIds })
             })
+            setIsSuccess(true)
+            setTimeout(() => {
+                setIsSuccess(false);
+            }, 505)
             setSelectedIds([]);
             refetch();
         }catch (err) {
@@ -68,6 +76,7 @@ function Questions(){
     }
     const addQuestion = async (data) => {
         setTitle("добавление вопроса")
+        setTitleSuccess("Вопрос успешно добавлен")
         setIsLoading(true) 
         try {
             const response = await fetch(`${API_URL}/add-question`, {
@@ -79,8 +88,12 @@ function Questions(){
             })
             reset();
             refetch();
+            setIsSuccess(true)
+            setTimeout(() => {
+                setIsSuccess(false);
+            }, 505)
         }catch (err) {
-            console.error({ error: err.message });
+            console.error(err)
         } finally {
             setIsLoading(false)
         }    
@@ -123,6 +136,9 @@ function Questions(){
             </AnimatePresence>
             {isLoad && (
                 <SubmitingBlock operation={title}/>
+            )}
+            {isSuccess && (
+                <SuccessBlock operation={titleSuccess}/>
             )}
         </div>
     )

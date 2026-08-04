@@ -1,20 +1,30 @@
 import { createPortal } from "react-dom";
 import style from "../css/components/delete-sugar-record.module.css";
+import SuccessBlock from "./success-block";
+import {useState} from "react"
+
 const API_URL = import.meta.env.VITE_API_URL;
 
 function DeleteSugarRecord({ record, onClose, onDeleted }) {
+    const [isSuccess, setIsSuccess] = useState(false);
+
     const deleteRecord = async (id) => {
-        const response = await fetch(`${API_URL}/delete-sugar-record`, {
-            method: "DELETE",
-            headers: {
-                    "Content-Type": "application/json;charset=utf-8",
-            },
-            body: JSON.stringify(id)
-        })
-        if (!response.ok) {
-            throw new Error(`HTTP error: ${response.status}`);
-        } else {
-            onDeleted?.();
+        try {
+            const response = await fetch(`${API_URL}/delete-sugar-record`, {
+                method: "DELETE",
+                headers: {
+                        "Content-Type": "application/json;charset=utf-8",
+                },
+                body: JSON.stringify(id)
+            })
+            setIsSuccess(true)
+            setTimeout(() => {
+                setIsSuccess(false);
+                onDeleted?.();
+                onClose();
+            }, 505)
+        } catch(err) {
+            console.error(err)
             onClose();
         }
     }
@@ -62,6 +72,9 @@ function DeleteSugarRecord({ record, onClose, onDeleted }) {
                     <button className={style.button} onClick={onClose}>Не удалять</button>
                 </div>
             </div>
+            {isSuccess && (
+                <SuccessBlock operation="Запись успешно удалена"/>
+            )}
         </div>,
         document.body
     );

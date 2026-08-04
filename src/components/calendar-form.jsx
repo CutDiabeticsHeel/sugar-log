@@ -7,6 +7,7 @@ import "@daypicker/react/style.css";
 import style from "../css/components/calendar-form.module.css";
 import { motion, AnimatePresence } from "framer-motion";
 import useOutsideClick from "../hooks/close-popup";
+import SuccessBlock from "./success-block";
 
 const API_URL = import.meta.env.VITE_API_URL;
 const wrapperVariants = {
@@ -45,6 +46,7 @@ function CalendarForm({ onChange }) {
     const [popupOpen, setPopupOpen] = useState(false);
     const [displayDays, setDisplayDays]  = useState(7);
     const wrapperRef = useRef(null);
+    const [isSuccess, setIsSuccess] = useState(false);
     const defaultSelected = {
         from: dayjs().toDate(),
         to: dayjs().toDate(),
@@ -80,13 +82,22 @@ function CalendarForm({ onChange }) {
             from: dayjs(data.dateRange.from).format('YYYY-MM-DD'),
             to: dayjs(data.dateRange.to).format('YYYY-MM-DD')
         });
-        const responce = await fetch(`${API_URL}/selectPeriod`,{
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json;charset=utf-8",
-            },
-            body: JSON.stringify(formattedData)
-        })
+        try {
+            const responce = await fetch(`${API_URL}/selectPeriod`,{
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json;charset=utf-8",
+                },
+                body: JSON.stringify(formattedData)
+            })
+            setIsSuccess(true)
+            setTimeout(() => {
+                setIsSuccess(false);
+            }, 505)
+        } catch(err) {
+            console.error(err)
+        }
+        
         setPopupOpen(false)
     }
 
@@ -136,6 +147,9 @@ function CalendarForm({ onChange }) {
                         )}
                     </AnimatePresence>
                 </label>
+                {isSuccess && (
+                    <SuccessBlock operation="Период применен"/>
+                )}
             </form>
     );
 }

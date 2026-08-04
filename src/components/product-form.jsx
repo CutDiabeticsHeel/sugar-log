@@ -5,6 +5,7 @@ import {useRef, useState, useEffect} from "react";
 import {useGetUserInfoQuery} from "../store/api";
 import Preloader from "./preloader";
 import SubmitingBlock from "./submiting";
+import SuccessBlock from "./success-block";
 import { productEntrySchema } from "../utils/product-form-validate";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -43,6 +44,7 @@ function ProductForm({defaultValue, onClose}) {
     const XEBEValue = Number((((protein * 4 * weight) + (fat * 9 * weight)) / 10000).toFixed(2));
     const XEValue = Number((((carbs * weight / 100)) / 12).toFixed(2));
     const [isLoad, setIsLoading] = useState(false)
+    const [isSuccess, setIsSuccess] = useState(false)
 
     const onSubmit = async (data) =>{
         const parsed = productEntrySchema.safeParse(data)
@@ -67,10 +69,14 @@ function ProductForm({defaultValue, onClose}) {
                     id: defaultValue?.id ?? null,
                 })
             })
-            onClose?.();
             reset();
+            setIsSuccess(true)
+            setTimeout(() => {
+                setIsSuccess(false);
+                onClose?.();
+            }, 505)
         }catch (err) {
-            console.error({ error: err.message });
+            console.error(err)
         } finally {
             setIsLoading(false)
         }
@@ -142,6 +148,9 @@ function ProductForm({defaultValue, onClose}) {
                 </motion.form>
                 {isLoad && (
                     <SubmitingBlock operation="добавление в Список Продуктов"/>
+                )}
+                {isSuccess && (
+                    <SuccessBlock operation = {defaultValue ? "Информация о продукте успешно изменена" : " Продукт успешно добавлен в Список Продуктов"}/>
                 )}
         </section>
     )

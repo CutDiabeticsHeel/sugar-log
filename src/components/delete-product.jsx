@@ -1,23 +1,33 @@
 import style from "../css/components/delete-product.module.css";
 import tableStyle from "../css/components/products-table.module.css";
+import SuccessBlock from "./success-block";
 import { createPortal } from "react-dom";
+import {useState} from "react"
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 function DeleteProductRecord({ product, onClose }) {
+    const [isSuccess, setIsSuccess] = useState(false);
+
     const deleteProduct= async (id) => {
-        const response = await fetch(`${API_URL}/delete-product`, {
-            method: "DELETE",
-            headers: {
-                    "Content-Type": "application/json;charset=utf-8",
-            },
-            body: JSON.stringify(id)
-        })
-        if (!response.ok) {
-            throw new Error(`HTTP error: ${response.status}`);
-        } else {
+        try {
+            const response = await fetch(`${API_URL}/delete-product`, {
+                method: "DELETE",
+                headers: {
+                        "Content-Type": "application/json;charset=utf-8",
+                },
+                body: JSON.stringify(id)
+            })
+            setIsSuccess(true)
+            setTimeout(() => {
+                setIsSuccess(false);
+                onClose()
+            }, 505)
+        } catch (err) {
+            console.error(err)
             onClose()
         }
+        
     }
     return createPortal(
         <div className={style.overlay} onClick={onClose}>
@@ -60,6 +70,9 @@ function DeleteProductRecord({ product, onClose }) {
                     <button className={style.button} onClick={onClose}>Не удалять</button>
                 </div>
             </div>
+            {isSuccess && (
+                <SuccessBlock operation="Продукт успешно удален"/>
+            )}
         </div>,
         document.body
     );

@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import UndoIcon from '@mui/icons-material/Undo';
 import Preloader from "./preloader";
 import SubmitingBlock from "./submiting";
+import SuccessBlock from "./success-block";
 
 const API_URL = import.meta.env.VITE_API_URL;
 const wrapperVariants = {
@@ -28,6 +29,7 @@ function ProfileInfo(){
     const [shortInsulin, setShortInsulin] = useState("");
     const [longInsulin, setLongInsulin] = useState("");
     const [isLoad, setIsLoading] = useState(false)
+    const [isSuccess, setIsSuccess] = useState(false)
     if (isLoading) return (<Preloader/>)
 
     const info = userInfo?.[0];
@@ -45,8 +47,12 @@ function ProfileInfo(){
             await refetch();
             setPopupOpen(false)
             setHeight(""); setWeight(""); setShortInsulin(""); setLongInsulin(""); setName("");
+            setIsSuccess(true)
+            setTimeout(() => {
+                setIsSuccess(false);
+            }, 505)
         }catch (err) {
-            console.error({ error: err.message });
+            console.error(err)
         } finally {
             setIsLoading(false)
         }
@@ -111,6 +117,9 @@ function ProfileInfo(){
             </AnimatePresence>
             {isLoad && (
                 <SubmitingBlock operation="изменение информации о вас"/>
+            )}
+            {isSuccess && (
+                <SuccessBlock operation="Информация о вас успешно изменена"/>
             )}
         </div>
     )
