@@ -11,11 +11,13 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
+import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
+import SickIcon from '@mui/icons-material/Sick';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {useRef, useState, useEffect} from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useGetProductsQuery, useAddSugarRecordMutation  } from "../store/api";
 import Preloader from "./preloader";
 import { sugarEntrySchema } from "../utils/sugar-form-validate";
@@ -307,17 +309,27 @@ function SugarForm({defaultValue, onClose}) {
                     <textarea className={style.notesInput} name="notes" id="" {...register("notes")}></textarea>
                 </label>
                 <div className={style.activityContainer}>
-                    <span>Готовые паттерны активности</span>
+                    <span>Готовые события</span>
                     <div className={style.activityPatterns}>
                         <label className={style.activityCheckbox}>
                             <input type="checkbox" value="Тренировка" {...register("activity")} />
-                            <FitnessCenterIcon />
+                            <FitnessCenterIcon sx={{ fill: "#013567" }}/>
                             Тренировка
                         </label>
                         <label className={style.activityCheckbox}>
                             <input type="checkbox" value="Прогулка" {...register("activity")} />
-                            <DirectionsWalkIcon />
+                            <DirectionsWalkIcon sx={{ fill: "#013567" }}/>
                             Прогулка
+                        </label>
+                        <label className={style.activityCheckbox}>
+                            <input type="checkbox" value="Плохое самочувствие" {...register("activity")} />
+                            <SentimentVeryDissatisfiedIcon sx={{ fill: "#013567" }}/>
+                            Плохое самочувствие
+                        </label>
+                        <label className={style.activityCheckbox}>
+                            <input type="checkbox" value="Болезнь" {...register("activity")} />
+                            <SickIcon sx={{ fill: "#013567" }}/>
+                            Болезнь
                         </label>
                     </div>
                 </div>
@@ -328,9 +340,7 @@ function SugarForm({defaultValue, onClose}) {
             {isLoad && (
                     <SubmitingBlock operation="добавление записи в Дневник Сахаров"/>
                 )}
-            {isSuccess && (
-                    <SuccessBlock operation={defaultValue?.id ? "Запись успешна изменена" : "Запись успешна добавлена в Дневник Сахаров"}/>
-                )}
+            <SuccessBlock show={isSuccess} operation={defaultValue?.id ? "Запись успешно изменена" : "Запись успешно добавлена в Дневник Сахаров"}/>
         </section>
     )
 }

@@ -70,9 +70,7 @@ function DeleteProductRecord({ product, onClose }) {
                     <button className={style.button} onClick={onClose}>Не удалять</button>
                 </div>
             </div>
-            {isSuccess && (
-                <SuccessBlock operation="Продукт успешно удален"/>
-            )}
+                <SuccessBlock show={isSuccess} operation="Продукт успешно удален"/>
         </div>,
         document.body
     );

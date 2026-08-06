@@ -23,7 +23,7 @@ function Diary() {
 
     return (
         <section className={style.dairy}>
-            <h1>Дневник</h1>
+            <h1>Дневник сахаров</h1>
             <div className={style.dairyActiveElements}>
                 <CalendarFrom value={period} onChange={setPeriod} />
                 <label >

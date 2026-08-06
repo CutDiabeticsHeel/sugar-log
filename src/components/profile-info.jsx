@@ -118,9 +118,7 @@ function ProfileInfo(){
             {isLoad && (
                 <SubmitingBlock operation="изменение информации о вас"/>
             )}
-            {isSuccess && (
-                <SuccessBlock operation="Информация о вас успешно изменена"/>
-            )}
+                <SuccessBlock show={isSuccess} operation="Информация о вас успешно изменена"/>
         </div>
     )
 }

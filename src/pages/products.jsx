@@ -21,7 +21,7 @@ function ProductsPage() {
 
     return (
         <section className="mainSection">
-            <h1>Таблица продуктов с расчетом ХЕ, БЖЕ и дозы инсулина</h1>
+            <h1>Таблица продуктов</h1>
             <div className={style.addProductForm}>
                 <button className={style.ProductFormPopup} onClick={() => setOpenPopup(prev => !prev)}>
                     Добавить продукт

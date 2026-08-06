@@ -91,9 +91,7 @@ function Endocrinologist(){
             {isLoad && (
                 <SubmitingBlock operation="изменение информации о приёме"/>
             )}   
-            {isSuccess && (
-                <SuccessBlock operation="Информация о приеме успешно изменена"/>
-            )}
+                <SuccessBlock show={isSuccess} operation="Информация о приеме успешно изменена"/>
         </div>
     )
 }

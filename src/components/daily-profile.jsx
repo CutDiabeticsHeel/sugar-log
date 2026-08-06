@@ -16,9 +16,18 @@ function DailyProfile() {
     const [isMobile, setIsMobile] = useState(window.innerWidth < 480);
 
     useEffect(() => {
-        const onResize = () => setIsMobile(window.innerWidth < 480);
+        let timeoutId;
+        const onResize = () => {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => {
+                setIsMobile(window.innerWidth < 480);
+            }, 228);
+        };
         window.addEventListener("resize", onResize);
-        return () => window.removeEventListener("resize", onResize);
+        return () => {
+            clearTimeout(timeoutId);
+            window.removeEventListener("resize", onResize);
+        };
     }, []);
 
     if (isLoading) return (<Preloader/>);
@@ -40,6 +49,11 @@ function DailyProfile() {
 
     const maxSugar = Math.max(...sugarLog.map(item => item.sugar));
     const minSugar = Math.min(...sugarLog.map(item => item.sugar));
+    const timestamps = sugarLog.map(row => dayjs(`2000-01-01 ${row.time}`).valueOf());
+
+    const minTime = dayjs(Math.min(...timestamps)).format("HH:mm");
+    const maxTime = dayjs(Math.max(...timestamps)).format("HH:mm");
+    console.log(minTime, maxTime)
 
     const series = Object.entries(grouped)
         .sort(([dateA], [dateB]) => dateA.localeCompare(dateB))
@@ -123,8 +137,6 @@ function DailyProfile() {
         },
         xAxis: {
             type: "time",
-            min: "2000-01-01 00:00",
-            max: "2000-01-02 00:00",
             axisLabel: {
                 rotate: isMobile ? 45: 0,
                 formatter(value) {

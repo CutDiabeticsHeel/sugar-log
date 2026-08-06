@@ -18,6 +18,7 @@ function Stats() {
 
     return (
         <section className={style.statsSection}>
+            <h1>Ваша статистика</h1>
             <MetricsBlock metrics={metrics}/>
             <MetricsChart metrics={metrics}/>
         </section>

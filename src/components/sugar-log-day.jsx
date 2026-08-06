@@ -133,7 +133,7 @@ function SugarLogDay({ period }) {
                                             <td>{record.carb}</td>
                                             <td>{record.ccal}</td>
                                             <td>{record.food}</td>
-                                            <td>{`${record.notes ? `${record.notes}.` : ""} ${record.activity ?  `Активности: ${record.activity}` : ""}`}</td>
+                                            <td>{`${record.notes ? `${record.notes}.` : ""} ${record.activity ?  `${record.activity}` : ""}`}</td>
                                             <td>
                                                 <button className={style.icon}>
                                                     <EditIcon  onClick={() => setEditPopupId(record.id)} sx={{ fill: "#013567" }}/>

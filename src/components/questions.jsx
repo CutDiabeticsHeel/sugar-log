@@ -137,9 +137,7 @@ function Questions(){
             {isLoad && (
                 <SubmitingBlock operation={title}/>
             )}
-            {isSuccess && (
-                <SuccessBlock operation={titleSuccess}/>
-            )}
+                <SuccessBlock  show={isSuccess} operation={titleSuccess}/>
         </div>
     )
 }

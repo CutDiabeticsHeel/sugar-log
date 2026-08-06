@@ -148,9 +148,7 @@ function CalendarForm({ onChange }) {
                         )}
                     </AnimatePresence>
                 </label>
-                {isSuccess && (
-                    <SuccessBlock operation="Период применен"/>
-                )}
+                    <SuccessBlock show={isSuccess} operation="Период применен"/>
             </form>
     );
 }

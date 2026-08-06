@@ -149,9 +149,7 @@ function ProductForm({defaultValue, onClose}) {
                 {isLoad && (
                     <SubmitingBlock operation="добавление в Список Продуктов"/>
                 )}
-                {isSuccess && (
-                    <SuccessBlock operation = {defaultValue ? "Информация о продукте успешно изменена" : " Продукт успешно добавлен в Список Продуктов"}/>
-                )}
+                    <SuccessBlock show={isSuccess} operation = {defaultValue ? "Информация о продукте успешно изменена" : " Продукт успешно добавлен в Список Продуктов"}/>
         </section>
     )
 }

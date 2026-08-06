@@ -151,7 +151,6 @@
 .activityCheckbox {
     display: flex;
     align-items: center;
-    background-color: var(--paper-soft);
     border: 1px solid var(--border-color);
     color: #000000;
     padding: 10px;

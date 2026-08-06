@@ -72,9 +72,7 @@ function DeleteSugarRecord({ record, onClose, onDeleted }) {
                     <button className={style.button} onClick={onClose}>Не удалять</button>
                 </div>
             </div>
-            {isSuccess && (
-                <SuccessBlock operation="Запись успешно удалена"/>
-            )}
+                <SuccessBlock show={isSuccess} operation="Запись успешно удалена"/>
         </div>,
         document.body
     );

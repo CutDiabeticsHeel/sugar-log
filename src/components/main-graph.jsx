@@ -19,9 +19,18 @@ function MainGraph() {
     const toggleRotate = () => setIsRotated(r => !r);
     
     useEffect(() => {
-        const onResize = () => setIsMobile(window.innerWidth < 480);
+        let timeoutId;
+        const onResize = () => {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => {
+                setIsMobile(window.innerWidth < 480);
+            }, 228);
+        };
         window.addEventListener("resize", onResize);
-        return () => window.removeEventListener("resize", onResize);
+        return () => {
+            clearTimeout(timeoutId);
+            window.removeEventListener("resize", onResize);
+        };
     }, []);
 
     if (isLoading) return (<Preloader/>);
@@ -62,8 +71,8 @@ function MainGraph() {
             }
         },
         yAxis: {
-            min: Math.floor(minSugar - 2),
-            max: Math.ceil(maxSugar + 1)
+            min: Math.floor(minSugar - 1),
+            max: Math.ceil(maxSugar)
         },
         series: [
             {
@@ -81,7 +90,7 @@ function MainGraph() {
                     data: [
                         [
                             {
-                                yAxis: Math.floor(minSugar - 2),
+                                yAxis: Math.floor(minSugar - 1),
                                 itemStyle: {
                                     color: "#7C3AED"
                                 }
@@ -120,7 +129,7 @@ function MainGraph() {
                                 }
                             },
                             {
-                                yAxis: Math.ceil(maxSugar + 1)
+                                yAxis: Math.ceil(maxSugar)
                             }
                         ]
                     ]
