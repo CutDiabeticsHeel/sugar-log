@@ -45,7 +45,7 @@ function CalendarForm({ onChange }) {
     const { control, setValue, handleSubmit } = useForm();
     const [popupOpen, setPopupOpen] = useState(false);
     const [displayDays, setDisplayDays]  = useState(7);
-    const wrapperRef = useRef(null);
+    const calendarRef = useRef(null);
     const [isSuccess, setIsSuccess] = useState(false);
     const defaultSelected = {
         from: dayjs().toDate(),
@@ -53,6 +53,7 @@ function CalendarForm({ onChange }) {
     };
     const [range, setRange] = useState(defaultSelected);
     let footer = `Выберите дату.`;
+    useOutsideClick(calendarRef, () => setPopupOpen(false));
 
     if (range?.from) {
         if (!range.to) {
@@ -115,7 +116,7 @@ function CalendarForm({ onChange }) {
                     <input type="button" onClick={() => changePeriod(30)} value="30 дней" 
                     className={`${style.dateButton} ${displayDays === 30 ? style.dateButtonActive : ""}`}/>
                 </label>
-                <label className={style.customPeriodWrapper} ref={wrapperRef}>
+                <label className={style.customPeriodWrapper} ref={calendarRef}>
                     <input type="button" onClick={() => setPopupOpen((prev) => !prev)} value="Свой период"  className={style.dateButton}/>
                     <AnimatePresence>
                         {popupOpen && (
@@ -139,7 +140,7 @@ function CalendarForm({ onChange }) {
                                         )}
                                     />
                                 </motion.div>
-                                <motion.button type="button" onClick={() => setRange(undefined)} className={style.popupButton} variants={childVariants}>
+                                <motion.button type="button" onClick={() => changePeriod(7)} className={style.popupButton} variants={childVariants}>
                                 Сбросить период
                                 </motion.button>
                                 <motion.button type="submit" className={style.popupButton} variants={childVariants}>Применить период</motion.button>

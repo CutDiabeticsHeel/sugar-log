@@ -1,4 +1,6 @@
 import React from 'react';
+import {Link} from "react-router-dom";
+import style from "./css/components/error-boundary.module.css";
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -21,10 +23,11 @@ class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div style={{ padding: 20, textAlign: 'center' }}>
+        <div className={style.errorBlock}>
           <h2>Что-то пошло не так 😔</h2>
-          <p>{this.state.error?.message}</p>
-          <button onClick={this.handleReset}>Попробовать снова</button>
+          <p className={style.errorText}>{this.state.error?.message}</p>
+          <button onClick={this.handleReset} className={style.button}>Попробовать снова</button>
+          <Link to="/" className={style.button}>Вернуться на главную</Link>
         </div>
       );
     }
