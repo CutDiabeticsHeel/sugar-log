@@ -22,7 +22,7 @@ function DeleteProductRecord({ product, onClose }) {
             setTimeout(() => {
                 setIsSuccess(false);
                 onClose()
-            }, 505)
+            }, 1488)
         } catch (err) {
             console.error(err)
             onClose()

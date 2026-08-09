@@ -137,7 +137,7 @@ function SugarForm({defaultValue, onClose}) {
             setTimeout(() => {
                 setIsSuccess(false);
                 onClose?.();
-            }, 505)
+            }, 1488)
         } catch (err) {
             console.error(err);
         } finally {
@@ -267,6 +267,10 @@ function SugarForm({defaultValue, onClose}) {
                             menu: (base) => ({
                                 ...base,
                                 backgroundColor: "var(--paper-soft)",
+                            }),
+                            dropdownIndicator: (base) => ({
+                                ...base,
+                                cursor: "pointer",
                             }),
                         }}
                         onChange={setSelectedProduct}

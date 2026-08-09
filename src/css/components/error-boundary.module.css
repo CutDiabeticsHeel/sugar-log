@@ -20,4 +20,5 @@
     font-size: var(--medium-text);
     border: 1px solid var(--border-color);
     width: max-content;
+    cursor: pointer;
 }

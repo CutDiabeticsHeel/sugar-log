@@ -73,6 +73,7 @@ function CalendarForm({ onChange }) {
     };
 
     const onSubmit = async (data) => {
+        setDisplayDays(228)
         const formattedData = {
             dateRange: {
                 from: dayjs(data.dateRange.from).format('YYYY-MM-DD'),
@@ -94,7 +95,7 @@ function CalendarForm({ onChange }) {
             setIsSuccess(true)
             setTimeout(() => {
                 setIsSuccess(false);
-            }, 505)
+            }, 1488)
         } catch(err) {
             console.error(err)
         }
@@ -117,7 +118,11 @@ function CalendarForm({ onChange }) {
                     className={`${style.dateButton} ${displayDays === 30 ? style.dateButtonActive : ""}`}/>
                 </label>
                 <label className={style.customPeriodWrapper} ref={calendarRef}>
-                    <input type="button" onClick={() => setPopupOpen((prev) => !prev)} value="Свой период"  className={style.dateButton}/>
+                    <input type="button" 
+                        className={`${style.dateButton} ${displayDays === 228 ? style.dateButtonActive : ""}`} 
+                        onClick={() => setPopupOpen((prev) => !prev)} 
+                        value="Свой период"
+                    />
                     <AnimatePresence>
                         {popupOpen && (
                             <motion.div className={style.datePopup} initial="closed" animate="open" exit="closed" variants={wrapperVariants} >
@@ -140,10 +145,12 @@ function CalendarForm({ onChange }) {
                                         )}
                                     />
                                 </motion.div>
-                                <motion.button type="button" onClick={() => changePeriod(7)} className={style.popupButton} variants={childVariants}>
-                                Сбросить период
+                                <motion.button type="button" onClick={() => setRange(null)} className={style.popupButton} variants={childVariants}>
+                                    Сбросить период
                                 </motion.button>
-                                <motion.button type="submit" className={style.popupButton} variants={childVariants}>Применить период</motion.button>
+                                <motion.button type="submit" className={style.popupButton} variants={childVariants}>
+                                    Применить период
+                                </motion.button>
                             </motion.div>
                         )}
                     </AnimatePresence>

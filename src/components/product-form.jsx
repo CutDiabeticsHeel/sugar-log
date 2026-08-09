@@ -2,7 +2,7 @@ import { useForm, Controller  } from "react-hook-form"
 import style from "../css/components/product-form.module.css";
 import { motion } from "framer-motion";
 import {useRef, useState, useEffect} from "react";
-import {useGetUserInfoQuery} from "../store/api";
+import {useGetUserInfoQuery, useAddProductMutation} from "../store/api";
 import Preloader from "./preloader";
 import SubmitingBlock from "./submiting";
 import SuccessBlock from "./success-block";
@@ -46,6 +46,8 @@ function ProductForm({defaultValue, onClose}) {
     const [isLoad, setIsLoading] = useState(false)
     const [isSuccess, setIsSuccess] = useState(false)
 
+    const [addProduct] = useAddProductMutation();
+
     const onSubmit = async (data) =>{
         const parsed = productEntrySchema.safeParse(data)
         if (!parsed.success) {
@@ -59,22 +61,23 @@ function ProductForm({defaultValue, onClose}) {
         }
         setIsLoading(true)
         try {
-            const responce = await fetch(`${API_URL}/addProduct`,{
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json;charset=utf-8",
-                },
-                body: JSON.stringify({
-                    ...data,
-                    id: defaultValue?.id ?? null,
-                })
-            })
+            await addProduct({...data, id: defaultValue?.id ?? null}).unwrap();
+            // const responce = await fetch(`${API_URL}/addProduct`,{
+            //     method: "POST",
+            //     headers: {
+            //         "Content-Type": "application/json;charset=utf-8",
+            //     },
+            //     body: JSON.stringify({
+            //         ...data,
+            //         id: defaultValue?.id ?? null,
+            //     })
+            // })
             reset();
             setIsSuccess(true)
             setTimeout(() => {
                 setIsSuccess(false);
                 onClose?.();
-            }, 505)
+            }, 1488)
         }catch (err) {
             console.error(err)
         } finally {

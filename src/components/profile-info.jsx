@@ -50,7 +50,7 @@ function ProfileInfo(){
             setIsSuccess(true)
             setTimeout(() => {
                 setIsSuccess(false);
-            }, 505)
+            }, 1488)
         }catch (err) {
             console.error(err)
         } finally {

@@ -22,7 +22,7 @@ function DeleteSugarRecord({ record, onClose, onDeleted }) {
                 setIsSuccess(false);
                 onDeleted?.();
                 onClose();
-            }, 505)
+            }, 1488)
         } catch(err) {
             console.error(err)
             onClose();

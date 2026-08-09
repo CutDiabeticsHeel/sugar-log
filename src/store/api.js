@@ -7,11 +7,12 @@ export const api = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: API_URL,
     }),
-    tagTypes: ["SugarLog"],
+    tagTypes: ["SugarLog", 'Product'],
 
     endpoints: (builder) => ({
         getProducts: builder.query({
             query: () => "/products",
+            providesTags: ['Product'],
         }),
 
         getAllSugarLog: builder.query({
@@ -56,6 +57,15 @@ export const api = createApi({
             }),
             invalidatesTags: ["SugarLog"],
         }),
+
+        addProduct: builder.mutation({
+            query: (newProduct) => ({
+                url: '/addProduct',
+                method: 'POST',
+                body: newProduct,
+            }),
+            invalidatesTags: ['Product'],
+        }),
     }),
 });
 
@@ -68,5 +78,6 @@ export const {
     useGetUserInfoQuery,
     useGetUserQuestionsQuery,
     useGetEndocrinologistInfoQuery,
-    useAddSugarRecordMutation 
+    useAddSugarRecordMutation,
+    useAddProductMutation, 
 } = api;

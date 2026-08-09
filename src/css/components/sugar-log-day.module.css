@@ -39,6 +39,7 @@ th {
 .caption {
     padding: 0px 10px;
     text-align: left;
+    cursor: pointer;
 }
 .sugarLow,
 .sugarNormal,

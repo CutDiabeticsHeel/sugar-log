@@ -49,12 +49,7 @@ function DailyProfile() {
 
     const maxSugar = Math.max(...sugarLog.map(item => item.sugar));
     const minSugar = Math.min(...sugarLog.map(item => item.sugar));
-    const timestamps = sugarLog.map(row => dayjs(`2000-01-01 ${row.time}`).valueOf());
-
-    const minTime = dayjs(Math.min(...timestamps)).format("HH:mm");
-    const maxTime = dayjs(Math.max(...timestamps)).format("HH:mm");
-    console.log(minTime, maxTime)
-
+    
     const series = Object.entries(grouped)
         .sort(([dateA], [dateB]) => dateA.localeCompare(dateB))
         .map(([date, data]) => ({
