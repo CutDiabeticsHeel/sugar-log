@@ -33,6 +33,7 @@ const formVariants = {
 };
 
 function SugarForm({defaultValue, onClose}) {
+    const STORAGE_KEY = defaultValue?.id ? `sugarFormDraft_${defaultValue.id}` : "sugarFormDraft_new";
     const { data: allProduct, isLoading, refetch} = useGetProductsQuery()
     const [addSugarRecord] = useAddSugarRecordMutation();
     const forEachProduct = (allProduct ?? []).map((item)=> ({
@@ -44,8 +45,20 @@ function SugarForm({defaultValue, onClose}) {
         carbs: item["Углеводы"]
     }))
     const defaultActivity = defaultValue?.activity ? String(defaultValue.activity).split(',').map(a => a.trim()).filter(Boolean): [];
-    const { register, handleSubmit, control, setError, formState: { errors }, watch, reset, setValue } = useForm({
-        defaultValues: {
+    const getInitialValues = () => {
+        const saved = sessionStorage.getItem(STORAGE_KEY);
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                return {
+                    ...parsed,
+                    time: parsed.time ? dayjs(parsed.time) : dayjs(),
+                    date: parsed.date ? dayjs(parsed.date) : dayjs(),
+                    foodList: parsed.foodList ?? [],
+                };
+            } catch {}
+        }
+        return {
             time: defaultValue?.time ? dayjs(defaultValue.time, "HH:mm") : dayjs(),
             date: defaultValue?.date ? dayjs(defaultValue.date) : dayjs(),
             sugar: defaultValue?.sugar ?? "",
@@ -58,13 +71,19 @@ function SugarForm({defaultValue, onClose}) {
             protein: defaultValue?.manual_protein ?? "",
             fat: defaultValue?.manual_fat ?? "",
             ccal: defaultValue?.ccal ?? "",
-        }
+            foodList: [],
+        };
+    };
+    const [initialValues] = useState(getInitialValues);
+    const { register, handleSubmit, control, setError, formState: { errors }, watch, reset, setValue } = useForm({
+        defaultValues: initialValues
     })
     const [selectedProduct, setSelectedProduct] = useState(null);
-    const [foodList, setFoodList] = useState([]);
+    const [foodList, setFoodList] = useState(initialValues.foodList);
 
     useEffect(() => {
         if (isLoading || !defaultValue) return;
+        if (initialValues.foodList?.length > 0) return;
 
         const autoFoodPairs = defaultValue?.auto_food
             ? String(defaultValue.auto_food).split(',').map(pair => {
@@ -111,6 +130,17 @@ function SugarForm({defaultValue, onClose}) {
             handleFoodAutoChange(foodList);
         }
     }, [foodList]);
+
+    useEffect(() => {
+        const subscription = watch((values) => {
+            sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ ...values, foodList }));
+        });
+        return () => subscription.unsubscribe();
+    }, [watch, foodList]);
+    useEffect(() => {
+        const currentValues = watch(); // снэпшот текущих значений формы
+        sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ ...currentValues, foodList }));
+    }, [foodList]);
     
     if (isLoading) return (<Preloader/>)
 
@@ -131,6 +161,7 @@ function SugarForm({defaultValue, onClose}) {
         setIsLoading(true)
         try {
             await addSugarRecord({...parsed.data, id: defaultValue?.id ?? null}).unwrap();
+            sessionStorage.removeItem(STORAGE_KEY);
             setIsSuccess(true)
             reset();
             setFoodList([])
@@ -184,7 +215,6 @@ function SugarForm({defaultValue, onClose}) {
                         <Controller
                             name="time"
                             control={control}
-                            defaultValue={defaultValue?.time ? dayjs(defaultValue.time, "HH:mm") : dayjs()}
                             render={({ field }) => (
                                 <TimeField
                                     label="Выберите время"
@@ -280,7 +310,7 @@ function SugarForm({defaultValue, onClose}) {
                         {foodList.map((product, index) => (
                             <li key={index} className={style.foodItem}>
                                 <span>{product.label}</span>
-                                <button type="button" onClick={() => setFoodList(prev => prev.map((item, i) => i === index ? { ...item, amount: decrement(item.amount) } : item))}>
+                                <button className={style.counter} type="button" onClick={() => setFoodList(prev => prev.map((item, i) => i === index ? { ...item, amount: decrement(item.amount) } : item))}>
                                     <RemoveIcon />
                                 </button>
                                 <input
@@ -294,7 +324,7 @@ function SugarForm({defaultValue, onClose}) {
                                     }}
                                     onBlur={() => setFoodList(prev => prev.map((item, i) => i === index ? { ...item, amount: isNaN(parseFloat(item.amount)) ? 1 : parseFloat(item.amount) } : item))}
                                 />
-                                <button type="button" onClick={() => setFoodList(prev => prev.map((item, i) => i === index ? { ...item, amount: increment(item.amount) } : item))}>
+                                <button className={style.counter} type="button" onClick={() => setFoodList(prev => prev.map((item, i) => i === index ? { ...item, amount: increment(item.amount) } : item))}>
                                     <AddIcon />
                                 </button>
                                 <button type="button" onClick={() => setFoodList(prev => prev.filter((_, i) => i !== index))}>

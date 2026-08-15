@@ -21,16 +21,25 @@ const formVariants = {
 };
 
 function ProductForm({defaultValue, onClose}) {
+    const STORAGE_KEY = defaultValue?.id ? `productFormDraft_${defaultValue.id}` : "productFormDraft_new";
     const {data: userInfo, isLoading, refetch} = useGetUserInfoQuery();
     const {register, handleSubmit, watch, reset, setError, formState: { errors },} = useForm({
-        defaultValues: {
-            nameProduct: defaultValue?.["Продукт"] ?? "",
-            protein: defaultValue?.["Белки"] ?? "",
-            fat: defaultValue?.["Жиры"] ?? "",
-            carbs: defaultValue?.["Углеводы"] ?? "",
-            weigth: defaultValue?.["Вес продукта"] ?? "",
+        defaultValues: async () => {
+            const saved = sessionStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                try {
+                    return JSON.parse(saved)
+                } catch {}
+            } 
+            return {
+                nameProduct: defaultValue?.["Продукт"] ?? "",
+                protein: defaultValue?.["Белки"] ?? "",
+                fat: defaultValue?.["Жиры"] ?? "",
+                carbs: defaultValue?.["Углеводы"] ?? "",
+                weigth: defaultValue?.["Вес продукта"] ?? "",
+            };
         }
-    })
+    });
     const toNumber = (value) => Number(String(value).replace(",", ".")) || 0;
     const [smallForm, setSmallForm] = useState(false)
     const [width, setWidth] = useState();
@@ -62,16 +71,7 @@ function ProductForm({defaultValue, onClose}) {
         setIsLoading(true)
         try {
             await addProduct({...data, id: defaultValue?.id ?? null}).unwrap();
-            // const responce = await fetch(`${API_URL}/addProduct`,{
-            //     method: "POST",
-            //     headers: {
-            //         "Content-Type": "application/json;charset=utf-8",
-            //     },
-            //     body: JSON.stringify({
-            //         ...data,
-            //         id: defaultValue?.id ?? null,
-            //     })
-            // })
+            sessionStorage.removeItem(STORAGE_KEY);
             reset();
             setIsSuccess(true)
             setTimeout(() => {
@@ -84,6 +84,13 @@ function ProductForm({defaultValue, onClose}) {
             setIsLoading(false)
         }
     }
+
+    useEffect(() => {
+        const subscription = watch((values) => {
+            sessionStorage.setItem(STORAGE_KEY, JSON.stringify(values));
+        });
+        return () => subscription.unsubscribe();
+    }, [watch]);
 
     useEffect(() => {
         const element = formElement.current;

@@ -123,6 +123,14 @@
 }
 .foodSelectContainer button{
     background-color: var(--primary-element-background);
+    cursor: pointer;
+}
+.counter:hover{
+    background-color: var(--third-element-background);
+    border: 1px solid var(--primary-element-background);
+}
+.foodSelectContainer button:last-child:hover{
+    background-color: var(--danger);
 }
 .foodInputContainer {
     display: flex;
