@@ -6,6 +6,8 @@ import {getAll, addProduct, getInsulinAndXEBE, updateUserInfo, addSugarRecord, a
     deleteQuestions, updateEndocrinologistInfo, deleteSugarLogById, deleteProductById
 } from "./database-function.js";
 
+const PORT = process.env.PORT || 5000;
+
 const app = Fastify({
     logger: true,
 });
@@ -13,6 +15,10 @@ const app = Fastify({
 app.register(cors, {
     origin: ["http://localhost:4000", "https://sugar-log-feeb.onrender.com", "https://sugar-log-k53m.onrender.com"],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+});
+
+app.get('/', async () => {
+    return { message: 'Sugar Log API is running' };
 });
 
 app.get("/api/user-info", async (request, reply) => {
@@ -188,7 +194,7 @@ app.delete("/api/delete-product", async (request, reply) => {
 const start = async () => {
     try {
         await app.listen({
-            port: 5000,
+            port: PORT,
             host: "0.0.0.0"
         });
         console.log("✅ Сервер запущен на http://localhost:5000");
