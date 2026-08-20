@@ -17,13 +17,12 @@ function Menu() {
 
     return (
         <nav className={`${style.navigationMenu} ${isOpen ? style.openMenu : style.closeMenu}`} ref={menuRef}>
-            <span className={style.titleMenu}>
+            <span className={style.titleMenu} onClick={() => (setOpen(prev => !prev))}>
                 <span className={style.linkText}>Дневник <br/> сахаров</span>
-                <button className={style.buttonMenu} onClick={() => (setOpen(prev => !prev))}>
+                <button className={style.buttonMenu}>
                     <MenuIcon/>
                 </button>
             </span>
-
             <NavLink to="/" className={({ isActive }) => `${style.navigationItem} ${isActive ? style.navigationItemActive : ""}`}>
                 <WaterDropIcon/>
                 <span className={style.linkText}>Главная</span>
