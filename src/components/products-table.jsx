@@ -77,34 +77,41 @@ function ProductsTable(){
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredData.map((product) => (
-                            <tr key={product.id}>
-                                <td>{product["Продукт"]}</td>
-                                <td>{product["Белки"]}</td>
-                                <td>{product["Жиры"]}</td>
-                                <td>{product["Углеводы"]}</td>
-                                <td>{product["Вес продукта"]}</td>
-                                <td>{Number(product["ккал"]).toFixed(0)}</td>
-                                <td>{Number(product["БЖЕ"]).toFixed(2)}</td>
-                                <td>{Number(product["ХЕ"]).toFixed(2)}</td>
-                                <td>{Number(product["ХЕ + БЖЕ"]).toFixed(2)}</td>
-                                <td>{Number(product["Всего инсулина"]).toFixed(2)}</td>
-                                <td>
-                                    <button className={style.icon}>
-                                        <EditIcon  onClick={() => setEditPopupId(product.id)} sx={{ fill: "#013567" }}/>
-                                        {editPopupId === product.id && (
-                                            <EditProduct product={product} onClose={() => setEditPopupId(null)}/>
-                                        )}
-                                    </button>
-                                    <button className={style.icon} >
-                                        <DeleteIcon  onClick={() => setDeletePopupId(product.id)} sx={{ fill: "#013567" }}/>
-                                        {deletePopupId === product.id && (
-                                            <DeleteProduct product={product} onClose={() => setDeletePopupId(null)}/>
-                                        )}
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
+                        {filteredData.map((product) => {
+                            const weight = Number(product["Вес продукта"]) || 0;
+                            const k = weight / 100;
+                            const proteinPerProduct = (Number(product["Белки"]) || 0) * k;
+                            const fatPerProduct = (Number(product["Жиры"]) || 0) * k;
+                            const carbsPerProduct = (Number(product["Углеводы"]) || 0) * k;
+                            return (
+                                <tr key={product.id}>
+                                    <td>{product["Продукт"]}</td>
+                                    <td>{Number(proteinPerProduct).toFixed(0)}</td>
+                                    <td>{Number(fatPerProduct).toFixed(0)}</td>
+                                    <td>{Number(carbsPerProduct).toFixed(0)}</td>
+                                    <td>{product["Вес продукта"]}</td>
+                                    <td>{Number(product["ккал"]).toFixed(0)}</td>
+                                    <td>{Number(product["БЖЕ"]).toFixed(2)}</td>
+                                    <td>{Number(product["ХЕ"]).toFixed(2)}</td>
+                                    <td>{Number(product["ХЕ + БЖЕ"]).toFixed(2)}</td>
+                                    <td>{Number(product["Всего инсулина"]).toFixed(2)}</td>
+                                    <td>
+                                        <button className={style.icon}>
+                                            <EditIcon  onClick={() => setEditPopupId(product.id)} sx={{ fill: "#013567" }}/>
+                                            {editPopupId === product.id && (
+                                                <EditProduct product={product} onClose={() => setEditPopupId(null)}/>
+                                            )}
+                                        </button>
+                                        <button className={style.icon} >
+                                            <DeleteIcon  onClick={() => setDeletePopupId(product.id)} sx={{ fill: "#013567" }}/>
+                                            {deletePopupId === product.id && (
+                                                <DeleteProduct product={product} onClose={() => setDeletePopupId(null)}/>
+                                            )}
+                                        </button>
+                                    </td>
+                                </tr>
+                                );
+                        })}
                     </tbody>
                 </table>
             </div>

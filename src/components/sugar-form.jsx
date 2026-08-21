@@ -42,7 +42,8 @@ function SugarForm({defaultValue, onClose}) {
         kcal: item["ккал"],
         protein: item["Белки"],
         fat: item["Жиры"],
-        carbs: item["Углеводы"]
+        carbs: item["Углеводы"],
+        weight: item["Вес продукта"], 
     }))
     const defaultActivity = defaultValue?.activity ? String(defaultValue.activity).split(',').map(a => a.trim()).filter(Boolean): [];
     const getInitialValues = () => {
@@ -138,7 +139,7 @@ function SugarForm({defaultValue, onClose}) {
         return () => subscription.unsubscribe();
     }, [watch, foodList]);
     useEffect(() => {
-        const currentValues = watch(); // снэпшот текущих значений формы
+        const currentValues = watch();
         sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ ...currentValues, foodList }));
     }, [foodList]);
     

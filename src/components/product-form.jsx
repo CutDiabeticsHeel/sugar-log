@@ -7,6 +7,7 @@ import Preloader from "./preloader";
 import SubmitingBlock from "./submiting";
 import SuccessBlock from "./success-block";
 import { productEntrySchema } from "../utils/product-form-validate";
+import Switch from '@mui/material/Switch';
 
 const API_URL = import.meta.env.VITE_API_URL;
 const formVariants = {
@@ -40,20 +41,25 @@ function ProductForm({defaultValue, onClose}) {
             };
         }
     });
+    const [isLoad, setIsLoading] = useState(false)
+    const [isSuccess, setIsSuccess] = useState(false)
+    const [isPortion, setIsPortion] = useState(false);
+    
     const toNumber = (value) => Number(String(value).replace(",", ".")) || 0;
     const [smallForm, setSmallForm] = useState(false)
     const [width, setWidth] = useState();
     const formElement = useRef(null);
 
-    const protein = toNumber(watch("protein"));
-    const fat = toNumber(watch("fat"));
-    const carbs = toNumber(watch("carbs"));
+    const rawProtein = toNumber(watch("protein"));
+    const rawFat = toNumber(watch("fat"));
+    const rawCarbs = toNumber(watch("carbs"));
     const weight = toNumber(watch("weigth"));
+    const protein = isPortion && weight > 0 ? (rawProtein / weight) * 100 : rawProtein;
+    const fat = isPortion && weight > 0 ? (rawFat / weight) * 100 : rawFat;
+    const carbs = isPortion && weight > 0 ? (rawCarbs / weight) * 100 : rawCarbs;
 
     const XEBEValue = Number((((protein * 4 * weight) + (fat * 9 * weight)) / 10000).toFixed(2));
     const XEValue = Number((((carbs * weight / 100)) / 12).toFixed(2));
-    const [isLoad, setIsLoading] = useState(false)
-    const [isSuccess, setIsSuccess] = useState(false)
 
     const [addProduct] = useAddProductMutation();
 
@@ -70,7 +76,7 @@ function ProductForm({defaultValue, onClose}) {
         }
         setIsLoading(true)
         try {
-            await addProduct({...data, id: defaultValue?.id ?? null}).unwrap();
+            await addProduct({...data, id: defaultValue?.id ?? null, isPortion: isPortion}).unwrap();
             sessionStorage.removeItem(STORAGE_KEY);
             reset();
             setIsSuccess(true)
@@ -126,6 +132,22 @@ function ProductForm({defaultValue, onClose}) {
                         <input type="text" {...register("nameProduct")}  placeholder={defaultValue ? defaultValue["Продукт"] : ""}/>
                         {errors.nameProduct && <span className={style.errorText}>{errors.nameProduct.message}</span>}
                     </label>
+                    <div className={style.portion}>
+                        <span>Рассчитать продукт</span>
+                        <Switch
+                        sx={{
+                                "& .MuiSwitch-switchBase.Mui-checked": {
+                                    color: "#013567",
+                                },
+                                "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+                                    backgroundColor: "#013567",
+                                },
+                            }}  
+                            checked={isPortion}
+                            onChange={(event) => setIsPortion(event.target.checked)}
+                        />
+                        <span>Добавить рассчитанный</span>
+                    </div>
                     <label className={style.proteinConrainer}>
                         Белки, г
                         <input type="text" {...register("protein")}  placeholder={defaultValue ? defaultValue["Белки"] : ""}/>
@@ -143,7 +165,7 @@ function ProductForm({defaultValue, onClose}) {
                     </label>
                     <label className={style.weigthConrainer}>
                         Вес продукта, г
-                        <input type="text" {...register("weigth")}  placeholder={defaultValue ? defaultValue["Вес продукта"] : ""}/>
+                        <input type="text" {...register("weigth")}  placeholder={defaultValue ? defaultValue["Вес продукта"] : ""} />
                         {errors.weigth && <span className={style.errorText}>{errors.weigth.message}</span>}
                     </label>
                     <div className={style.valueContainer}>

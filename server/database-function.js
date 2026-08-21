@@ -28,12 +28,22 @@ async function getAll(sql, params = []) {
     return result.rows;
 }
 
-async function addProduct({ id, nameProduct, protein, fat, carbs, weigth }) {
+async function addProduct({ id, nameProduct, protein, fat, carbs, weigth, isPortion}) {
+    const weight = toNumber(weigth);
+    let proteinValue = toNumber(protein);
+    let fatValue = toNumber(fat);
+    let carbsValue = toNumber(carbs);
+
+    if (isPortion) {
+        proteinValue = proteinValue / weight * 100;
+        fatValue = fatValue / weight * 100;
+        carbsValue = carbsValue / weight * 100;
+    }
     const parsed = {
-        protein: toNumber(protein),
-        fat: toNumber(fat),
-        carbs: toNumber(carbs),
-        weight: toNumber(weigth),
+        protein: proteinValue,
+        fat: fatValue,
+        carbs: carbsValue,
+        weight
     };
 
     const { kkal, bzhu, xe, xeBzhu } = calculateNutrition(parsed);
@@ -176,10 +186,11 @@ async function addSugarRecord(entry) {
 
     let autoProtein = 0, autoFat = 0, autoCarb = 0, autoCcal = 0;
     for (const food of foodList) {
-        autoProtein += Number(food.protein * food.amount) || 0;
-        autoFat += Number(food.fat * food.amount) || 0;
-        autoCarb += Number(food.carbs * food.amount) || 0;
-        autoCcal += parseFloat(food.kcal * food.amount) || 0;
+        const gramsEaten = Number(food.weight) * Number(food.amount);
+        autoProtein += Number(food.protein) * gramsEaten / 100;
+        autoFat     += Number(food.fat) * gramsEaten / 100;
+        autoCarb    += Number(food.carbs) * gramsEaten / 100;
+        autoCcal    += Number(food.kcal) * gramsEaten / 100;
     }
 
     const autoFood = foodList.map(food => `${food.value}:${food.amount}`).join(',');

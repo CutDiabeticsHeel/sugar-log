@@ -71,6 +71,7 @@ app.get("/api/today-sugar-log", async (request, reply) => {
 
 app.post("/api/addSugar", async (request, reply) => {
     try {
+        console.log(request.body)
         await addSugarRecord(request.body)
         return {message: "Успешно"}
     } catch (err) {
@@ -81,7 +82,7 @@ app.post("/api/addSugar", async (request, reply) => {
 
 app.post("/api/addProduct", async (request, reply) => {
     try {
-        const { id, nameProduct, protein, fat, carbs, weigth } = request.body;
+        const { id, nameProduct, protein, fat, carbs, weigth, isPortion} = request.body;
 
         if (!nameProduct || !protein || !fat || !carbs || !weigth) {
             return reply.status(400).send({ error: "Missing required fields" });
