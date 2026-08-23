@@ -43,7 +43,7 @@ function ProductForm({defaultValue, onClose}) {
     });
     const [isLoad, setIsLoading] = useState(false)
     const [isSuccess, setIsSuccess] = useState(false)
-    const [isPortion, setIsPortion] = useState(false);
+    const [isPortion, setIsPortion] = useState(defaultValue?.["Порционный"] ?? false);
     
     const toNumber = (value) => Number(String(value).replace(",", ".")) || 0;
     const [smallForm, setSmallForm] = useState(false)
@@ -126,7 +126,7 @@ function ProductForm({defaultValue, onClose}) {
 
     return (
         <section className={style.productAddSection} >
-                <motion.form onSubmit={handleSubmit(onSubmit)} autoComplete="off" className={`${style.productForm } ${smallForm ? style.productSmallForm : "" }`} autoComplete="off" ref={formElement} variants={formVariants}>
+                <motion.form onSubmit={handleSubmit(onSubmit)} autoComplete="off" className={`${style.productForm } ${smallForm ? style.productSmallForm : "" }`} ref={formElement} variants={formVariants}>
                     <label className={style.nameProductConrainer} >
                         Название продукта
                         <input type="text" {...register("nameProduct")}  placeholder={defaultValue ? defaultValue["Продукт"] : ""}/>
@@ -135,14 +135,20 @@ function ProductForm({defaultValue, onClose}) {
                     <div className={style.portion}>
                         <span>Рассчитать продукт</span>
                         <Switch
-                        sx={{
+                            sx={{
+                                "& .MuiSwitch-switchBase": {
+                                    color: "#013567",
+                                },
+                                "& .MuiSwitch-switchBase + .MuiSwitch-track": {
+                                    backgroundColor: "#013567",
+                                },
                                 "& .MuiSwitch-switchBase.Mui-checked": {
                                     color: "#013567",
                                 },
                                 "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
                                     backgroundColor: "#013567",
                                 },
-                            }}  
+                            }} 
                             checked={isPortion}
                             onChange={(event) => setIsPortion(event.target.checked)}
                         />

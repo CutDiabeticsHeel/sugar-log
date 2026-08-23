@@ -11,7 +11,7 @@ function toNumber(value) {
 }
 
 function calculateNutrition({ protein, fat, carbs, weight }) {
-    const kkal = ((protein * 4 + fat * 9 + carbs * 4) * weight) / 100;
+    const kkal = protein * 4 + fat * 9 + carbs * 4;
     const bzhu = ((protein * 4 * weight) + (fat * 9 * weight)) / 10000;
     const xe = (carbs * weight / 100) / 12;
     const xeBzhu = xe + bzhu;
@@ -50,8 +50,8 @@ async function addProduct({ id, nameProduct, protein, fat, carbs, weigth, isPort
 
     const sql = `
         INSERT INTO products
-            (id, "Продукт", "Белки", "Жиры", "Углеводы", "Вес продукта", "ккал", "БЖЕ", "ХЕ", "ХЕ + БЖЕ")
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            (id, "Продукт", "Белки", "Жиры", "Углеводы", "Вес продукта", "ккал", "БЖЕ", "ХЕ", "ХЕ + БЖЕ", "Порционный")
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(id) DO UPDATE SET
             "Продукт" = excluded."Продукт",
             "Белки" = excluded."Белки",
@@ -61,7 +61,8 @@ async function addProduct({ id, nameProduct, protein, fat, carbs, weigth, isPort
             "ккал" = excluded."ккал",
             "БЖЕ" = excluded."БЖЕ",
             "ХЕ" = excluded."ХЕ",
-            "ХЕ + БЖЕ" = excluded."ХЕ + БЖЕ"
+            "ХЕ + БЖЕ" = excluded."ХЕ + БЖЕ",
+            "Порционный" = excluded."Порционный"
     `;
 
     const params = [
@@ -74,7 +75,8 @@ async function addProduct({ id, nameProduct, protein, fat, carbs, weigth, isPort
         kkal,
         bzhu,
         xe,
-        xeBzhu
+        xeBzhu,
+        isPortion
     ];
 
     const result = await db.execute({ sql, args: params });
