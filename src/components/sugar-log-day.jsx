@@ -108,47 +108,57 @@ function SugarLogDay({ period }) {
                             <table className={style.dayLogTable}>
                                 <thead className={style.headers}>
                                     <tr>
-                                        <th>Время</th>
+                                        <th rowSpan={2}>Время</th>
                                         <th>Сахар</th>
                                         <th>Инсулин</th>
                                         <th>ХЕ + БЖЕ</th>
-                                        <th>Б</th>
-                                        <th>Ж</th>
-                                        <th>У</th>
-                                        <th>Ккал</th>
-                                        <th>Еда</th>
-                                        <th>Заметки</th>
-                                        <th></th>
+                                        <th rowSpan={2}>Ккал</th>
+                                        <th rowSpan={2}>Еда</th>
+                                        <th rowSpan={2}>Заметки</th>
+                                        <th rowSpan={2}></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {dayData.records.map((record) => (
-                                        <tr key={record.id}>
-                                            <td>{record.time}</td>
-                                            <td>{record.sugar}</td>
-                                            <td>{record.insulin}</td>
-                                            <td>{record.XEBE}</td>
-                                            <td>{record.protein}</td>
-                                            <td>{record.fat}</td>
-                                            <td>{record.carb}</td>
-                                            <td>{record.ccal}</td>
-                                            <td>{record.food}</td>
-                                            <td>{`${record.notes ? `${record.notes}.` : ""} ${record.activity ?  `${record.activity}` : ""}`}</td>
-                                            <td>
-                                                <button className={style.icon}>
-                                                    <EditIcon  onClick={() => setEditPopupId(record.id)} sx={{ fill: "#013567" }}/>
-                                                    {editPopupId === record.id && (
-                                                        <EditSugarRecord record={record} onClose={() => setEditPopupId(null)}/>
-                                                    )}
-                                                </button>
-                                                <button className={style.icon}>
-                                                    <DeleteIcon onClick={() => setDeletePopupId(record.id)} sx={{ fill: "#013567" }}/>
-                                                    {deletePopupId === record.id && (
-                                                        <DeleteSugarRecord record={record} onClose={() => setDeletePopupId(null)} onDeleted={refetch}/>
-                                                    )}
-                                                </button>
-                                            </td>
-                                        </tr>
+                                        <>
+                                            <tr key={record.id}>
+                                                <td rowSpan={2}>{record.time}</td>
+                                                <td>{record.sugar}</td>
+                                                <td>{record.insulin}</td>
+                                                <td>{record.XEBE}</td>
+                                                <td rowSpan={2}>{record.ccal}</td>
+                                                <td rowSpan={2}>{record.food}</td>
+                                                <td rowSpan={2}>{`${record.notes ? `${record.notes}.` : ""} ${record.activity ?  `${record.activity}` : ""}`}</td>
+                                                <td rowSpan={2}>
+                                                    <button className={style.icon}>
+                                                        <EditIcon  onClick={() => setEditPopupId(record.id)} sx={{ fill: "#013567" }}/>
+                                                        {editPopupId === record.id && (
+                                                            <EditSugarRecord record={record} onClose={() => setEditPopupId(null)}/>
+                                                        )}
+                                                    </button>
+                                                    <button className={style.icon}>
+                                                        <DeleteIcon onClick={() => setDeletePopupId(record.id)} sx={{ fill: "#013567" }}/>
+                                                        {deletePopupId === record.id && (
+                                                            <DeleteSugarRecord record={record} onClose={() => setDeletePopupId(null)} onDeleted={refetch}/>
+                                                        )}
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <span className={style.macros}>Б </span> 
+                                                    {record.protein}
+                                                </td>
+                                                <td>
+                                                    <span className={style.macros}>Ж </span>
+                                                    {record.fat}
+                                                </td>
+                                                <td>
+                                                    <span className={style.macros}>У </span>
+                                                    {record.carb}
+                                                </td>
+                                            </tr>
+                                        </>
                                     ))}
                                 </tbody>
                             </table>

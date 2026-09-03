@@ -205,6 +205,6 @@
         grid-column: 1/5;
     }
     .foodSelectContainer button{
-        padding: 0;
+        padding: 5px 0px;
     }
 }

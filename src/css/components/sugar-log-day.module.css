@@ -70,6 +70,10 @@ th {
     border: none;
     background-color: inherit;
 }
+.macros {
+    color: var(--text-muted);
+    gap: 3px;
+}
 .emptyDay {
     padding: 16px;
     text-align: center;

@@ -3,11 +3,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import style from "../css/components/success-block.module.css";
 
 function SuccessBlock({ show, operation }) {
-    return createPortal(
+    return(
         <AnimatePresence>
             {show && (
                 <motion.div
-                    className={style.overlay}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1}}
                     exit={{ opacity: 0}}
@@ -18,8 +17,7 @@ function SuccessBlock({ show, operation }) {
                     </div>
                 </motion.div>
             )}
-        </AnimatePresence>,
-        document.body
+        </AnimatePresence>
     );
 }
 

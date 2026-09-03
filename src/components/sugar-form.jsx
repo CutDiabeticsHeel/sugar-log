@@ -373,8 +373,8 @@ function SugarForm({defaultValue, onClose}) {
                 </button>
             </motion.form>
             {isLoad && (
-                    <SubmitingBlock operation="добавление записи в Дневник Сахаров"/>
-                )}
+                <SubmitingBlock operation="добавление записи в Дневник Сахаров"/>
+            )}
             <SuccessBlock show={isSuccess} operation={defaultValue?.id ? "Запись успешно изменена" : "Запись успешно добавлена в Дневник Сахаров"}/>
         </section>
     )

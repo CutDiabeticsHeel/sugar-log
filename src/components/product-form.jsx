@@ -42,7 +42,7 @@ function ProductForm({defaultValue, onClose}) {
         }
     });
     const [isLoad, setIsLoading] = useState(false)
-    const [isSuccess, setIsSuccess] = useState(false)
+    const [isSuccess, setIsSuccess] = useState(true)
     const [isPortion, setIsPortion] = useState(defaultValue?.["Порционный"] ?? false);
     
     const toNumber = (value) => Number(String(value).replace(",", ".")) || 0;
@@ -187,7 +187,7 @@ function ProductForm({defaultValue, onClose}) {
                 {isLoad && (
                     <SubmitingBlock operation="добавление в Список Продуктов"/>
                 )}
-                    <SuccessBlock show={isSuccess} operation = {defaultValue ? "Информация о продукте успешно изменена" : " Продукт успешно добавлен в Список Продуктов"}/>
+                <SuccessBlock show={isSuccess} operation = {defaultValue ? "Информация о продукте успешно изменена" : " Продукт успешно добавлен в Список Продуктов"}/>
         </section>
     )
 }

@@ -8,6 +8,8 @@
     z-index: 1001;
     position: fixed;
     top: 5%;
+    left: 20%;
+    right: 20%;
     background-color: var(--second-success-bg);
     border-radius: 20px;
     padding: 10px;

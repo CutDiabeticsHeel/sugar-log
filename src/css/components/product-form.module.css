@@ -82,3 +82,9 @@ input {
 .errorText {
     color: var(--danger)
 }
+@media (max-width: 548px) {
+    .portion {
+        display: flex;
+        flex-direction: column;
+    }
+}
