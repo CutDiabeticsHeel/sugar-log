@@ -42,7 +42,7 @@ function ProductForm({defaultValue, onClose}) {
         }
     });
     const [isLoad, setIsLoading] = useState(false)
-    const [isSuccess, setIsSuccess] = useState(true)
+    const [isSuccess, setIsSuccess] = useState(false)
     const [isPortion, setIsPortion] = useState(defaultValue?.["Порционный"] ?? false);
     
     const toNumber = (value) => Number(String(value).replace(",", ".")) || 0;
