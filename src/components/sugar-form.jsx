@@ -108,15 +108,6 @@ function SugarForm({defaultValue, onClose}) {
     const [isLoad, setIsLoading] = useState(false)
     const [isSuccess, setIsSuccess] = useState(false)
 
-    const sugarDecline = userInfo[0]["sugar_decline"];
-    const sugarValue = watch("sugar")
-
-    const insulinHint = (() => {
-        const num = Number(String(sugarValue).replace(",", "."));
-        if (!sugarDecline || isNaN(num) || num < 10) return null;
-        return ((num - 7) / sugarDecline).toFixed(1);
-    })();
-
     const handleFoodAutoChange = async (selectedOptions) =>{
         const response = await fetch(`${API_URL}/foodAuto`,{
             method: "POST",
@@ -153,6 +144,15 @@ function SugarForm({defaultValue, onClose}) {
     }, [foodList]);
     
     if (isLoading) return (<Preloader/>)
+
+    const sugarDecline = userInfo[0]["sugar_decline"];
+    const sugarValue = watch("sugar")
+
+    const insulinHint = (() => {
+        const num = Number(String(sugarValue).replace(",", "."));
+        if (!sugarDecline || isNaN(num) || num < 10) return null;
+        return ((num - 7) / sugarDecline).toFixed(1);
+    })();
 
     const onSubmit = async (data) => {
         data.food = foodList;
