@@ -137,7 +137,8 @@ async function updateUserInfo(
     height,
     weight,
     shortInsulin,
-    longInsulin
+    longInsulin,
+    sugarDecline
 ) {
     const fields = [];
     const values = [];
@@ -165,6 +166,11 @@ async function updateUserInfo(
     if (longInsulin !== "") {
         fields.push("long_insulin = ?");
         values.push(longInsulin);
+    }
+
+    if (sugarDecline !== "") {
+        fields.push("sugar_decline = ?");
+        values.push(sugarDecline);
     }
 
     if (fields.length === 0) {

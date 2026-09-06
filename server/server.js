@@ -23,7 +23,6 @@ app.get('/', async () => {
 
 app.get("/api/user-info", async (request, reply) => {
     return await getAll("SELECT * FROM user_info");
-
 });
 
 app.get("/api/data-for-metrics", async (request, reply) => {
@@ -33,7 +32,6 @@ app.get("/api/data-for-metrics", async (request, reply) => {
 
 app.get("/api/user-questions", async (request, reply) => {
     return await getAll("SELECT * FROM questions");
-
 });
 
 app.get("/api/endocrinologist", async (request, reply) => {
@@ -81,7 +79,6 @@ app.post("/api/addSugar", async (request, reply) => {
 
 app.post("/api/addProduct", async (request, reply) => {
     try {
-        console.log(request.body)
         const result = await addProduct(request.body);
 
         reply.status(201).send(result);
@@ -118,8 +115,8 @@ app.post("/api/foodAuto", async (request, reply) => {
 
 app.post("/api/changeUserInfo", async (request, reply) => {
     try {
-        const {name, height, weight, shortInsulin, longInsulin} = request.body;
-        await updateUserInfo(name, height, weight, shortInsulin, longInsulin)
+        const {name, height, weight, shortInsulin, longInsulin, sugarDecline} = request.body;
+        await updateUserInfo(name, height, weight, shortInsulin, longInsulin, sugarDecline)
         return {message: "Успешно"}
     } catch(err){
         console.log(err)

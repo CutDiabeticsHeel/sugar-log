@@ -28,6 +28,7 @@ function ProfileInfo(){
     const [weight, setWeight] = useState("");
     const [shortInsulin, setShortInsulin] = useState("");
     const [longInsulin, setLongInsulin] = useState("");
+    const [sugarDecline, setsugarDecline] = useState("");
     const [isLoad, setIsLoading] = useState(false)
     const [isSuccess, setIsSuccess] = useState(false)
     if (isLoading) return (<Preloader/>)
@@ -36,7 +37,7 @@ function ProfileInfo(){
     const changeUserInfo = async () => {
         setIsLoading(true)
         try {
-            const data = {name, height, weight, shortInsulin, longInsulin}
+            const data = {name, height, weight, shortInsulin, longInsulin, sugarDecline};
             const response = await fetch(`${API_URL}/changeUserInfo`, {
                 method: "POST",
                 headers: {
@@ -46,8 +47,8 @@ function ProfileInfo(){
             })
             await refetch();
             setPopupOpen(false)
-            setHeight(""); setWeight(""); setShortInsulin(""); setLongInsulin(""); setName("");
-            setIsSuccess(true)
+            setHeight(""); setWeight(""); setShortInsulin(""); setLongInsulin(""); setName(""); setsugarDecline("");
+            setIsSuccess(true);
             setTimeout(() => {
                 setIsSuccess(false);
             }, 1488)
@@ -76,6 +77,9 @@ function ProfileInfo(){
                         </label>
                         <label>Длинный инсулин, ед/сутки 
                             <input type="text" value={longInsulin} placeholder={info.long_insulin} onChange={(e) => setLongInsulin(e.target.value)} />
+                        </label>
+                        <label className={style.sugarDecline}>Сколько ммоль/л снижает 1ед инсулина:
+                            <input type="text" value={sugarDecline} placeholder={info.sugar_decline} onChange={(e) => setsugarDecline(e.target.value)} />
                         </label>
                         <button className={style.addEntry} onClick={changeUserInfo}>
                             Сохранить изменения
@@ -108,7 +112,9 @@ function ProfileInfo(){
                         <p className={style.valueContainer}>Длинный инсулин: 
                             <span className={style.valueItem}>{info.long_insulin} ед/сутки</span>
                         </p>
-
+                        <p className={style.valueContainer}>Сколько ммоль/л снижает 1ед инсулина: 
+                            <span className={style.valueItem}>{info.sugar_decline}</span>
+                        </p>
                         <button onClick={() => setPopupOpen(true)} className={style.editButton}>
                             <EditIcon fontSize="small" />
                         </button>

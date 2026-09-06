@@ -1,14 +1,12 @@
 import { useForm, Controller  } from "react-hook-form"
 import style from "../css/components/sugar-form.module.css";
 import AsyncSelect  from "react-select/async";
-import Checkbox from "@mui/material/Checkbox";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
@@ -16,9 +14,9 @@ import SickIcon from '@mui/icons-material/Sick';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import DeleteIcon from '@mui/icons-material/Delete';
-import {useRef, useState, useEffect} from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useGetProductsQuery, useAddSugarRecordMutation  } from "../store/api";
+import {useState, useEffect} from "react";
+import { motion } from "framer-motion";
+import { useGetProductsQuery, useAddSugarRecordMutation, useGetUserInfoQuery  } from "../store/api";
 import Preloader from "./preloader";
 import { sugarEntrySchema } from "../utils/sugar-form-validate";
 import SubmitingBlock from "./submiting";
@@ -34,7 +32,8 @@ const formVariants = {
 
 function SugarForm({defaultValue, onClose}) {
     const STORAGE_KEY = defaultValue?.id ? `sugarFormDraft_${defaultValue.id}` : "sugarFormDraft_new";
-    const { data: allProduct, isLoading, refetch} = useGetProductsQuery()
+    const {data: allProduct, isLoading, refetch} = useGetProductsQuery();
+    const {data: userInfo} = useGetUserInfoQuery();
     const [addSugarRecord] = useAddSugarRecordMutation();
     const forEachProduct = (allProduct ?? []).map((item)=> ({
         value: item.id, 
@@ -109,6 +108,15 @@ function SugarForm({defaultValue, onClose}) {
     const [isLoad, setIsLoading] = useState(false)
     const [isSuccess, setIsSuccess] = useState(false)
 
+    const sugarDecline = userInfo[0]["sugar_decline"];
+    const sugarValue = watch("sugar")
+
+    const insulinHint = (() => {
+        const num = Number(String(sugarValue).replace(",", "."));
+        if (!sugarDecline || isNaN(num) || num < 10) return null;
+        return ((num - 7) / sugarDecline).toFixed(1);
+    })();
+
     const handleFoodAutoChange = async (selectedOptions) =>{
         const response = await fetch(`${API_URL}/foodAuto`,{
             method: "POST",
@@ -138,6 +146,7 @@ function SugarForm({defaultValue, onClose}) {
         });
         return () => subscription.unsubscribe();
     }, [watch, foodList]);
+
     useEffect(() => {
         const currentValues = watch();
         sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ ...currentValues, foodList }));
@@ -149,7 +158,7 @@ function SugarForm({defaultValue, onClose}) {
         data.food = foodList;
         data.time = dayjs(data.time).format("HH:mm");
         data.date = dayjs(data.date).format("YYYY-MM-DD");
-        const parsed = sugarEntrySchema.safeParse(data)
+        const parsed = sugarEntrySchema.safeParse(data);
         if (!parsed.success) {
             const fieldErrors = parsed.error.flatten().fieldErrors;
             Object.entries(fieldErrors).forEach(([field, messages]) => {
@@ -190,11 +199,9 @@ function SugarForm({defaultValue, onClose}) {
             }, 228);
     });
 
-    const increment = (value) =>
-        Math.min(Max, Number((Number(value) + 1).toFixed(1)));
+    const increment = (value) => Math.min(Max, Number((Number(value) + 1).toFixed(1)));
 
-    const decrement = (value) =>
-        Math.max(Min, Number((Number(value) - 1).toFixed(1)));
+    const decrement = (value) => Math.max(Min, Number((Number(value) - 1).toFixed(1)));
 
     const addProduct = () => {
         if (!selectedProduct) return;
@@ -249,6 +256,11 @@ function SugarForm({defaultValue, onClose}) {
                 <label className={style.sugarInputContainer}>
                     Cахар
                     <input className={style.sugarInput} {...register("sugar")}/>
+                    {insulinHint && (
+                        <span>
+                            Рекомендуемая доза инсулина на снижение: {insulinHint} ед
+                        </span>
+                    )}
                     {errors.sugar && <span className={style.errorText}>{errors.sugar.message}</span>}
                 </label>
                 <label className={style.insulinInputContainer}>
