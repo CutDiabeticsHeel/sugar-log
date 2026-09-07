@@ -30,9 +30,6 @@ export const sugarEntrySchema = z.object({
         z.number({ error: 'Сахар должен быть числом' })
          .gt(1, { message: 'Сахар должен быть больше 1 ммоль' })
          .lt(40, { message: 'Сахар должен быть меньше 40 ммоль/л' })
-         .refine((val) => val >= 10, (val) =>  ({
-            message: `${(val - 7) / 3} `
-         }))
     ),
     insulin: numericField(
         z.number({ error: 'Инсулин должен быть числом' })
