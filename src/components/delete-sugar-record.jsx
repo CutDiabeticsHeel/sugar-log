@@ -2,21 +2,18 @@ import { createPortal } from "react-dom";
 import style from "../css/components/delete-sugar-record.module.css";
 import SuccessBlock from "./success-block";
 import {useState} from "react"
-
-const API_URL = import.meta.env.VITE_API_URL;
+import { apiWrite } from "../offline/api";
 
 function DeleteSugarRecord({ record, onClose, onDeleted }) {
     const [isSuccess, setIsSuccess] = useState(false);
 
     const deleteRecord = async (id) => {
         try {
-            const response = await fetch(`${API_URL}/delete-sugar-record`, {
-                method: "DELETE",
-                headers: {
-                        "Content-Type": "application/json;charset=utf-8",
-                },
-                body: JSON.stringify(id)
-            })
+            const { data, queued } = await apiWrite(
+                'DELETE',
+                '/delete-sugar-record',
+                id
+            );
             setIsSuccess(true)
             setTimeout(() => {
                 setIsSuccess(false);

@@ -7,8 +7,8 @@ import UndoIcon from '@mui/icons-material/Undo';
 import Preloader from "./preloader";
 import SubmitingBlock from "./submiting";
 import SuccessBlock from "./success-block";
+import { apiWrite } from "../offline/api";
 
-const API_URL = import.meta.env.VITE_API_URL;
 const wrapperVariants = {
     closed: {
         opacity: 0,
@@ -37,14 +37,12 @@ function ProfileInfo(){
     const changeUserInfo = async () => {
         setIsLoading(true)
         try {
-            const data = {name, height, weight, shortInsulin, longInsulin, sugarDecline};
-            const response = await fetch(`${API_URL}/changeUserInfo`, {
-                method: "POST",
-                headers: {
-                        "Content-Type": "application/json;charset=utf-8",
-                },
-                body: JSON.stringify(data)
-            })
+            const userData = {name, height, weight, shortInsulin, longInsulin, sugarDecline};
+            const { data, queued } = await apiWrite(
+                'POST',
+                '/changeUserInfo',
+                userData
+            );
             await refetch();
             setPopupOpen(false)
             setHeight(""); setWeight(""); setShortInsulin(""); setLongInsulin(""); setName(""); setsugarDecline("");

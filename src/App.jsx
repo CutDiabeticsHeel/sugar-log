@@ -1,10 +1,12 @@
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 
 import Home from "./pages/home";
 import Menu from "./components/Menu";
 import "./css/main.css";
 import Preloader from "./components/preloader";
+import useOnlineStatus from "./hooks/useOnlineStatus";
+import { apiGet } from "./offline/api";
 
 const Diary = lazy(() => import("./pages/diary"));
 const Charts = lazy(() => import("./pages/graph"));
@@ -13,7 +15,25 @@ const ProductsPage = lazy(() => import("./pages/products"));
 const Profile = lazy(() => import("./pages/profile"));
 
 function App() {
+    const isOnline = useOnlineStatus();
+
+    useEffect(() => {
+        apiGet('/products').catch(console.error);
+    }, []);
+
     return (
+      <div className="App">
+        {!isOnline && (
+          <div style={{
+            position: 'fixed',
+            top: '20px',
+            right: '20px',
+            zIndex: 1000
+          }}>
+            ⚠️ Нет сети. Показаны сохранённые данные.
+          </div>
+        )}
+
         <main className="main">
           <Menu />
           <Suspense fallback={<Preloader/>}>
@@ -27,6 +47,7 @@ function App() {
             </Routes>
           </Suspense>
         </main>
+      </div>
     );
 }
 

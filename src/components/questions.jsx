@@ -7,8 +7,8 @@ import { useForm} from "react-hook-form"
 import Preloader from "./preloader";
 import SubmitingBlock from "./submiting";
 import SuccessBlock from "./success-block";
+import { apiWrite } from "../offline/api";
 
-const API_URL = import.meta.env.VITE_API_URL;
 const wrapperVariants = {
     closed: {
         height: 0,
@@ -55,13 +55,11 @@ function Questions(){
         setTitleSuccess("Вопрос успешно удален")
         setIsLoading(true)
         try {
-            const response = await fetch(`${API_URL}/delete-question`, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json;charset=utf-8",
-                },
-                body: JSON.stringify({ ids: selectedIds })
-            })
+            const { data, queued } = await apiWrite(
+                'DELETE',
+                '/delete-question',
+                { ids: selectedIds }
+            );
             setIsSuccess(true)
             setTimeout(() => {
                 setIsSuccess(false);
@@ -79,13 +77,11 @@ function Questions(){
         setTitleSuccess("Вопрос успешно добавлен")
         setIsLoading(true) 
         try {
-            const response = await fetch(`${API_URL}/add-question`, {
-                method: "post",
-                headers: {
-                    "Content-Type": "application/json;charset=utf-8",
-                },
-                body: JSON.stringify(data)
-            })
+            const result = await apiWrite(
+                'POST',
+                '/add-question',
+                data
+            );
             reset();
             refetch();
             setIsSuccess(true)

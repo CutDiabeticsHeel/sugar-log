@@ -3,21 +3,18 @@ import tableStyle from "../css/components/products-table.module.css";
 import SuccessBlock from "./success-block";
 import { createPortal } from "react-dom";
 import {useState} from "react"
-
-const API_URL = import.meta.env.VITE_API_URL;
+import { apiWrite } from "../offline/api";
 
 function DeleteProductRecord({ product, onClose }) {
     const [isSuccess, setIsSuccess] = useState(false);
 
     const deleteProduct= async (id) => {
         try {
-            const response = await fetch(`${API_URL}/delete-product`, {
-                method: "DELETE",
-                headers: {
-                        "Content-Type": "application/json;charset=utf-8",
-                },
-                body: JSON.stringify(id)
-            })
+            const { data, queued } = await apiWrite(
+                'DELETE',
+                '/delete-product',
+                id
+            );
             setIsSuccess(true)
             setTimeout(() => {
                 setIsSuccess(false);

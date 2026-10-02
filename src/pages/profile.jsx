@@ -2,6 +2,7 @@ import ProfileInfo from "../components/profile-info";
 import Endocrinologist from "../components/endocrinologist"
 import Questions from "../components/questions"
 import style from "../css/pages/profile.module.css";
+import InstallPrompt from '../components/InstallPrompt';
 
 function Profile() {
     return (
@@ -11,6 +12,7 @@ function Profile() {
                 <ProfileInfo/>
                 <Endocrinologist/>
                 <Questions/>
+                <InstallPrompt />
             </div>
         </section>
     );

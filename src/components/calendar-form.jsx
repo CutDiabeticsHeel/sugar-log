@@ -8,8 +8,8 @@ import style from "../css/components/calendar-form.module.css";
 import { motion, AnimatePresence } from "framer-motion";
 import useOutsideClick from "../hooks/close-popup";
 import SuccessBlock from "./success-block";
+import { apiWrite } from "../offline/api";
 
-const API_URL = import.meta.env.VITE_API_URL;
 const wrapperVariants = {
     closed: {
         height: 0,
@@ -85,13 +85,11 @@ function CalendarForm({ onChange }) {
             to: dayjs(data.dateRange.to).format('YYYY-MM-DD')
         });
         try {
-            const responce = await fetch(`${API_URL}/selectPeriod`,{
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json;charset=utf-8",
-                },
-                body: JSON.stringify(formattedData)
-            })
+            const { data, queued } = await apiWrite(
+                'POST',
+                '/selectPeriod',
+                formattedData
+            );
             setIsSuccess(true)
             setTimeout(() => {
                 setIsSuccess(false);

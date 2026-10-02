@@ -73,7 +73,6 @@ function SugarLogDay({ period }) {
         acc[date].ccalSum += record.ccal ?? 0
         acc[date].xebeSum += record.XEBE ?? 0
         acc[date].insulinSum += record.insulin ?? 0
-        console.log(acc[date].insulinSum)
         return acc;
     }, {});
 

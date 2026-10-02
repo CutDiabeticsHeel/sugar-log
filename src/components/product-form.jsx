@@ -1,4 +1,4 @@
-import { useForm, Controller  } from "react-hook-form"
+import { useForm  } from "react-hook-form"
 import style from "../css/components/product-form.module.css";
 import { motion } from "framer-motion";
 import {useRef, useState, useEffect} from "react";
@@ -9,7 +9,6 @@ import SuccessBlock from "./success-block";
 import { productEntrySchema } from "../utils/product-form-validate";
 import Switch from '@mui/material/Switch';
 
-const API_URL = import.meta.env.VITE_API_URL;
 const formVariants = {
     closed: {
         opacity: 0,

@@ -1,6 +1,5 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
-import fastifyStatic from "@fastify/static";
 import dayjs from "dayjs";
 import {getAll, addProduct, getInsulinAndXEBE, updateUserInfo, addSugarRecord, addQuestion,
     deleteQuestions, updateEndocrinologistInfo, deleteSugarLogById, deleteProductById
@@ -13,7 +12,7 @@ const app = Fastify({
 });
 
 app.register(cors, {
-    origin: ["http://localhost:4000", "https://sugar-log-feeb.onrender.com", "https://sugar-log-k53m.onrender.com"],
+    origin: ["http://localhost:4000", "http://localhost:4173", "https://sugar-log-feeb.onrender.com", "https://sugar-log-k53m.onrender.com"],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
 });
 
@@ -91,26 +90,6 @@ app.post("/api/addProduct", async (request, reply) => {
 app.post("/api/selectPeriod", async (request, reply) => {
     const data = request.body.dateRange
     return {message: "Успешно"}
-})
-
-app.post("/api/foodAuto", async (request, reply) => {
-    try {
-        const { insulin, XEBE} = await getInsulinAndXEBE(request.body)
-
-        return {
-            insulin,
-            XEBE,
-        };
-    } catch (err) {
-        console.log(err)
-        reply.code(500)
-        return {error: "Ошибка при расчете"}
-    }
-
-    return {
-        insulin: calculatedInsulin,
-        XEBE: calculatedXEBE,
-    };
 })
 
 app.post("/api/changeUserInfo", async (request, reply) => {

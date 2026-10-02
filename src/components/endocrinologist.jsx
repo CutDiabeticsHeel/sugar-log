@@ -2,13 +2,13 @@ import {useGetEndocrinologistInfoQuery} from "../store/api";
 import EditIcon from '@mui/icons-material/Edit';
 import UndoIcon from '@mui/icons-material/Undo';
 import style from "../css/components/endocrinologist.module.css";
-import {useState, useEffect} from "react";
+import {useState} from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Preloader from "./preloader";
 import SubmitingBlock from "./submiting";
 import SuccessBlock from "./success-block";
+import { apiWrite } from "../offline/api";
 
-const API_URL = import.meta.env.VITE_API_URL;
 const wrapperVariants = {
     closed: {
         opacity: 0,
@@ -41,13 +41,11 @@ function Endocrinologist(){
     const handleSave = async () => {
         setIsLoading(true)
         try {
-            const response = await fetch(`${API_URL}/update-endocrinologist`, {
-                method: "PUT",
-                headers: {
-                        "Content-Type": "application/json;charset=utf-8",
-                },
-                body: JSON.stringify(formData)
-            })
+            const { data, queued } = await apiWrite(
+                'PUT',
+                '/update-endocrinologist',
+                formData
+            );
             setFormData({day: '', month: '', time: '', name: ''})
             setPopupOpen(prev => !prev)
             refetch()

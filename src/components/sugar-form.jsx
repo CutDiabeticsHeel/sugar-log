@@ -21,9 +21,9 @@ import Preloader from "./preloader";
 import { sugarEntrySchema } from "../utils/sugar-form-validate";
 import SubmitingBlock from "./submiting";
 import SuccessBlock from "./success-block";
+import { getInsulinAndXEBE } from "../offline/api";
 dayjs.extend(customParseFormat);
 
-const API_URL = import.meta.env.VITE_API_URL;
 
 const formVariants = {
     closed: { opacity: 0, transition: { duration: 0.15 } },
@@ -108,22 +108,17 @@ function SugarForm({defaultValue, onClose}) {
     const [isLoad, setIsLoading] = useState(false)
     const [isSuccess, setIsSuccess] = useState(false)
 
-    const handleFoodAutoChange = async (selectedOptions) =>{
-        const response = await fetch(`${API_URL}/foodAuto`,{
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json;charset=utf-8",
-            },
-            body: JSON.stringify(selectedOptions)
-        })
-        if (!response.ok) {
-            throw new Error(`HTTP error: ${response.status}`);
-        } else {
-            const result = await response.json()
-            setValue("insulin", result.insulin)
-            setValue("XEBE", result.XEBE)
+    const handleFoodAutoChange = async (selectedOptions) => {
+        try {
+            const result = await getInsulinAndXEBE(selectedOptions);
+
+            setValue("insulin", result.insulin);
+            setValue("XEBE", result.XEBE);
+
+        } catch (err) {
+            console.error(err);
         }
-    }
+    };
 
     useEffect(() => {
         if (foodList.length > 0) {
