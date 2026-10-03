@@ -1,7 +1,8 @@
 import style from "../css/components/metrics-chart.module.css";
 import ReactECharts from "echarts-for-react";
 
-function MetricsChart({metrics}) {
+function MetricsChart({metrics: rawMetrics}) {
+    const metrics = rawMetrics ?? {}
     const isNarrowScreen = window.innerWidth < 540;
 
     const barsOption = {
@@ -19,29 +20,29 @@ function MetricsChart({metrics}) {
             boundaryGap: true,
             
         },
-        yAxis: {max: Math.max(metrics.timeLow, metrics.timeInRange, metrics.timeBitHigh, metrics.timeHigh) + 5, type: 'value'},
+        yAxis: {max: Math.max(metrics.timeLow ?? 0, metrics.timeInRange ?? 0, metrics.timeBitHigh ?? 0, metrics.timeHigh ?? 0) + 5, type: 'value'},
         series: [{
             data: [
                 {
-                    value: metrics.timeLow,
+                    value: metrics.timeLow ?? 0,
                     itemStyle: {
                         color: "#7C3AED"
                     }
                 },
                 {
-                    value: metrics.timeInRange,
+                    value: metrics.timeInRange ?? 0,
                     itemStyle: {
                         color: "#2E8B57"
                     }
                 },
                 {
-                    value: metrics.timeBitHigh,
+                    value: metrics.timeBitHigh ?? 0,
                     itemStyle: {
                         color: "#F59E0B"
                     }
                 },
                 {
-                    value: metrics.timeHigh,
+                    value: metrics.timeHigh ?? 0,
                     itemStyle: {
                         color: "#E74C3C"
                     }
@@ -70,7 +71,7 @@ function MetricsChart({metrics}) {
             name: "ммоль/л",
             nameLocation: "middle",
             nameGap: 30,
-            max: Math.max(metrics.morningAverage, metrics.dayAverage, metrics.eveningAverage, metrics.nightAverage),
+            max: Math.max(metrics.morningAverage ?? 0, metrics.dayAverage ?? 0, metrics.eveningAverage ?? 0, metrics.nightAverage ?? 0),
         },
         yAxis: {
             type: "category",
@@ -117,6 +118,7 @@ function MetricsChart({metrics}) {
             }
         ]
     };
+
     return (
         <div className={style.metricsChart}>
             <div className={style.inRangeBars}>

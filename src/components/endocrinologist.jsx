@@ -21,7 +21,7 @@ const wrapperVariants = {
 };
 
 function Endocrinologist(){
-    const {data: endocrinologist, isLoading, refetch} = useGetEndocrinologistInfoQuery()
+    const {data: endocrinologist = {}, isLoading, refetch} = useGetEndocrinologistInfoQuery()
     const [popupOpen, setPopupOpen] = useState(false)
     const [formData, setFormData] = useState({
         day: '',
@@ -64,10 +64,10 @@ function Endocrinologist(){
             <AnimatePresence mode="wait">
                 {popupOpen ? (
                     <motion.div className={style.appointmentDate} key="edit" style={{ overflow: "hidden" }} initial="closed" animate="open" exit="closed" variants={wrapperVariants}>
-                        <input name="day" value={formData.day} onChange={handleChange} placeholder={info.day} autoComplete="off"/>
-                        <input name="month" value={formData.month} onChange={handleChange} placeholder={info.month} autoComplete="off"/>
-                        <input name="time" value={formData.time} onChange={handleChange} placeholder={info.time} autoComplete="off"/>
-                        <input name="name" value={formData.name} onChange={handleChange} placeholder={info.name} autoComplete="off"/>
+                        <input name="day" value={formData.day} onChange={handleChange} placeholder={info?.day} autoComplete="off"/>
+                        <input name="month" value={formData.month} onChange={handleChange} placeholder={info?.month} autoComplete="off"/>
+                        <input name="time" value={formData.time} onChange={handleChange} placeholder={info?.time} autoComplete="off"/>
+                        <input name="name" value={formData.name} onChange={handleChange} placeholder={info?.name} autoComplete="off"/>
                         <button onClick={handleSave} className={style.addEntry}>Сохранить</button>
                         <button className={style.editButton} onClick={() => setPopupOpen(prev => !prev)}>
                             <UndoIcon fontSize="small"/>
@@ -78,8 +78,8 @@ function Endocrinologist(){
                     <p>Когда к врачу <br/>
                         <span className={style.endocrinologistText}>Плановый прием эндокринолога</span>
                     </p>
-                    <p className={style.appointmentDate}>{info.day} {info.month} в {info.time}</p>
-                    <span>Врач: {info.name}</span>
+                    <p className={style.appointmentDate}>{info?.day} {info?.month} в {info?.time}</p>
+                    <span>Врач: {info?.name}</span>
                     <button className={style.editButton} onClick={() => setPopupOpen(prev => !prev)}>
                         <EditIcon fontSize="small"/>
                     </button>

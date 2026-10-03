@@ -6,7 +6,7 @@ import MetricsChart from "../components/metrics-chart";
 import Preloader from "../components/preloader";
 
 function Stats() {
-    const {data: onlySugar, isLoading} = useGetOnlySugarQuery()
+    const {data: onlySugar = [], isLoading} = useGetOnlySugarQuery()
 
     if (isLoading) return (<Preloader/>)
     
@@ -15,6 +15,7 @@ function Stats() {
         datetime: `${item.date}T${item.time}:00`
     }))
     const metrics = calculateMetrics(sugarData)
+    console.log(metrics)
 
     return (
         <section className={style.statsSection}>

@@ -8,6 +8,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        navigateFallback: '/index.html',
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/sugar-log-feeb\.onrender\.com\/api\/.*/i,
@@ -18,23 +19,11 @@ export default defineConfig({
                 maxEntries: 100,
                 maxAgeSeconds: 60 * 60 * 24,
               },
-      
               cacheableResponse: {
                 statuses: [0, 200],
               }
             }
-          },
-          {
-            urlPattern: /^https:\/\/sugar-log-feeb\.onrender\.com\/api\/.*/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'images-cache',
-              expiration: {
-                maxEntries: 60,
-                maxAgeSeconds: 30 * 24 * 60 * 60,
-              }
-            }
-          },
+          }
         ]
       },
       includeAssets: ['favicon.ico'],

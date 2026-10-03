@@ -12,7 +12,6 @@ function ProductsTable(){
     const {data: products, isLoading, refetch} = useGetProductsQuery();
     const [searchedVal, setSearchedVal] = useState("");
     const [debounceValue, setDebounceValue] = useState("");
-    const [needScroll, setNeedScroll] = useState(false);
     const [deletePopupId, setDeletePopupId] = useState(null)
     const [editPopupId, setEditPopupId] = useState(null)
 
@@ -27,6 +26,7 @@ function ProductsTable(){
             document.body.classList.remove('disable-scroll');
         };
     }, [deletePopupId, editPopupId]);
+
     useEffect(() => {
         const timer = setTimeout(() => {
             setDebounceValue(searchedVal)

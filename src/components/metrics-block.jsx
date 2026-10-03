@@ -26,7 +26,8 @@ const metricsDescription = {
     standardDeviation: "Стандартное отклонение",
 };
 
-function MetricsBlock ({metrics}) {
+function MetricsBlock ({metrics: rawMetrics}) {
+    const metrics = rawMetrics ?? {}
     const [popupOpen, setPopupOpen] = useState(false)
 
     useEffect(() => {

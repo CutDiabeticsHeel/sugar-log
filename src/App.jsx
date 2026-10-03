@@ -18,7 +18,8 @@ function App() {
     const isOnline = useOnlineStatus();
 
     useEffect(() => {
-        apiGet('/products').catch(console.error);
+        apiGet('/products').catch(err => console.error('PRODUCTS ERROR:', err));
+        apiGet('/user-info').catch(err => console.error('USER INFO ERROR:', err));
     }, []);
 
     return (
