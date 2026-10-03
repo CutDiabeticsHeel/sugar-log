@@ -8,16 +8,15 @@
     z-index: 1001;
     position: fixed;
     top: 5%;
-    left: 20%;
-    right: 20%;
+    left: 25%;
+    right: 25%;
     background-color: var(--second-success-bg);
     border-radius: 20px;
     padding: 10px;
-    max-width: 80%;
+    width: fit-content;
 }
 .successBlock span {
     display: inline-block;
-    text-align: center;
     overflow-wrap: break-word; 
     border-radius: 20px;
     color: #000000;

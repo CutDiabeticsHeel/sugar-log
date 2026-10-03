@@ -15,7 +15,6 @@ function Stats() {
         datetime: `${item.date}T${item.time}:00`
     }))
     const metrics = calculateMetrics(sugarData)
-    console.log(metrics)
 
     return (
         <section className={style.statsSection}>

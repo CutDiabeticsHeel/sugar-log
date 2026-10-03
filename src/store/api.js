@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { cacheGet} from "../offline/db"; 
+import { cacheGet, outboxAdd} from "../offline/db"; 
 
 const API_URL = import.meta.env.VITE_API_URL;
 const rawBaseQuery = fetchBaseQuery({ baseUrl: API_URL });
@@ -32,7 +32,23 @@ const isNetworkProblem = (error) => {
 const baseQueryWithOffline = async (args, api, extraOptions) => {
     const result = await rawBaseQuery(args, api, extraOptions);
 
-    if (!isGetRequest(args)) return result;
+    if (!isGetRequest(args)) {
+        if (result.error?.status === "FETCH_ERROR") {
+            try {
+                await outboxAdd({
+                    method: args.method,
+                    path: args.url,
+                    body: args.body,
+                    createdAt: Date.now(),
+                });
+                return { data: { queued: true }, meta: { queued: true } };
+            } catch (e) {
+                console.warn("Не удалось сохранить в outbox", e);
+            }
+        }
+        return result;
+    }
+
     if (result.data !== undefined) return result;
 
     if (isNetworkProblem(result.error)) {

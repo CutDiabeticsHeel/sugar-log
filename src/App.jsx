@@ -29,9 +29,12 @@ function App() {
             position: 'fixed',
             top: '20px',
             right: '20px',
+            backgroundColor: "#FDECEA",
+            padding: "20px",
+            borderRadius: "20px",
             zIndex: 1000
           }}>
-            ⚠️ Нет сети. Показаны сохранённые данные.
+            Нет сети. Работа в оффлайн.
           </div>
         )}
 

@@ -6,12 +6,10 @@ function useOnlineStatus() {
   useEffect(() => {
     function handleOnline() {
       setIsOnline(true);
-      console.log('Internet connection restored!');
     }
 
     function handleOffline() {
       setIsOnline(false);
-      console.log('Internet connection lost.');
     }
 
     window.addEventListener('online', handleOnline);
