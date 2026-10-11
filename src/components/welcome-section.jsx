@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
 import {useState} from "react"
 import Preloader from "./preloader";
+dayjs.locale('ru');
 
 function Welcome () {
     const [defaultPeriod] = useState({
@@ -17,12 +18,17 @@ function Welcome () {
         return <Preloader/>;
     }
     if (!iserInfo?.length || !sugarLog?.length) {
-        return <div className={style.welcomeSection}>Нет данных</div>;
+        return (
+            <div className={style.welcomeSection}>
+                <h3> Сегодня, {dayjs().format('D MMMM')}</h3>
+                <div>Нет данных о сахарах за последение 7 дней</div>
+            </div>
+        );
     }
     const sugar = sugarLog.reduce((sum, item) => sum + item.sugar, 0)
     return (
         <div className={style.welcomeSection}>
-            <h3> Сегодня, {dayjs().locale('ru').format('D MMMM')}</h3>
+            <h3> Сегодня, {dayjs().format('D MMMM')}</h3>
             <div className={style.infoSection}>
                 <div className={style.infoContainer}>
                     <span>Средний сахар · 7 дней</span>

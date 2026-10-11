@@ -103,27 +103,24 @@ function SugarForm({defaultValue, onClose}) {
     }, [isLoading, defaultValue, allProduct]); 
 
     const Min = 0; 
-    const Max = 100;
-    const foodAmount = watch("foodAmount")
     const [isLoad, setIsLoading] = useState(false)
     const [isSuccess, setIsSuccess] = useState(false)
 
-    const handleFoodAutoChange = async (selectedOptions) => {
-        try {
-            const result = await getInsulinAndXEBE(selectedOptions);
-
-            setValue("insulin", result.insulin);
-            setValue("XEBE", result.XEBE);
-
-        } catch (err) {
-            console.error(err);
-        }
-    };
-
     useEffect(() => {
+        let cancelled = false;
         if (foodList.length > 0) {
-            handleFoodAutoChange(foodList);
+            getInsulinAndXEBE(foodList)
+                .then(result => {
+                    if (cancelled) return;
+                    setValue("insulin", result.insulin);
+                    setValue("XEBE", result.XEBE);
+                })
+                .catch(console.error);
+        } else {
+            setValue("insulin", "");
+            setValue("XEBE", "");
         }
+        return () => { cancelled = true; };
     }, [foodList]);
 
     useEffect(() => {
@@ -194,7 +191,7 @@ function SugarForm({defaultValue, onClose}) {
             }, 228);
     });
 
-    const increment = (value) => Math.min(Max, Number((Number(value) + 1).toFixed(1)));
+    const increment = (value) => Number((Number(value) + 1).toFixed(1));
 
     const decrement = (value) => Math.max(Min, Number((Number(value) - 1).toFixed(1)));
 
@@ -210,6 +207,9 @@ function SugarForm({defaultValue, onClose}) {
         ]);
         setSelectedProduct(null);
     };
+
+    const updateItem = (index, patch) =>
+        setFoodList(prev => prev.map((item, i) => i === index ? { ...item, ...patch } : item));
     return (
         <section className={style.sugarAddSection} >
             <motion.form onSubmit={handleSubmit(onSubmit)} className={style.sugarForm} autoComplete="off" variants={formVariants}>
@@ -315,31 +315,47 @@ function SugarForm({defaultValue, onClose}) {
                     />
                     <button type="button" className={style.addEntry} onClick={addProduct}>Добавить продукт</button>
                     <ul className={style.productsList}>
-                        {foodList.map((product, index) => (
-                            <li key={index} className={style.foodItem}>
-                                <span>{product.label}</span>
-                                <button className={style.counter} type="button" onClick={() => setFoodList(prev => prev.map((item, i) => i === index ? { ...item, amount: decrement(item.amount) } : item))}>
-                                    <RemoveIcon />
-                                </button>
-                                <input
-                                    className={style.foodAmount}
-                                    name="foodAmount"
-                                    value={product.amount}
-                                    onChange={(e) => {
-                                        const raw = e.target.value.replace(",", ".");
-                                        if (/^\d*\.?\d?$/.test(raw))
-                                            setFoodList(prev => prev.map((item, i) => i === index ? { ...item, amount: raw === "" ? "" : raw } : item));
-                                    }}
-                                    onBlur={() => setFoodList(prev => prev.map((item, i) => i === index ? { ...item, amount: isNaN(parseFloat(item.amount)) ? 1 : parseFloat(item.amount) } : item))}
-                                />
-                                <button className={style.counter} type="button" onClick={() => setFoodList(prev => prev.map((item, i) => i === index ? { ...item, amount: increment(item.amount) } : item))}>
-                                    <AddIcon />
-                                </button>
-                                <button type="button" onClick={() => setFoodList(prev => prev.filter((_, i) => i !== index))}>
-                                    <DeleteIcon/>
-                                </button>
-                            </li>
-                        ))}
+                        {foodList.map((product, index) => {
+                            const isGrams = product.weight === 100;
+                            const factor = isGrams ? 100 : 1; 
+                            const productUnit = isGrams ? "г" : "шт";
+                            const shownAmount = product.draft ?? String(Number((product.amount * factor).toFixed(1)));
+                            return (
+                                <li key={index} className={style.foodItem}>
+                                    <span>{product.label}</span>
+                                    <button className={style.counter} type="button"
+                                        onClick={() => updateItem(index, { amount: decrement(product.amount), draft: undefined })}>
+                                        <RemoveIcon />
+                                    </button>
+                                    <input
+                                        className={style.foodAmount}
+                                        name="foodAmount"
+                                        value={shownAmount}
+                                        onChange={(e) => {
+                                            const raw = e.target.value.replace(",", ".");
+                                            if (!/^\d*\.?\d?$/.test(raw)) return;
+                                            const num = parseFloat(raw);
+                                            updateItem(index, {
+                                                draft: raw,
+                                                amount: isNaN(num) ? "" : Number((num / factor).toFixed(4)),
+                                            });
+                                        }}
+                                        onBlur={() => {
+                                            const num = parseFloat(product.amount);
+                                            updateItem(index, { amount: isNaN(num) ? 1 : num, draft: undefined });
+                                        }}
+                                    />
+                                    <span>{productUnit}</span>
+                                    <button className={style.counter} type="button"
+                                        onClick={() => updateItem(index, { amount: increment(product.amount), draft: undefined })}>
+                                        <AddIcon />
+                                    </button>
+                                    <button type="button" onClick={() => setFoodList(prev => prev.filter((_, i) => i !== index))}>
+                                        <DeleteIcon />
+                                    </button>
+                                </li>
+                            );
+                        })}
                     </ul>
                 </label>
                 <label className={style.foodInputContainer}>

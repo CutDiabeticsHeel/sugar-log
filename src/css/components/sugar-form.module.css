@@ -61,13 +61,14 @@
 }
 .foodItem {
     display: grid;
-    grid-template-columns: auto 50px 50px 50px 50px;
+    grid-template-columns: auto 50px 80px 25px 50px 50px;
     gap: 10px;
     margin: 10px 15px;
     align-items: center;
 }
 .foodItem span {
     font-size: var(--second-medium-text);
+    text-align: center;
 }
 .foodItem button {
     border: 1px solid var(--border-color);
@@ -75,7 +76,7 @@
 }
 .foodItem .foodAmount {
     text-align: center;
-    width: 50px;
+    width: 80px;
 }
 .sugarForm input,
 .sugarForm textarea {
