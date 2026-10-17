@@ -1,5 +1,5 @@
 import style from "../css/components/metrics-chart.module.css";
-import ReactECharts from "echarts-for-react";
+import ReactECharts from "./echart";
 
 function MetricsChart({metrics: rawMetrics}) {
     const metrics = rawMetrics ?? {}

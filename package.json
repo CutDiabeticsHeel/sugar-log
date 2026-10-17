@@ -4,7 +4,6 @@
   "type": "module",
   "private": true,
   "dependencies": {
-    "@base-ui/react": "^1.6.0",
     "@daypicker/react": "^10.0.1",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
@@ -31,7 +30,6 @@
     "react-dom": "^19.2.7",
     "react-hook-form": "^7.81.0",
     "react-redux": "^9.3.0",
-    "react-router": "^8.1.0",
     "react-router-dom": "^7.18.1",
     "react-select": "^5.10.2",
     "vite-plugin-pwa": "^1.3.0",

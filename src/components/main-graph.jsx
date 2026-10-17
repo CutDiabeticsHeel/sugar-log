@@ -1,4 +1,4 @@
-import ReactECharts from "echarts-for-react";
+import ReactECharts from "./echart";
 import dayjs from "dayjs";
 import { useGetDayPeriodSugarLogQuery } from "../store/api";
 import style from "../css/components/main-graph.module.css";

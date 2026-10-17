@@ -1,7 +1,7 @@
-import ReactECharts from "echarts-for-react";
+import ReactECharts from "./echart";
 import dayjs from "dayjs";
 import { useGetDayPeriodSugarLogQuery } from "../store/api";
-import {useState, useEffect, useRef} from "react";
+import {useState, useEffect} from "react";
 import style from "../css/components/daily-profile.module.css";
 import Preloader from "./preloader";
 

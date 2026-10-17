@@ -350,7 +350,7 @@ function SugarForm({defaultValue, onClose}) {
                                         onClick={() => updateItem(index, { amount: increment(product.amount), draft: undefined })}>
                                         <AddIcon />
                                     </button>
-                                    <button type="button" onClick={() => setFoodList(prev => prev.filter((_, i) => i !== index))}>
+                                    <button className={style.deleteButton} type="button" onClick={() => setFoodList(prev => prev.filter((_, i) => i !== index))}>
                                         <DeleteIcon />
                                     </button>
                                 </li>
