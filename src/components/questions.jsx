@@ -95,7 +95,7 @@ function Questions(){
         }    
     }
     return (
-        <div className={style.questionsSection}>
+        <div className={style.questionsSection} data-testid="questions-section">
             <p>Вопросы для следующего приема</p>
             <ul className={style.questionList}>
                 { userQuestions.length === 0 ?

@@ -20,7 +20,7 @@ const formVariants = {
     }
 };
 
-function ProductForm({defaultValue, onClose}) {
+export function ProductForm({defaultValue, onClose}) {
     const STORAGE_KEY = defaultValue?.id ? `productFormDraft_${defaultValue.id}` : "productFormDraft_new";
     const {data: userInfo, isLoading, refetch} = useGetUserInfoQuery();
     const {register, handleSubmit, watch, reset, setError, formState: { errors },} = useForm({
