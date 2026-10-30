@@ -4,7 +4,8 @@ import WaterDropIcon from '@mui/icons-material/WaterDrop';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
 import BarChartIcon from '@mui/icons-material/BarChart';
-import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
+import LunchDiningIcon from '@mui/icons-material/LunchDining';
+import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import PersonIcon from '@mui/icons-material/Person';
 import MenuIcon from '@mui/icons-material/Menu';
 import {useState, useRef} from "react";
@@ -44,7 +45,7 @@ function Menu() {
                 <span className={style.linkNumber}>04</span>
             </NavLink>
             <NavLink to="/products" className={({ isActive }) => `${style.navigationItem} ${isActive ? style.navigationItemActive : ""}`}>
-                <RestaurantMenuIcon/>
+                <LunchDiningIcon/>
                 <span className={style.linkText}>Продукты</span>
                 <span className={style.linkNumber}>05</span>
             </NavLink>
@@ -52,6 +53,11 @@ function Menu() {
                 <PersonIcon/>
                 <span className={style.linkText}>Профиль</span>
                 <span className={style.linkNumber}>06</span>
+            </NavLink>
+            <NavLink to="/InSug-curve" className={({ isActive }) => `${style.navigationItem} ${isActive ? style.navigationItemActive : ""}`}>
+                <QueryStatsIcon/>
+                <span className={style.linkText}>Кривая</span>
+                <span className={style.linkNumber}>07</span>
             </NavLink>
         </nav>
     )

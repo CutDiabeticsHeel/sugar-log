@@ -13,6 +13,7 @@ const Charts = lazy(() => import("./pages/graph"));
 const Statistics = lazy(() => import("./pages/stats"));
 const ProductsPage = lazy(() => import("./pages/products"));
 const Profile = lazy(() => import("./pages/profile"));
+const CarbInsulinCurve = lazy(() => import("./pages/carbInsulinCurve"));
 
 function App() {
     const isOnline = useOnlineStatus();
@@ -48,6 +49,7 @@ function App() {
                 <Route path="/statistics" element={<Statistics />} />
                 <Route path="/products" element={<ProductsPage />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/InSug-curve" element={<CarbInsulinCurve/> } />
             </Routes>
           </Suspense>
         </main>

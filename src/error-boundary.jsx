@@ -27,7 +27,7 @@ class ErrorBoundary extends React.Component {
           <h2>Что-то пошло не так 😔</h2>
           <p className={style.errorText}>{this.state.error?.message}</p>
           <button onClick={this.handleReset} className={style.button}>Попробовать снова</button>
-          <Link to="/" className={style.button}>Вернуться на главную</Link>
+          <a href="/" className={style.button}>Вернуться на главную</a>
         </div>
       );
     }
