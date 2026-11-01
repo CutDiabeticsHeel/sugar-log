@@ -2,7 +2,7 @@
     display: grid;
     grid-template-columns: 1fr 0.5fr;
     padding: 20px;
-    gap: 15px;
+    gap: 20px;
     min-width: 0;
     margin-left: 48px;
 }
@@ -12,12 +12,14 @@
     background-color: var(--secondary-background);
     border-radius: 20px;
     padding: 10px;
+    min-width: 0;
 }
 .CarbInsulinCurve h1{
     grid-column: 1/3;
 }
 .curveLegendContainer {
     display: flex;
+    flex-wrap: wrap;
     gap: 15px
 }
 .curveLegend {
@@ -31,4 +33,13 @@
     color: var(--text-primary);
     font-size: var(--second-medium-text);
     cursor: pointer;
+}
+
+@media (max-width: 1200px) {
+    .CarbInsulinCurve {
+        grid-template-columns: 1fr;
+    }
+    .CarbInsulinCurve h1 {
+        grid-column: 1;
+    }
 }

@@ -1,39 +1,71 @@
 import ReactECharts from "echarts-for-react"
 import style from "../css/components/inSugCurve.module.css"
+import { sumCurves } from "../utils/carbCurve"
 
-const COLORS = ["#1B6BB8", "#013567", "#2E8B57", "#F59E0B", "#7C3AED"]
+const COLORS = ["#1B6BB8", "#013567", "#2E8B57", "#7C3AED", "#E74C3C"]
+const CARB_COLORS = ["#CFB093", "#B45309", "#EA580C", "#92400E", "#D97706"]
+const TOTAL_COLOR = "#F59E0B"
 const TEXT = "#6B7280"
 const GRID = "#dde8ed"
+const TICK = 30 // шаг делений оси, минуты
 
-function InsulinSugarCurve({ curves = [], isf = 2 }) {
-  const k = 60 * isf
-  const xMax = Math.max(300, ...curves.map((c) => (c.offset ?? 0) + c.end)) + 30
+const fmtTime = (v) => `${Math.floor(v / 60)}:${String(v % 60).padStart(2, "0")}`
 
-  const series = curves.map((c, i) => {
-    const color = COLORS[i % COLORS.length]
-    const offset = c.offset ?? 0
-    return {
-      id: c.id,
-      name: `${c.name}, ${c.dose} ЕД`,
-      type: "line",
-      data: c.points.map(([t, y]) => [t + offset, y * k]),
-      showSymbol: false,
-      lineStyle: { width: 3, color },
-      itemStyle: { color },
-      areaStyle: { color, opacity: 0.12 }, 
-      markPoint: {
-        symbol: "pin",
-        symbolSize: 46,
-        itemStyle: { color },
-        data: [
-          {
-            coord: [c.peak + offset, c.peakY * k],
-            label: { formatter: c.peak + " мин", color: "#fff" },
-          },
-        ],
-      },
-    }
-  })
+// одна серия для любой кривой: factor переводит её в ммоль/л в час
+const makeSeries = (c, color, factor, name, { width = 3, area = true, pin = true } = {}) => {
+  const offset = c.offset ?? 0
+  return {
+    id: c.id,
+    name,
+    type: "line",
+    data: c.points.map(([t, y]) => [t + offset, y * factor]),
+    showSymbol: false,
+    lineStyle: { width, color },
+    itemStyle: { color },
+    areaStyle: area ? { color, opacity: 0.12 } : undefined,
+    markPoint: pin
+      ? {
+          symbol: "pin",
+          symbolSize: 46,
+          itemStyle: { color, opacity: 0.72 },
+          data: [
+            {
+              coord: [c.peak + offset, c.peakY * factor],
+              label: { formatter: c.peak + " мин", color: "#000", opacity: 1 },
+            },
+          ],
+        }
+      : undefined,
+  }
+}
+
+function InsulinSugarCurve({ curves = [], productCurves = [], isf = 2, cr = 10 }) {
+  const k = 60 * isf              // ЕД/мин → ммоль/л в час
+  const kCarb = (60 * isf) / cr   // г/мин  → ммоль/л в час
+
+  // граница оси — конец самой длинной кривой, без запаса
+  const ends = [
+    ...curves.map((c) => (c.offset ?? 0) + c.end),
+    ...productCurves.map((c) => (c.offset ?? 0) + c.end),
+  ]
+  const xMax = ends.length ? Math.max(...ends) : 240
+
+  const total = productCurves.length > 1 ? sumCurves(productCurves) : null
+
+  const carbSeries = productCurves.map((c, i) =>
+    makeSeries(c, CARB_COLORS[i % CARB_COLORS.length], kCarb,
+      `${c.name}, ${Math.round(c.carbs)} г`,
+      { width: 2, area: false, pin: false })
+  )
+
+  const totalSeries = total
+    ? [makeSeries(total, TOTAL_COLOR, kCarb,
+        `Все продукты, ${Math.round(total.carbs)} г`, { width: 4 })]
+    : []
+
+  const insulinSeries = curves.map((c, i) =>
+    makeSeries(c, COLORS[i % COLORS.length], k, `${c.name}, ${c.dose} ЕД`)
+  )
 
   const option = {
     legend: { top: 0, type: "scroll", textStyle: { color: TEXT } },
@@ -41,13 +73,13 @@ function InsulinSugarCurve({ curves = [], isf = 2 }) {
       trigger: "axis",
       valueFormatter: (v) => v.toFixed(2) + " ммоль/л в час",
     },
-    grid: { left: 64, right: 24, top: 48, bottom: 40 },
+    grid: { left: 64, right: 16, top: 48, bottom: 40 },
     xAxis: {
       type: "value",
       min: 0,
       max: xMax,
-      interval: 60,
-      axisLabel: { color: TEXT, formatter: (v) => v / 60 + " ч" },
+      interval: TICK,
+      axisLabel: { color: TEXT, formatter: fmtTime, hideOverlap: true },
       axisLine: { lineStyle: { color: TEXT } },
     },
     yAxis: {
@@ -58,10 +90,17 @@ function InsulinSugarCurve({ curves = [], isf = 2 }) {
       axisLabel: { color: TEXT },
       splitLine: { lineStyle: { color: GRID } },
     },
-    series,
+    series: [...carbSeries, ...totalSeries, ...insulinSeries],
   }
 
-  return <ReactECharts className={style.curveGraph} style={{ height: "70vh" }} option={option} notMerge />
+  return (
+    <ReactECharts
+      className={style.curveGraph}
+      style={{ height: "70vh" }}
+      option={option}
+      notMerge
+    />
+  )
 }
 
 export default InsulinSugarCurve

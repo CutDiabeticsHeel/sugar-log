@@ -1,0 +1,126 @@
+.addCurveContainer {
+    display: flex;
+    flex-direction: column;
+    grid-column: 2/3;
+    gap: 10px;
+    background-color: var(--secondary-background);
+    padding: 10px;
+    border-radius: 20px;
+    height: fit-content;
+    min-width: 0;
+}
+.foodSelectContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0;
+    height: fit-content;
+}
+.foodSelectContainer button {
+    background-color: var(--primary-element-background);
+    cursor: pointer;
+}
+.foodSelect {
+    width: 100%;
+    font-size: var(--second-medium-text);
+    padding: 0;
+}
+.addEntry {
+    cursor: pointer;
+    grid-column: 1/3;
+    border: none;
+    border-radius: 10px;
+    background-color: var(--success);
+    color: #ffffff;
+    padding: 5px;
+    font-size: var(--second-medium-text);
+    border: 1px solid var(--border-color);
+}
+.productsList {
+    margin: 0;
+    padding: 0;
+    background-color: var(--third-element-background);
+    border-radius: 20px;
+    width: max-content;
+    max-width: 100%;
+    align-self: center;
+}
+.foodItem {
+    display: grid;
+    grid-template-columns: 50px 80px 25px 50px 50px;
+    gap: 10px;
+    margin: 10px 15px;
+    align-items: center;
+}
+.foodItem .productLabel {
+    grid-row: 1;
+    grid-column: 1/7;
+    font-size: var(--second-medium-text);
+    text-align: center;
+}
+.foodItem button {
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+}
+.foodItem .foodAmount {
+    text-align: center;
+    width: 80px;
+}
+.counter:hover {
+    background-color: var(--third-element-background);
+    border: 1px solid var(--primary-element-background);
+}
+.foodSelectContainer button:last-child:hover {
+    background-color: var(--danger);
+}
+.sugarForm input,
+.sugarForm textarea {
+    box-sizing: border-box;
+    resize: none;
+    border: none;
+    border-radius: 10px;
+    padding: 5px;
+    background-color: var(--paper-soft);
+    border: 1px solid var(--border-color);
+    width: 100%;
+    font-size: var(--second-medium-text);
+}
+.calculateCurve {
+    cursor: pointer;
+    grid-column: 1 / 3;
+    border: none;
+    border-radius: 10px;
+    background-color: var(--success);
+    color: #ffffff;
+    padding: 5px;
+    font-size: var(--second-medium-text);
+    border: 1px solid var(--border-color);
+}
+
+@media (max-width: 1200px) {
+    .addCurveContainer {
+        grid-column: 1;
+    }
+}
+
+@media (max-width: 450px) {
+    .foodItem {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+    .foodAmount {
+        grid-column: 1/3;
+    }
+    .productUnit {
+        grid-column: 3/5;
+    }
+    .foodItem .productLabel {
+        grid-column: 1/5;
+    }
+    .counter {
+        grid-row: 3;
+    }
+    .deleteButton {
+        grid-row: 3;
+        grid-column: 2/4;
+    }
+}
