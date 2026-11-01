@@ -120,8 +120,8 @@ function SugarLogDay({ period }) {
                                 </thead>
                                 <tbody>
                                     {dayData.records.map((record) => (
-                                        <>
-                                            <tr key={record.id}>
+                                        <Fragment key={record.id}>
+                                            <tr>
                                                 <td rowSpan={2}>{record.time}</td>
                                                 <td>{record.sugar}</td>
                                                 <td>{record.insulin}</td>
@@ -158,7 +158,7 @@ function SugarLogDay({ period }) {
                                                     {record.carb}
                                                 </td>
                                             </tr>
-                                        </>
+                                        </Fragment>
                                     ))}
                                 </tbody>
                             </table>

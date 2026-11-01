@@ -1,0 +1,78 @@
+.insulinSection {
+    font-size: var(--medium-text);
+    background-color: var(--secondary-background);
+    color: #000000;
+    border-radius: 20px;
+    padding: 20px;
+    gap: 10px;
+    box-sizing: border-box;
+}
+.insulinSection h1 {
+    color: var(--text-primary);
+    margin: 10px 0px;
+}
+.insulinSection button {
+    border: none;
+    outline: 2px;
+    border-radius: 10px;
+    cursor: pointer;
+    width: fit-content;
+}
+.insulinSection input {
+    box-sizing: border-box;
+    resize: none;
+    border: none;
+    border-radius: 10px;
+    padding: 0px;
+    background-color: var(--paper-soft);
+    font-size: var(--medium-text);
+}
+.insuluinList {
+    padding: 0;
+}
+.insuluinListItem {
+    margin: 15px 0px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.insulinName {
+    width: 150px;
+}
+.insuluinListItem div{
+    display: flex;
+    gap: 10px;
+    width: fit-content;
+    box-sizing: border-box;
+    resize: none;
+    border: none;
+    border-radius: 10px;
+    padding: 5px;
+    background-color: var(--paper-soft);
+    border: 1px solid var(--border-color);
+    font-size: var(--medium-text);
+}
+.unit{
+    font-size: var(--medium-text);
+}
+.addInsulin {
+    margin-left: auto;
+    border: none;
+    border-radius: 20px;
+    background-color: var(--secondary-element-background);
+    color: #ffffff;
+    padding: 10px;
+    height: 100%;
+    font-size: var(--medium-text);
+    cursor: pointer;
+}
+.counter {
+    padding: 0;
+}
+.counter:hover{
+    outline: 2px solid var(--primary-element-background);
+}
+.insuluinAmount {
+    text-align: center;
+    width: 60px;
+}

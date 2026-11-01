@@ -4,17 +4,13 @@ import InsulinSelect from "../components/insulinSelect"
 import style from "../css/pages/carbInsulinCurve.module.css"
 
 function CarbInsulinCurve(){
-    const [insulinDots, setInsulinDots] = useState([])
+    const [insulinDots, setInsulinDots] = useState({})
+    console.log(insulinDots)
 
     return (
         <section className={style.CarbInsulinCurve}>
             <div>
                 График
-                {insulinDots.map((point, index) => (
-                    <p key={index}>
-                    X: {point.x}, Y: {point.y}
-                    </p>
-                ))}
             </div>
             <div>
                 Продукты
