@@ -9,12 +9,27 @@ import style from "../css/components/insulinSelect.module.css"
 const STEP = 0.5
 const MIN = 0
 
-function InsulinSelect({ setInsulinDots }) {
+function InsulinSelect({ onAdd  }) {
   const [insulinsAmounts, setAmounts] = useState({})
 
   const addInsulin = (name, dose) => {
-    const {start, peak, end} = insulin.find((ins) => ins.name === name)
-    setInsulinDots(makeInsulin({start, peak, end}, dose))
+    const d = parseFloat(dose)
+    if (!d) return   
+
+    const ins = insulin.find((i) => i.name === name)
+    if (!ins) return
+
+    const { points, peakY } = makeInsulin(ins, d)
+    onAdd({
+      id: crypto.randomUUID(),
+      name,
+      dose: d,
+      points,
+      peakY,
+      start: ins.start,
+      peak: ins.peak,
+      end: ins.end,
+    })
     setAmount(name, 0)
   }
 
@@ -29,7 +44,7 @@ function InsulinSelect({ setInsulinDots }) {
 
   return (
     <div className={style.insulinSection}>
-      <h1>Инсулин</h1>
+      <h2>Инсулин</h2>
       <ul className={style.insuluinList}>
         {insulin.map((ins) => (
           <li className={style.insuluinListItem} key={ins.name}>
