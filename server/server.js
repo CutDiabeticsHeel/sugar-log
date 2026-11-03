@@ -21,7 +21,7 @@ app.get('/', async () => {
 });
 
 app.get("/api/user-info", async (request, reply) => {
-    return await getAll("SELECT * FROM user_info");
+    return await getAll("SELECT * FROM users");
 });
 
 app.get("/api/data-for-metrics", async (request, reply) => {
@@ -34,7 +34,7 @@ app.get("/api/user-questions", async (request, reply) => {
 });
 
 app.get("/api/endocrinologist", async (request, reply) => {
-    return await getAll("SELECT * FROM endocrinologist");
+    return await getAll("SELECT * FROM endocrinologists");
 
 });
 

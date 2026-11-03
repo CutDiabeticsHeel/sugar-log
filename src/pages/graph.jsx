@@ -9,7 +9,6 @@ function Graph() {
             <MainGraph/>
             <DailyProfile/>
         </section>
-        
     );
 }
 

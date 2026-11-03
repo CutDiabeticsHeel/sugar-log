@@ -129,6 +129,11 @@ export const api = createApi({
             }),
             invalidatesTags: ['Product'],
         }),
+        
+        updateUserInfo: builder.mutation({
+            query: (body) => ({ url: "/user-info", method: "PUT", body }),
+            invalidatesTags: ['UserInfo', 'Product'],  // 'Product' обязательно
+        }),
     }),
 });
 

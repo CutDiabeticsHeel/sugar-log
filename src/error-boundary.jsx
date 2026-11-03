@@ -30,7 +30,7 @@ class ErrorBoundary extends React.Component {
           <button type="button" onClick={() => window.location.reload()} className={style.button}>
             Перезагрузить страницу
           </button>
-          <a href="/" className={style.button}>Вернуться на главную</a>
+          <a href="/home" className={style.button}>Вернуться на главную</a>
         </div>
       );
     }

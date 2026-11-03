@@ -2,12 +2,13 @@ import { Suspense, lazy, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 
 import Home from "./pages/home";
-import Menu from "./components/Menu";
+import MainLayout from "./pages/outlet";
 import "./css/main.css";
 import Preloader from "./components/preloader";
 import useOnlineStatus from "./hooks/useOnlineStatus";
 import { apiGet } from "./offline/api";
 
+const Welcome = lazy(() => import("./pages/welcome"));
 const Diary = lazy(() => import("./pages/diary"));
 const Charts = lazy(() => import("./pages/graph"));
 const Statistics = lazy(() => import("./pages/stats"));
@@ -24,36 +25,36 @@ function App() {
     }, []);
 
     return (
-      <div className="App">
-        {!isOnline && (
-          <div style={{
-            position: 'fixed',
-            top: '20px',
-            right: '20px',
-            backgroundColor: "#FDECEA",
-            padding: "20px",
-            borderRadius: "20px",
-            zIndex: 1000
-          }}>
-            Нет сети. Работа в оффлайн.
-          </div>
-        )}
-
-        <main className="main">
-          <Menu />
-          <Suspense fallback={<Preloader/>}>
+        <div className="App">
+            {!isOnline && (
+                <div style={{
+                    position: 'fixed', top: '20px', right: '20px',
+                    backgroundColor: "#FDECEA", padding: "20px",
+                    borderRadius: "20px", zIndex: 1000
+                }}>
+                    Нет сети. Работа в оффлайн.
+                </div>
+            )}
             <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/diary" element={<Diary />} />
-                <Route path="/graph" element={<Charts />} />
-                <Route path="/statistics" element={<Statistics />} />
-                <Route path="/products" element={<ProductsPage />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/InSug-curve" element={<CarbInsulinCurve/> } />
+                <Route
+                    path="/"
+                    element={
+                        <Suspense fallback={<Preloader />}>
+                            <Welcome />
+                        </Suspense>
+                    }
+                />
+                <Route element={<MainLayout />}>
+                    <Route path="/home" element={<Home />} />
+                    <Route path="/diary" element={<Diary />} />
+                    <Route path="/graph" element={<Charts />} />
+                    <Route path="/statistics" element={<Statistics />} />
+                    <Route path="/products" element={<ProductsPage />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/InSug-curve" element={<CarbInsulinCurve />} />
+                </Route>
             </Routes>
-          </Suspense>
-        </main>
-      </div>
+        </div>
     );
 }
 

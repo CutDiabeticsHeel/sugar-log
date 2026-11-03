@@ -1,0 +1,26 @@
+.welcomeSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 75px 0px;
+    gap: 75px;
+}
+.registerButtonContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+.registerButtonContainer button {
+    display: flex;
+    align-items: center;
+    font-size: var(--large-text);
+    gap: 10px;
+    border: 3px solid var(--primary-element-background);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;   
+}
+.registerButtonContainer button:hover {
+    border: 3px solid #000000;
+}
