@@ -105,11 +105,11 @@ export const api = createApi({
         }),
 
         getUserQuestions: builder.query({
-            query: () => "/user-questions",
+            query: () => `/user-questions?id=${localStorage.getItem("UserID")}`,
         }),
 
         getEndocrinologistInfo: builder.query({
-            query: () => "/endocrinologist",
+            query: () => `/endocrinologist?id=${localStorage.getItem("UserID")}`,
         }),
 
         addSugarRecord: builder.mutation({
@@ -132,7 +132,7 @@ export const api = createApi({
         
         updateUserInfo: builder.mutation({
             query: (body) => ({ url: "/user-info", method: "PUT", body }),
-            invalidatesTags: ['UserInfo', 'Product'],  // 'Product' обязательно
+            invalidatesTags: ['UserInfo', 'Product'],
         }),
     }),
 });

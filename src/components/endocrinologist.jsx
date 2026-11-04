@@ -44,7 +44,8 @@ function Endocrinologist(){
             const { data, queued } = await apiWrite(
                 'PUT',
                 '/update-endocrinologist',
-                formData
+                formData,
+                {userId: localStorage.getItem("UserID")}
             );
             setFormData({day: '', month: '', time: '', name: ''})
             setPopupOpen(prev => !prev)

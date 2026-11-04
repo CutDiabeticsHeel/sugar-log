@@ -35,6 +35,7 @@ const wrapperVariants = {
 
 function Questions(){
     const {data: userQuestions, isLoading, refetch} = useGetUserQuestionsQuery()
+    console.log(userQuestions)
     const [popupOpen, setPopupOpen] = useState(false)
     const { register, handleSubmit, reset } = useForm();
     const [selectedIds, setSelectedIds] = useState([]);
@@ -58,7 +59,8 @@ function Questions(){
             const { data, queued } = await apiWrite(
                 'DELETE',
                 '/delete-question',
-                { ids: selectedIds }
+                { ids: selectedIds },
+                {userId: localStorage.getItem("UserID")}
             );
             setIsSuccess(true)
             setTimeout(() => {
@@ -80,7 +82,8 @@ function Questions(){
             const result = await apiWrite(
                 'POST',
                 '/add-question',
-                data
+                data,
+                {userId: localStorage.getItem("UserID")}
             );
             reset();
             refetch();

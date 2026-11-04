@@ -33,6 +33,11 @@ async function getOne(sql, params = []) {
     return result.rows[0] ?? null;
 }
 
+function getUserId(request) {
+    const id = Number(request.query?.id ?? request.body?.userId);
+    return Number.isInteger(id) && id > 0 ? id : null;
+}
+
 async function addProduct({ id, nameProduct, protein, fat, carbs, weigth, isPortion}) {
     const weight = toNumber(weigth);
     let proteinValue = toNumber(protein);
@@ -129,57 +134,22 @@ async function getInsulinAndXEBE(foodItems, userId) {
     };
 }
 
-async function updateUserInfo(
-    name,
-    height,
-    weight,
-    shortInsulin,
-    longInsulin,
-    sugarDecline
-) {
+async function updateUserInfo(userId, name, height, weight, shortInsulin, longInsulin, sugarDecline) {
     const fields = [];
     const values = [];
 
-    if (name !== "") {
-        fields.push("name = ?");
-        values.push(name);
-    }
+    if (name !== "")          { fields.push("name = ?");          values.push(name); }
+    if (height !== "")        { fields.push("height = ?");        values.push(height); }
+    if (weight !== "")        { fields.push("weight = ?");        values.push(weight); }
+    if (shortInsulin !== "")  { fields.push("short_insulin = ?"); values.push(shortInsulin); }
+    if (longInsulin !== "")   { fields.push("long_insulin = ?");  values.push(longInsulin); }
+    if (sugarDecline !== "")  { fields.push("sugar_decline = ?"); values.push(sugarDecline); }
+    if (fields.length === 0) return 0;
 
-    if (height !== "") {
-        fields.push("height = ?");
-        values.push(height);
-    }
-
-    if (weight !== "") {
-        fields.push("weight = ?");
-        values.push(weight);
-    }
-
-    if (shortInsulin !== "") {
-        fields.push("short_insulin = ?");
-        values.push(shortInsulin);
-    }
-
-    if (longInsulin !== "") {
-        fields.push("long_insulin = ?");
-        values.push(longInsulin);
-    }
-
-    if (sugarDecline !== "") {
-        fields.push("sugar_decline = ?");
-        values.push(sugarDecline);
-    }
-
-    if (fields.length === 0) {
-        return 0;
-    }
-
-    const sql = `
-        UPDATE user_info
-        SET ${fields.join(", ")}
-    `;
-
-    const result = await db.execute({ sql, args: values });
+    const result = await db.execute({
+        sql: `UPDATE user_info SET ${fields.join(", ")} WHERE user_id = ?`,
+        args: [...values, userId],
+    });
     return result.rowsAffected;
 }
 
@@ -243,66 +213,41 @@ async function addSugarRecord(entry) {
     }
 }
 
-async function addQuestion(question) {
-    if (!question || question === "") {
-        return 0;
-    }
+async function addQuestion(userId, question) {
+    if (!question || question === "") return 0;
 
-    const sql = `
-        INSERT INTO questions (question)
-        VALUES (?)
-    `;
-
-    const result = await db.execute({ sql, args: [question] });
+    const result = await db.execute({
+        sql: "INSERT INTO questions (user_id, question) VALUES (?, ?)",
+        args: [userId, question],
+    });
     return Number(result.lastInsertRowid);
 }
 
-async function deleteQuestions(ids) {
-    if (!ids || ids.length === 0) {
-        return 0;
-    }
+async function deleteQuestions(userId, ids) {
+    if (!ids || ids.length === 0) return 0;
 
     const placeholders = ids.map(() => "?").join(", ");
-
-    const sql = `
-        DELETE FROM questions
-        WHERE id IN (${placeholders})
-    `;
-
-    const result = await db.execute({ sql, args: ids });
+    const result = await db.execute({
+        sql: `DELETE FROM questions WHERE user_id = ? AND id IN (${placeholders})`,
+        args: [userId, ...ids],
+    });
     return result.rowsAffected;
 }
 
-async function updateEndocrinologistInfo(name, day, month, time) {
+async function updateEndocrinologistInfo(userId, name, day, month, time) {
     const fields = [];
     const values = [];
 
-    if (name !== "") {
-        fields.push("name = ?");
-        values.push(name);
-    }
-    if (day !== "") {
-        fields.push("day = ?");
-        values.push(day);
-    }
-    if (month !== "") {
-        fields.push("month = ?");
-        values.push(month);
-    }
-    if (time !== "") {
-        fields.push("time = ?");
-        values.push(time);
-    }
-    if (fields.length === 0) {
-        return 0;
-    }
+    if (name !== "")  { fields.push("name = ?");    values.push(name); }
+    if (day !== "")   { fields.push("day = ?");     values.push(day); }
+    if (month !== "") { fields.push("month = ?");   values.push(month); }
+    if (time !== "")  { fields.push("time = ?");    values.push(time); }
+    if (fields.length === 0) return 0;
 
-    const sql = `
-        UPDATE endocrinologist
-        SET ${fields.join(", ")}
-    `;
-
-    const result = await db.execute({ sql, args: values });
+    const result = await db.execute({
+        sql: `UPDATE endocrinologist SET ${fields.join(", ")} WHERE user_id = ?`,
+        args: [...values, userId],
+    });
     return result.rowsAffected;
 }
 
@@ -316,5 +261,5 @@ async function deleteProductById(id) {
     return result.rowsAffected;
 }
 
-export { getAll, getOne, addProduct, getInsulinAndXEBE, updateUserInfo, addSugarRecord, addQuestion,
+export { getAll, getOne, getUserId, addProduct, getInsulinAndXEBE, updateUserInfo, addSugarRecord, addQuestion,
     deleteQuestions, updateEndocrinologistInfo, deleteSugarLogById, deleteProductById };
