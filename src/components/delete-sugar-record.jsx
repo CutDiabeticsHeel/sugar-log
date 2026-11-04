@@ -11,8 +11,9 @@ function DeleteSugarRecord({ record, onClose, onDeleted }) {
         try {
             const { data, queued } = await apiWrite(
                 'DELETE',
-                '/delete-sugar-record',
-                id
+                `/delete-sugar-record?id=${localStorage.getItem("UserID")}`,
+                id,
+                {userId: localStorage.getItem("UserID")}
             );
             setIsSuccess(true)
             setTimeout(() => {

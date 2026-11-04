@@ -153,13 +153,13 @@ async function updateUserInfo(userId, name, height, weight, shortInsulin, longIn
     if (fields.length === 0) return 0;
 
     const result = await db.execute({
-        sql: `UPDATE user_info SET ${fields.join(", ")} WHERE user_id = ?`,
+        sql: `UPDATE users_info SET ${fields.join(", ")} WHERE user_id = ?`,
         args: [...values, userId],
     });
     return result.rowsAffected;
 }
 
-async function addSugarRecord(entry) {
+async function addSugarRecord(userId, entry) {
     const foodList = Array.isArray(entry.food) ? entry.food : [];
     const autoNames = foodList.map(food => ` "${food.label}" x ${food.amount}`).filter(Boolean);
     const manualText = entry.foodText && entry.foodText.trim() ? entry.foodText.trim() : '';
@@ -190,7 +190,7 @@ async function addSugarRecord(entry) {
     const XEBE = entry.XEBE === undefined || entry.XEBE === null ? '' : entry.XEBE;
 
     if (entry.id) {
-        const sql = `UPDATE sugar_log
+        const sql = `UPDATE "${userId}_sugar_log"
                      SET date = ?, time = ?, sugar = ?, insulin = ?, XEBE = ?, food = ?, protein = ?, fat = ?, carb = ?, ccal = ?, notes = ?, auto_food = ?, activity = ?, food_text = ?,
                          manual_protein = ?, manual_fat = ?, manual_carb = ?
                      WHERE id = ?`;
@@ -205,7 +205,7 @@ async function addSugarRecord(entry) {
         await db.execute({ sql, args: params });
         return entry.id;
     } else {
-        const sql = `INSERT INTO sugar_log (date, time, sugar, insulin, XEBE, food, protein, fat, carb, ccal, notes, auto_food, activity, food_text, manual_protein, manual_fat, manual_carb)
+        const sql = `INSERT INTO "${userId}_sugar_log" (date, time, sugar, insulin, XEBE, food, protein, fat, carb, ccal, notes, auto_food, activity, food_text, manual_protein, manual_fat, manual_carb)
                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
         const params = [
@@ -251,14 +251,14 @@ async function updateEndocrinologistInfo(userId, name, day, month, time) {
     if (fields.length === 0) return 0;
 
     const result = await db.execute({
-        sql: `UPDATE endocrinologist SET ${fields.join(", ")} WHERE user_id = ?`,
+        sql: `UPDATE endocrinologists SET ${fields.join(", ")} WHERE user_id = ?`,
         args: [...values, userId],
     });
     return result.rowsAffected;
 }
 
-async function deleteSugarLogById(id) {
-    const result = await db.execute({ sql: 'DELETE FROM sugar_log WHERE id = ?', args: [id] });
+async function deleteSugarLogById(id, userId) {
+    const result = await db.execute({ sql: `DELETE FROM "${userId}_sugar_log" WHERE id = ?`, args: [id] });
     return result.rowsAffected;
 }
 

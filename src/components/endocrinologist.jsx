@@ -43,7 +43,7 @@ function Endocrinologist(){
         try {
             const { data, queued } = await apiWrite(
                 'PUT',
-                '/update-endocrinologist',
+                `/update-endocrinologist?id=${localStorage.getItem("UserID")}`,
                 formData,
                 {userId: localStorage.getItem("UserID")}
             );

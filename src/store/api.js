@@ -13,7 +13,6 @@ const FALLBACKS = {
     "/user-questions": [],
     "/endocrinologist": [],
 };
-const currentUserId = () => localStorage.getItem("UserID");
 
 const getUrl = (args) => (typeof args === "string" ? args : args.url);
 
@@ -115,7 +114,7 @@ export const api = createApi({
 
         addSugarRecord: builder.mutation({
             query: (data) => ({
-                url: "/addSugar",
+                url: `/addSugar?id=${localStorage.getItem("UserID")}`,
                 method: "POST",
                 body: data,
             }),

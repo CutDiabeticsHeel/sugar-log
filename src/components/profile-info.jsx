@@ -22,7 +22,6 @@ const wrapperVariants = {
 
 function ProfileInfo(){
     const {data: userInfo, isLoading, refetch} = useGetUserInfoQuery();
-    console.log(userInfo)
     const [popupOpen, setPopupOpen] = useState(false);
     const [name, setName] = useState("");
     const [height, setHeight] = useState("");
@@ -40,7 +39,7 @@ function ProfileInfo(){
             const userData = {name, height, weight, shortInsulin, longInsulin, sugarDecline};
             const { data, queued } = await apiWrite(
                 'POST',
-                '/changeUserInfo',
+                `/changeUserInfo?id=${localStorage.getItem("UserID")}`,
                 userData,
                 {userId: localStorage.getItem("UserID")}
             );

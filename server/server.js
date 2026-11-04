@@ -31,7 +31,6 @@ app.get("/api/user-info", async (request, reply) => {
         if (!userId) return reply.code(400).send({ error: "Нет userId" });
 
         const user = await getOne("SELECT * FROM users_info WHERE user_id = ?", [userId]);
-        console.log(userId, user)
         if (!user) return reply.code(404).send({ error: "Пользователь не найден" });
 
         return user;
@@ -134,7 +133,8 @@ app.get("/api/today-sugar-log", async (request, reply) => {
 
 app.post("/api/addSugar", async (request, reply) => {
     try {
-        await addSugarRecord(request.body);
+        const userId = getUserId(request);
+        await addSugarRecord(userId, request.body);
         return { message: "Успешно" };
     } catch (err) {
         console.log("ADD-SUGAR ERROR:", err);
@@ -220,7 +220,11 @@ app.put("/api/update-endocrinologist", async (request, reply) => {
 
 app.delete("/api/delete-sugar-record", async (request, reply) => {
     try {
-        await deleteSugarLogById(request.body);
+        console.log("BODY:", request.body);
+        console.log("USER ID:", getUserId(request));
+
+        const userId = getUserId(request);
+        await deleteSugarLogById(request.body, userId);
         return { message: "Успешно" };
     } catch (err) {
         console.log("DELETE-SUGAR-RECORD ERROR:", err);
