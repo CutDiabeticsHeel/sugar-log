@@ -38,6 +38,12 @@ function getUserId(request) {
     return Number.isInteger(id) && id > 0 ? id : null;
 }
 
+function sugarTable(userId, archive = false) {
+    const id = Number(userId);
+    if (!Number.isInteger(id) || id <= 0) throw new Error("Некорректный userId");
+    return `"${id}_sugar_log${archive ? "_archive" : ""}"`;
+}
+
 async function addProduct({ id, nameProduct, protein, fat, carbs, weigth, isPortion}) {
     const weight = toNumber(weigth);
     let proteinValue = toNumber(protein);
@@ -261,5 +267,5 @@ async function deleteProductById(id) {
     return result.rowsAffected;
 }
 
-export { getAll, getOne, getUserId, addProduct, getInsulinAndXEBE, updateUserInfo, addSugarRecord, addQuestion,
-    deleteQuestions, updateEndocrinologistInfo, deleteSugarLogById, deleteProductById };
+export { getAll, getOne, getUserId, addProduct, sugarTable, getInsulinAndXEBE, updateUserInfo, addSugarRecord, 
+    addQuestion, deleteQuestions, updateEndocrinologistInfo, deleteSugarLogById, deleteProductById };

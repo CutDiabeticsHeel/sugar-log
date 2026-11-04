@@ -1,7 +1,7 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import dayjs from "dayjs";
-import {getAll, getOne, getUserId, addProduct, updateUserInfo, addSugarRecord, addQuestion,
+import {getAll, getOne, getUserId, addProduct, sugarTable, updateUserInfo, addSugarRecord, addQuestion,
     deleteQuestions, updateEndocrinologistInfo, deleteSugarLogById, deleteProductById
 } from "./database-function.js";
 
@@ -31,6 +31,7 @@ app.get("/api/user-info", async (request, reply) => {
         if (!userId) return reply.code(400).send({ error: "Нет userId" });
 
         const user = await getOne("SELECT * FROM users_info WHERE user_id = ?", [userId]);
+        console.log(userId, user)
         if (!user) return reply.code(404).send({ error: "Пользователь не найден" });
 
         return user;
@@ -42,7 +43,10 @@ app.get("/api/user-info", async (request, reply) => {
 
 app.get("/api/data-for-metrics", async (request, reply) => {
     try {
-        return await getAll("SELECT sugar, date, time FROM sugar_log");
+        const userId = getUserId(request);
+        if (!userId) return reply.code(400).send({ error: "Нет userId" });
+
+        return await getAll(`SELECT sugar, date, time FROM ${sugarTable(userId)}`);
     } catch (err) {
         console.log("DATA-FOR-METRICS ERROR:", err);
         return reply.code(500).send({ error: err.message });
@@ -84,7 +88,10 @@ app.get("/api/products", async (request, reply) => {
 
 app.get("/api/all-sugar-log", async (request, reply) => {
     try {
-        return await getAll("SELECT * FROM sugar_log ORDER BY date ASC, time ASC");
+        const userId = getUserId(request);
+        if (!userId) return reply.code(400).send({ error: "Нет userId" });
+
+        return await getAll(`SELECT * FROM ${sugarTable(userId)} ORDER BY date ASC, time ASC`);
     } catch (err) {
         console.log("ALL-SUGAR-LOG ERROR:", err);
         return reply.code(500).send({ error: err.message });
@@ -93,13 +100,16 @@ app.get("/api/all-sugar-log", async (request, reply) => {
 
 app.get("/api/day-period-sugar-log", async (request, reply) => {
     try {
+        const userId = getUserId(request);
+        if (!userId) return reply.code(400).send({ error: "Нет userId" });
+
         const { from, to } = request.query;
         if (!from || !to) {
             return reply.code(400).send({ error: "from и to обязательны" });
         }
 
         return await getAll(`
-            SELECT * FROM sugar_log
+            SELECT * FROM ${sugarTable(userId)}
             WHERE date BETWEEN ? AND ?
             ORDER BY id DESC
         `, [from, to]);
@@ -111,8 +121,11 @@ app.get("/api/day-period-sugar-log", async (request, reply) => {
 
 app.get("/api/today-sugar-log", async (request, reply) => {
     try {
+        const userId = getUserId(request);
+        if (!userId) return reply.code(400).send({ error: "Нет userId" });
+
         const today = dayjs().format("YYYY-MM-DD");
-        return await getAll("SELECT * FROM sugar_log WHERE date = ?", [today]);
+        return await getAll(`SELECT * FROM ${sugarTable(userId)} WHERE date = ?`, [today]);
     } catch (err) {
         console.log("TODAY-SUGAR-LOG ERROR:", err);
         return reply.code(500).send({ error: err.message });

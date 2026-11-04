@@ -13,6 +13,7 @@ const FALLBACKS = {
     "/user-questions": [],
     "/endocrinologist": [],
 };
+const currentUserId = () => localStorage.getItem("UserID");
 
 const getUrl = (args) => (typeof args === "string" ? args : args.url);
 
@@ -79,25 +80,25 @@ export const api = createApi({
         }),
 
         getAllSugarLog: builder.query({
-            query: () => "/all-sugar-log",
+            query: () => `/all-sugar-log?id=${localStorage.getItem("UserID")}`,
             providesTags: ["SugarLog"],
         }),
 
         getTodaySugarLog: builder.query({
-            query: () => "/today-sugar-log",
+            query: () => `/today-sugar-log?id=${localStorage.getItem("UserID")}`,
             providesTags: ["SugarLog"],
         }),
 
         getDayPeriodSugarLog: builder.query({
             query: ({ from, to }) => ({
-                url: "/day-period-sugar-log",
+                url: `/day-period-sugar-log?id=${localStorage.getItem("UserID")}`,
                 params: { from, to },
             }),
             providesTags: ["SugarLog"],
         }),
 
         getOnlySugar: builder.query({
-            query: () => "/data-for-metrics",
+            query: () => `/data-for-metrics?id=${localStorage.getItem("UserID")}`,
         }),
 
         getUserInfo: builder.query({
