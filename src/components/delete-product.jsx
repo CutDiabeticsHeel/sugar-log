@@ -4,9 +4,11 @@ import SuccessBlock from "./success-block";
 import { createPortal } from "react-dom";
 import {useState} from "react"
 import { apiWrite } from "../offline/api";
+import { useGetUserInfoQuery } from "../store/api";
 
 function DeleteProductRecord({ product, onClose }) {
     const [isSuccess, setIsSuccess] = useState(false);
+    const {data: userInfo} = useGetUserInfoQuery();
 
     const deleteProduct= async (id) => {
         try {
@@ -26,6 +28,7 @@ function DeleteProductRecord({ product, onClose }) {
         }
         
     }
+
     return createPortal(
         <div className={style.overlay} onClick={onClose}>
             <div className={style.deleteProduct} onClick={(e) => e.stopPropagation()}>
@@ -57,7 +60,7 @@ function DeleteProductRecord({ product, onClose }) {
                                 <td>{Number(product["БЖЕ"]).toFixed(2)}</td>
                                 <td>{Number(product["ХЕ"]).toFixed(2)}</td>
                                 <td>{Number(product["ХЕ + БЖЕ"]).toFixed(2)}</td>
-                                <td>{Number(product["Всего инсулина"]).toFixed(2)}</td>
+                                <td>{(Number(product["ХЕ + БЖЕ"]).toFixed(2) * userInfo.short_insulin).toFixed(2)}</td>
                             </tr>
                         </tbody>
                     </table>

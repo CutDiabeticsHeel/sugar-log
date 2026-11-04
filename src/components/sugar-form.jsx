@@ -33,7 +33,7 @@ const formVariants = {
 function SugarForm({defaultValue, onClose}) {
     const STORAGE_KEY = defaultValue?.id ? `sugarFormDraft_${defaultValue.id}` : "sugarFormDraft_new";
     const {data: allProduct, isLoading, refetch} = useGetProductsQuery();
-    const {data: userInfo} = useGetUserInfoQuery();
+    const {data: userInfo, isLoading: isLoadingSecond} = useGetUserInfoQuery();
     const [addSugarRecord] = useAddSugarRecordMutation();
     const forEachProduct = (allProduct ?? []).map((item)=> ({
         value: item.id, 
@@ -109,7 +109,7 @@ function SugarForm({defaultValue, onClose}) {
     useEffect(() => {
         let cancelled = false;
         if (foodList.length > 0) {
-            getInsulinAndXEBE(foodList)
+            getInsulinAndXEBE(foodList, userInfo?.short_insulin)
                 .then(result => {
                     if (cancelled) return;
                     setValue("insulin", result.insulin);
@@ -121,7 +121,7 @@ function SugarForm({defaultValue, onClose}) {
             setValue("XEBE", "");
         }
         return () => { cancelled = true; };
-    }, [foodList]);
+    }, [foodList, userInfo?.short_insulin]);
 
     useEffect(() => {
         const subscription = watch((values) => {
@@ -135,9 +135,9 @@ function SugarForm({defaultValue, onClose}) {
         sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ ...currentValues, foodList }));
     }, [foodList]);
     
-    if (isLoading) return (<Preloader/>)
+    if (isLoading || isLoadingSecond) return (<Preloader/>)
 
-    const sugarDecline = userInfo["sugar_decline"];
+    const sugarDecline = userInfo?.sugar_decline;
     const sugarValue = watch("sugar")
 
     const insulinHint = (() => {

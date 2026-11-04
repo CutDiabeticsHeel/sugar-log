@@ -1,5 +1,5 @@
 import style from "../css/components/products-table.module.css";
-import {useGetProductsQuery} from "../store/api";
+import {useGetProductsQuery, useGetUserInfoQuery} from "../store/api";
 import {useState, useMemo, useEffect} from "react";
 import SearchIcon from '@mui/icons-material/Search';
 import EditIcon from '@mui/icons-material/Edit';
@@ -10,6 +10,7 @@ import Preloader from "./preloader";
 
 function ProductsTable(){
     const {data: products, isLoading, refetch} = useGetProductsQuery();
+    const {data: userInfo} = useGetUserInfoQuery();
     const [searchedVal, setSearchedVal] = useState("");
     const [debounceValue, setDebounceValue] = useState("");
     const [deletePopupId, setDeletePopupId] = useState(null)
@@ -94,7 +95,7 @@ function ProductsTable(){
                                     <td>{Number(product["БЖЕ"]).toFixed(2)}</td>
                                     <td>{Number(product["ХЕ"]).toFixed(2)}</td>
                                     <td>{Number(product["ХЕ + БЖЕ"]).toFixed(2)}</td>
-                                    <td>{Number(product["Всего инсулина"]).toFixed(2)}</td>
+                                    <td>{(Number(product["ХЕ + БЖЕ"]).toFixed(2) * userInfo.short_insulin).toFixed(2)}</td>
                                     <td>
                                         <button className={style.icon}>
                                             <EditIcon  onClick={() => setEditPopupId(product.id)} sx={{ fill: "#013567" }}/>

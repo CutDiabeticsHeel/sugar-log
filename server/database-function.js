@@ -96,44 +96,36 @@ async function addProduct({ id, nameProduct, protein, fat, carbs, weigth, isPort
     };
 }
 
-async function getInsulinAndXEBE(foodItems) {
+async function getInsulinAndXEBE(foodItems, userId) {
     if (!foodItems || foodItems.length === 0) {
         return { insulin: 0, XEBE: 0 };
     }
 
+    const user = await getOne("SELECT short_insulin FROM user_info WHERE user_id = ?", [userId]);
+    if (!user) throw new Error("Пользователь не найден");
+
     const ids = foodItems.map(item => item.value);
     const placeholders = ids.map(() => '?').join(',');
 
-    const query = `
-        SELECT id, "ХЕ + БЖЕ" as xebe, "Всего инсулина" as insulin
-        FROM products
-        WHERE id IN (${placeholders})
-    `;
+    const result = await db.execute({
+        sql: `SELECT id, "ХЕ + БЖЕ" AS xebe FROM products WHERE id IN (${placeholders})`,
+        args: ids,
+    });
 
-    const result = await db.execute({ sql: query, args: ids });
-    const rows = result.rows;
-
-    let calculatedInsulin = 0;
-    let calculatedXEBE = 0;
-
+    let totalXEBE = 0;
     for (const item of foodItems) {
-        const row = rows.find(r => r.id === item.value);
+        const row = result.rows.find(r => r.id === item.value);
         if (!row) {
             console.warn(`Продукт с id=${item.value} не найден в БД`);
             continue;
         }
-
         const xebe = parseFloat(String(row.xebe).replace(',', '.')) || 0;
-        const insulin = parseFloat(String(row.insulin).replace(',', '.')) || 0;
-        const amount = item.amount;
-
-        calculatedXEBE += xebe * amount;
-        calculatedInsulin += insulin * amount;
+        totalXEBE += xebe * item.amount;
     }
 
     return {
-        insulin: parseFloat(calculatedInsulin.toFixed(2)),
-        XEBE: parseFloat(calculatedXEBE.toFixed(2))
+        insulin: parseFloat((totalXEBE * user.short_insulin).toFixed(2)),
+        XEBE: parseFloat(totalXEBE.toFixed(2)),
     };
 }
 

@@ -61,50 +61,27 @@ export async function apiWrite(method, path, body) {
   }
 }
 
-export async function getInsulinAndXEBE(foodItems) {
-    if (!foodItems || foodItems.length === 0) {
-        return {
-            insulin: 0,
-            XEBE: 0
-        };
+export async function getInsulinAndXEBE(foodItems, shortInsulin) {
+    if (!foodItems || foodItems.length === 0 || !shortInsulin) {
+        return { insulin: 0, XEBE: 0 };
     }
 
     const products = await apiGet('/products');
-
-    let calculatedInsulin = 0;
-    let calculatedXEBE = 0;
+    let totalXEBE = 0;
 
     for (const item of foodItems) {
-        const product = products.find(
-            product => product.id === item.value
-        );
-
+        const product = products.find(p => p.id === item.value);
         if (!product) {
-            console.warn(
-                `Продукт с id=${item.value} не найден`
-            );
+            console.warn(`Продукт с id=${item.value} не найден`);
             continue;
         }
-
-        const xebe =
-            parseFloat(
-                String(product["ХЕ + БЖЕ"]).replace(',', '.')
-            ) || 0;
-
-        const insulin =
-            parseFloat(
-                String(product["Всего инсулина"]).replace(',', '.')
-            ) || 0;
-
-        const amount = item.amount;
-
-        calculatedXEBE += xebe * amount;
-        calculatedInsulin += insulin * amount;
+        const xebe = parseFloat(String(product["ХЕ + БЖЕ"]).replace(',', '.')) || 0;
+        totalXEBE += xebe * item.amount;
     }
 
     return {
-        insulin: parseFloat(calculatedInsulin.toFixed(2)),
-        XEBE: parseFloat(calculatedXEBE.toFixed(2))
+        insulin: parseFloat((totalXEBE * shortInsulin).toFixed(2)),
+        XEBE: parseFloat(totalXEBE.toFixed(2)),
     };
 }
 
