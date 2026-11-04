@@ -34,7 +34,16 @@ const wrapperVariants = {
 };
 
 function Questions(){
-    const {data: userQuestions, isLoading, refetch} = useGetUserQuestionsQuery()
+    const userId = localStorage.getItem("UserID");  
+    const {
+        data: userQuestions = [],
+        isLoading,
+        isFetching,
+        isError,
+        refetch
+    } = useGetUserQuestionsQuery(userId, {
+        skip: !userId
+    });
     const [popupOpen, setPopupOpen] = useState(false)
     const { register, handleSubmit, reset } = useForm();
     const [selectedIds, setSelectedIds] = useState([]);
@@ -43,7 +52,7 @@ function Questions(){
     const [isSuccess, setIsSuccess] = useState(false)
     const [titleSuccess, setTitleSuccess] = useState("");
 
-    if (isLoading) return (<Preloader/>)
+    if (isLoading || isFetching) return (<Preloader/>)
 
     const toggleQuestion = (id) => {
         setSelectedIds(prev =>

@@ -1,6 +1,5 @@
 import style from "../css/pages/welcome.module.css"
 import { useNavigate } from "react-router-dom";
-import { apiWrite } from "../offline/api"
 
 function Welcome() {
 

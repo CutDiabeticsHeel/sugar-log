@@ -105,7 +105,7 @@ export const api = createApi({
         }),
 
         getUserQuestions: builder.query({
-            query: () => `/user-questions?id=${localStorage.getItem("UserID")}`,
+            query: (userId) => `/user-questions?id=${userId}`,
         }),
 
         getEndocrinologistInfo: builder.query({

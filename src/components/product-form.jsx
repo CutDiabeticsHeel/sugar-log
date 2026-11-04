@@ -177,7 +177,7 @@ export function ProductForm({defaultValue, onClose}) {
                         <p ><span>БЖЕ</span>{XEBEValue}</p>
                         <p><span>ХЕ</span>{XEValue}</p>
                         <p><span>ХЕ + БЖЕ</span>{Number((XEValue + XEBEValue).toFixed(2))}</p>
-                        <p><span>Инсулин, ед</span>{Number(((XEValue + XEBEValue) * userInfo["short_insulin"]).toFixed(2))}</p>
+                        <p><span>Инсулин, ед</span>{Number(((XEValue + XEBEValue) * userInfo?.short_insulin).toFixed(2))}</p>
                     </div>
                     <button className={style.addEntry} type="submit" >
                         {defaultValue ? "Изменить продукт" : "Добавить продукт"}
