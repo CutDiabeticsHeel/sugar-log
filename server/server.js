@@ -1,7 +1,7 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import dayjs from "dayjs";
-import {getAll, addProduct, getInsulinAndXEBE, updateUserInfo, addSugarRecord, addQuestion,
+import {getAll, getOne, addProduct, updateUserInfo, addSugarRecord, addQuestion,
     deleteQuestions, updateEndocrinologistInfo, deleteSugarLogById, deleteProductById
 } from "./database-function.js";
 
@@ -21,7 +21,8 @@ app.get('/', async () => {
 });
 
 app.get("/api/user-info", async (request, reply) => {
-    return await getAll("SELECT * FROM users");
+    const id = Number(request.query.id);
+    return await getOne("SELECT * FROM users_info WHERE user_id = ?", [id]);
 });
 
 app.get("/api/data-for-metrics", async (request, reply) => {

@@ -33,7 +33,6 @@ function ProfileInfo(){
     const [isSuccess, setIsSuccess] = useState(false)
     if (isLoading) return (<Preloader/>)
 
-    const info = userInfo?.[0];
     const changeUserInfo = async () => {
         setIsLoading(true)
         try {
@@ -62,22 +61,22 @@ function ProfileInfo(){
                 {popupOpen ? (
                     <motion.div className={style.changeName} key="edit" initial="closed" animate="open" exit="closed" variants={wrapperVariants}>
                         <label className={style.userName}>Имя 
-                            <input type="text" value={name} placeholder={info.name} onChange={(e) => setName(e.target.value)} />
+                            <input type="text" value={name} placeholder={userInfo.name} onChange={(e) => setName(e.target.value)} />
                         </label>
                         <label>Рост, см 
-                            <input type="text" value={height} placeholder={info.height} onChange={(e) => setHeight(e.target.value)} />
+                            <input type="text" value={height} placeholder={userInfo.height} onChange={(e) => setHeight(e.target.value)} />
                         </label>
                         <label>Вес, кг 
-                            <input type="text" value={weight} placeholder={info.weight} onChange={(e) => setWeight(e.target.value)} />
+                            <input type="text" value={weight} placeholder={userInfo.weight} onChange={(e) => setWeight(e.target.value)} />
                         </label>
                         <label>Инсулин на 1 ХЕ, ед 
-                            <input type="text" value={shortInsulin} placeholder={info.short_insulin} onChange={(e) => setShortInsulin(e.target.value)} />
+                            <input type="text" value={shortInsulin} placeholder={userInfo.short_insulin} onChange={(e) => setShortInsulin(e.target.value)} />
                         </label>
                         <label>Длинный инсулин, ед/сутки 
-                            <input type="text" value={longInsulin} placeholder={info.long_insulin} onChange={(e) => setLongInsulin(e.target.value)} />
+                            <input type="text" value={longInsulin} placeholder={userInfo.long_insulin} onChange={(e) => setLongInsulin(e.target.value)} />
                         </label>
                         <label className={style.sugarDecline}>Сколько ммоль/л снижает 1ед инсулина:
-                            <input type="text" value={sugarDecline} placeholder={info.sugar_decline} onChange={(e) => setsugarDecline(e.target.value)} />
+                            <input type="text" value={sugarDecline} placeholder={userInfo.sugar_decline} onChange={(e) => setsugarDecline(e.target.value)} />
                         </label>
                         <button className={style.addEntry} onClick={changeUserInfo}>
                             Сохранить изменения
@@ -96,22 +95,22 @@ function ProfileInfo(){
                         variants={wrapperVariants}
                     >
                         <p className={style.valueContainer}>Имя: 
-                            <span className={style.valueItem}>{info.name}</span>
+                            <span className={style.valueItem}>{userInfo.name}</span>
                         </p>
                         <p className={style.valueContainer}>Рост: 
-                            <span className={style.valueItem}>{info.height} см</span>
+                            <span className={style.valueItem}>{userInfo.height} см</span>
                             </p>
                         <p className={style.valueContainer}>Вес: 
-                            <span className={style.valueItem}>{info.weight} кг</span>
+                            <span className={style.valueItem}>{userInfo.weight} кг</span>
                             </p>
                         <p className={style.valueContainer}>Инсулин на 1 ХЕ: 
-                            <span className={style.valueItem}>{info.short_insulin} ед</span>
+                            <span className={style.valueItem}>{userInfo.short_insulin} ед</span>
                             </p>
                         <p className={style.valueContainer}>Длинный инсулин: 
-                            <span className={style.valueItem}>{info.long_insulin} ед/сутки</span>
+                            <span className={style.valueItem}>{userInfo.long_insulin} ед/сутки</span>
                         </p>
                         <p className={style.valueContainer}>Сколько ммоль/л снижает 1ед инсулина: 
-                            <span className={style.valueItem}>{info.sugar_decline}</span>
+                            <span className={style.valueItem}>{userInfo.sugar_decline}</span>
                         </p>
                         <button onClick={() => setPopupOpen(true)} className={style.editButton}>
                             <EditIcon fontSize="small" />

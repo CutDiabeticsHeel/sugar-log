@@ -101,7 +101,7 @@ export const api = createApi({
         }),
 
         getUserInfo: builder.query({
-            query: () => "/user-info",
+            query: () => `/user-info?id=${localStorage.getItem("UserID")}`,
         }),
 
         getUserQuestions: builder.query({

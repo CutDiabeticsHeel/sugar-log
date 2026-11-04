@@ -1,9 +1,14 @@
 import style from "../css/pages/welcome.module.css"
+import { useNavigate } from "react-router-dom";
+import { apiWrite } from "../offline/api"
 
 function Welcome() {
 
-    const register = (id) => {
-        console.log(id)
+    const navigate = useNavigate();
+
+    const register = async (id) => {
+        localStorage.setItem("UserID", id);
+        navigate("/home")
     }
 
     return (

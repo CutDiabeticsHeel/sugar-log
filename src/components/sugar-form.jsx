@@ -137,7 +137,7 @@ function SugarForm({defaultValue, onClose}) {
     
     if (isLoading) return (<Preloader/>)
 
-    const sugarDecline = userInfo[0]["sugar_decline"];
+    const sugarDecline = userInfo["sugar_decline"];
     const sugarValue = watch("sugar")
 
     const insulinHint = (() => {

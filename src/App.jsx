@@ -20,8 +20,9 @@ function App() {
     const isOnline = useOnlineStatus();
 
     useEffect(() => {
+        const userId = localStorage.getItem("UserID");
         apiGet('/products').catch(err => console.error('PRODUCTS ERROR:', err));
-        apiGet('/user-info').catch(err => console.error('USER INFO ERROR:', err));
+        apiGet(`/user-info?id=${userId}`).catch(err => console.error('USER INFO ERROR:', err));
     }, []);
 
     return (

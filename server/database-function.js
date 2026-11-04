@@ -28,6 +28,11 @@ async function getAll(sql, params = []) {
     return result.rows;
 }
 
+async function getOne(sql, params = []) {
+    const result = await db.execute({ sql, args: params });
+    return result.rows[0] ?? null;
+}
+
 async function addProduct({ id, nameProduct, protein, fat, carbs, weigth, isPortion}) {
     const weight = toNumber(weigth);
     let proteinValue = toNumber(protein);
@@ -319,5 +324,5 @@ async function deleteProductById(id) {
     return result.rowsAffected;
 }
 
-export { getAll, addProduct, getInsulinAndXEBE, updateUserInfo, addSugarRecord, addQuestion,
+export { getAll, getOne, addProduct, getInsulinAndXEBE, updateUserInfo, addSugarRecord, addQuestion,
     deleteQuestions, updateEndocrinologistInfo, deleteSugarLogById, deleteProductById };

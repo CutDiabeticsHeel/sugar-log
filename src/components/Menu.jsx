@@ -24,7 +24,7 @@ function Menu() {
                     <MenuIcon/>
                 </button>
             </span>
-            <NavLink to="/" className={({ isActive }) => `${style.navigationItem} ${isActive ? style.navigationItemActive : ""}`}>
+            <NavLink to="/home" className={({ isActive }) => `${style.navigationItem} ${isActive ? style.navigationItemActive : ""}`}>
                 <WaterDropIcon/>
                 <span className={style.linkText}>Главная</span>
                 <span className={style.linkNumber}>01</span>

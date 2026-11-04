@@ -17,7 +17,7 @@ function Welcome () {
     if (isLoadingSugarLog || isLoadingUserInfo) {
         return <Preloader/>;
     }
-    if (!iserInfo?.length || !sugarLog?.length) {
+    if (!iserInfo || !sugarLog?.length) {
         return (
             <div className={style.welcomeSection}>
                 <h3> Сегодня, {dayjs().format('D MMMM')}</h3>
@@ -37,12 +37,12 @@ function Welcome () {
                 </div>
                 <div className={style.infoContainer}>
                     <span>Длинный инсулин</span>
-                    <p><span className={style.stats}>{iserInfo[0]["long_insulin"]}</span>ед /сутки</p>
+                    <p><span className={style.stats}>{iserInfo.long_insulin}</span>ед /сутки</p>
                     <span>Вечером в 20:00</span>
                 </div>
                 <div className={style.infoContainer}>
                     <span>Короткий</span>
-                    <p><span className={style.stats}>{iserInfo[0]["short_insulin"]}</span>ед / ХЕ-БЖЕ</p>
+                    <p><span className={style.stats}>{iserInfo.short_insulin}</span>ед / ХЕ-БЖЕ</p>
                     <span>Перед едой</span>
                 </div>
             </div>
