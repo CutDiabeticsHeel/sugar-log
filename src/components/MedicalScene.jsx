@@ -26,21 +26,26 @@ function MedicalScene() {
         const height = container.clientHeight;
 
         const scene = new THREE.Scene();
+        const group = new THREE.Group();
 
         const gluc = createGlucometer({ value: "5.6" });
         gluc.scale.setScalar(0.2);
-        gluc.position.set(-2.5, 2, 0);
+        gluc.position.set(-3, 3, 0);
         gluc.rotation.y = Math.PI / 10;
         gluc.rotation.z = -Math.PI / 10;
-        scene.add(gluc);
 
         const syringe = createInsulinSyringe()
         syringe.userData.cap.visible = false
         syringe.scale.setScalar(0.3);
         syringe.rotation.y = -Math.PI / 6;
         syringe.rotation.z = Math.PI - 0.15; 
-        syringe.position.set(2, -1, 0);
-        scene.add(syringe);
+        syringe.position.set(2, 1.5, 0);
+
+        group.add(gluc, syringe);
+        scene.add(group);
+
+        const box = new THREE.Box3().setFromObject(group);
+        group.position.sub(box.getCenter(new THREE.Vector3()));
 
         const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
         camera.position.set(0, 2, 6);
@@ -68,18 +73,36 @@ function MedicalScene() {
         };
         frameId = requestAnimationFrame(animate);
 
+        const CONTENT_WIDTH = 7;
+
+        const resize = () => {
+            const w = container.clientWidth;
+            const h = container.clientHeight;
+            renderer.setSize(w, h);
+            camera.aspect = w / h;
+
+            const vFov = THREE.MathUtils.degToRad(camera.fov);
+            const distForWidth = (CONTENT_WIDTH / 2) / (Math.tan(vFov / 2) * camera.aspect);
+            camera.position.set(0, 0, Math.max(6, distForWidth));
+            camera.lookAt(0, 0, 0);
+            camera.updateProjectionMatrix();
+        };
+        resize();
+        window.addEventListener("resize", resize);
+
         return () => {
             cancelAnimationFrame(frameId);
             gui.destroy();
             container.removeChild(renderer.domElement);
             renderer.dispose();
+            window.removeEventListener("resize", resize);
         };
     }, []);
 
     return (
         <div
             ref={medicalRef}
-            style={{ width: "100vw", height: "100vh", position: "fixed", zIndex: -1 }}
+            style={{ width: "100vw", height: "100vh", position: "fixed",  zIndex: -1 }}
         />
     );
 }

@@ -144,7 +144,6 @@ export function createInsulinSyringe({ capOn = true } = {}) {
   return g;
 }
 
-/** units: 10..100 — на какой отметке стоит пробка */
 export function setInsulinSyringeUnits(syringe, units) {
   const y = UNIT_Y(THREE.MathUtils.clamp(units, 0, 100));
   syringe.userData.plunger.position.y = y;
