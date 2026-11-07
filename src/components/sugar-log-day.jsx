@@ -83,8 +83,6 @@ function SugarLogDay({ period }) {
         return acc;
     }, {});
 
-    console.log(groupedByDate)
-
     const sugarStyles = {
         low: style.sugarLow,
         normal: style.sugarNormal,

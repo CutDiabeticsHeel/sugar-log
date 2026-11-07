@@ -8,7 +8,7 @@
     overflow: hidden;
     box-sizing: border-box;
     height: 100vh;
-    transition: width 0.3s ease, padding 0.3s ease;
+    transition: width 0.3s ease;
     width: auto;
     z-index: 1000;
 }
@@ -44,7 +44,7 @@
     justify-self: end;
     font-size: 0.85em;
     opacity: 0.6;
-    transition: opacity 0.2s ease, width 0.2s ease;
+    transition: opacity 0.2s ease, width 0.2s ease, height 0.2s ease;
     overflow: hidden;
     white-space: nowrap;
 }
@@ -107,5 +107,10 @@
         position: absolute;
         top: 0px;
         left: 0px;
+    }
+    .openMenu {
+        width: 100vw;
+        height: 100dvh;
+        overscroll-behavior-y: none;
     }
 }

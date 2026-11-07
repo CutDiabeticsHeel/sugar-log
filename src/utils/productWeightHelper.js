@@ -11,17 +11,18 @@ function parseAutoFood(value) {
 
 export function formatFood(record, productsById) {
     const items = parseAutoFood(record.auto_food);
-    console.log(items)
 
     if (!items.length) return record.food;
 
     const parts = items.map(({ id, amount }) => {
 
         const product = productsById.get(id);
-        console.log(product)
         if (!product) return `#${id} x ${amount}`;
-        if (amount === 1) {
+        if (amount === 1 && Number(product["Вес продукта"]) !== 100) {
             return `${product["Продукт"]}`
+        }
+        if (amount === 1 && Number(product["Вес продукта"]) === 100) {
+            return `${product["Продукт"]} 100гр`
         }
 
         const qty =
