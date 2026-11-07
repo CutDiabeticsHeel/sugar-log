@@ -43,3 +43,21 @@
         grid-column: 1;
     }
 }
+@media (max-width: 425px) {
+    .CarbInsulinCurve {
+        margin-left: 0px;
+        padding: 10px;
+        padding-top: 0;
+    }
+    .CarbInsulinCurve h1 {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        height: 77px;
+        padding-left: 40px;
+        width: calc(100% + 10px);
+        color: #ffffff;
+        background-color: var(--secondary-element-background);
+    }
+}

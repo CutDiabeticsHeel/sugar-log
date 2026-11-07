@@ -98,3 +98,14 @@
 .closeMenu .titleMenu .linkText {
     display: none;
 }
+@media (max-width: 425px) {
+    .closeMenu a {
+        display: none;
+    }
+    .closeMenu {
+        height: auto;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+    }
+}
