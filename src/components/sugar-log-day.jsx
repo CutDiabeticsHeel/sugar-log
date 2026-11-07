@@ -1,14 +1,15 @@
-import {useGetDayPeriodSugarLogQuery} from "../store/api";
+import {useGetDayPeriodSugarLogQuery, useGetProductsQuery} from "../store/api";
 import style from "../css/components/sugar-log-day.module.css";
 import dayjs from "dayjs";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import {getSugarStatus} from "../utils/sugar-status.js"
-import {useState, useEffect, useMemo} from "react"
+import {useState, useEffect, useMemo, Fragment} from "react"
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteSugarRecord from "./delete-sugar-record.jsx";
 import EditSugarRecord from "./edit-sugar-record.jsx";
 import Preloader from "./preloader.jsx";
+import {formatFood} from "../utils/productWeightHelper.js";
 
 dayjs.extend(isSameOrBefore);
 
@@ -22,8 +23,14 @@ function SugarLogDay({ period }) {
     const {data: sugarLog, isLoading, refetch} = useGetDayPeriodSugarLogQuery(effectivePeriod, {
         skip: !effectivePeriod?.from || !effectivePeriod?.to,
     });
+    const {data: products = [], isLoading: isLoadingSecond} = useGetProductsQuery();
     const [deletePopupId, setDeletePopupId] = useState(null)
     const [editPopupId, setEditPopupId] = useState(null)
+
+    const productsById = useMemo(
+        () => new Map(products.map((p) => [Number(p.id), p])),
+        [products]
+    );
 
     useEffect(() => {
         if (deletePopupId || editPopupId) {
@@ -47,7 +54,7 @@ function SugarLogDay({ period }) {
         return dates.reverse();
     }, [effectivePeriod.from, effectivePeriod.to]);
 
-    if (isLoading || !sugarLog) {
+    if (isLoading || isLoadingSecond || !sugarLog) {
         return <Preloader/>
     }
 
@@ -75,6 +82,8 @@ function SugarLogDay({ period }) {
         acc[date].insulinSum += record.insulin ?? 0
         return acc;
     }, {});
+
+    console.log(groupedByDate)
 
     const sugarStyles = {
         low: style.sugarLow,
@@ -120,14 +129,14 @@ function SugarLogDay({ period }) {
                                 </thead>
                                 <tbody>
                                     {dayData.records.map((record) => (
-                                        <>
+                                        <Fragment key={record.id}>
                                             <tr>
                                                 <td rowSpan={2}>{record.time}</td>
                                                 <td>{record.sugar}</td>
                                                 <td>{record.insulin}</td>
                                                 <td>{record.XEBE}</td>
                                                 <td rowSpan={2}>{record.ccal}</td>
-                                                <td rowSpan={2}>{record.food}</td>
+                                                <td rowSpan={2}>{formatFood(record, productsById)}</td>
                                                 <td rowSpan={2}>{`${record.notes ? `${record.notes}.` : ""} ${record.activity ?  `${record.activity}` : ""}`}</td>
                                                 <td rowSpan={2}>
                                                     <button className={style.icon}>
@@ -158,7 +167,7 @@ function SugarLogDay({ period }) {
                                                     {record.carb}
                                                 </td>
                                             </tr>
-                                        </>
+                                        </Fragment>
                                     ))}
                                 </tbody>
                             </table>

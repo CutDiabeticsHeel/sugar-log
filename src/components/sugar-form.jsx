@@ -30,9 +30,10 @@ const formVariants = {
     open: { opacity: 1, transition: { duration: 0.25, delay: 0.35 } }
 };
 
+
 function SugarForm({defaultValue, onClose}) {
     const STORAGE_KEY = defaultValue?.id ? `sugarFormDraft_${defaultValue.id}` : "sugarFormDraft_new";
-    const {data: allProduct, isLoading, refetch} = useGetProductsQuery();
+    const {data: allProduct, isLoading} = useGetProductsQuery();
     const {data: userInfo, isLoading: isLoadingSecond} = useGetUserInfoQuery();
     const [addSugarRecord] = useAddSugarRecordMutation();
     const forEachProduct = (allProduct ?? []).map((item)=> ({
