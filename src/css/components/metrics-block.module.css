@@ -1,5 +1,4 @@
 .metricsBlock {
-    position: relative;
     min-width: 0;
 }
 .metricsList {
@@ -27,8 +26,8 @@
 }
 .metricsInfoButton {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 10px;
+    right: 10px;
     background-color: var(--third-element-background);
     border: 1px solid var(--border-color);
     border-radius: 10px;
@@ -54,7 +53,6 @@
     cursor: pointer;
 }
 .metricsInfo {
-    position: relative;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -63,9 +61,8 @@
     padding: 20px;
     height: auto;
     max-height: 80vh;
-    width: 50%;
+    width: 65%;
     overflow-y: auto;
-    z-index: 901;
     cursor: default;
 }
 .metricsInfo h2 {
@@ -89,14 +86,18 @@
     scrollbar-width: thin;
     scrollbar-color: var(--primary-element-background) transparent;
 }
-@media (max-width: 770px) {
-    .metricsBlock {
+@media (max-width: 425px) {
+    .overlay {
+        z-index: 1001;
+    }
+    .metricsList {
         margin-top: 50px;
     }
     .metricsInfoButton {
-        top: -50px;
+        top: 90px
     }
-    .metricsList {
-        width: calc(100% - 30px);
+    .metricsInfoButton.open {
+        top: 10px;
+        z-index: 1002;
     }
 }

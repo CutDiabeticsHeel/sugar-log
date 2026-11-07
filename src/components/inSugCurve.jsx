@@ -7,11 +7,10 @@ const CARB_COLORS = ["#CFB093", "#B45309", "#EA580C", "#92400E", "#D97706"]
 const TOTAL_COLOR = "#F59E0B"
 const TEXT = "#6B7280"
 const GRID = "#dde8ed"
-const TICK = 30 // шаг делений оси, минуты
+const TICK = 30 
 
 const fmtTime = (v) => `${Math.floor(v / 60)}:${String(v % 60).padStart(2, "0")}`
 
-// одна серия для любой кривой: factor переводит её в ммоль/л в час
 const makeSeries = (c, color, factor, name, { width = 3, area = true, pin = true } = {}) => {
   const offset = c.offset ?? 0
   return {
@@ -40,10 +39,9 @@ const makeSeries = (c, color, factor, name, { width = 3, area = true, pin = true
 }
 
 function InsulinSugarCurve({ curves = [], productCurves = [], isf = 2, cr = 10 }) {
-  const k = 60 * isf              // ЕД/мин → ммоль/л в час
-  const kCarb = (60 * isf) / cr   // г/мин  → ммоль/л в час
+  const k = 60 * isf              
+  const kCarb = (60 * isf) / cr   
 
-  // граница оси — конец самой длинной кривой, без запаса
   const ends = [
     ...curves.map((c) => (c.offset ?? 0) + c.end),
     ...productCurves.map((c) => (c.offset ?? 0) + c.end),
@@ -73,7 +71,7 @@ function InsulinSugarCurve({ curves = [], productCurves = [], isf = 2, cr = 10 }
       trigger: "axis",
       valueFormatter: (v) => v.toFixed(2) + " ммоль/л в час",
     },
-    grid: { left: 64, right: 16, top: 48, bottom: 40 },
+    grid: { left: 16, right: 16, top: 48, bottom: 40, containLabel: true },
     xAxis: {
       type: "value",
       min: 0,
@@ -86,7 +84,7 @@ function InsulinSugarCurve({ curves = [], productCurves = [], isf = 2, cr = 10 }
       type: "value",
       min: 0,
       name: "ммоль/л в час",
-      nameTextStyle: { color: TEXT },
+      nameTextStyle: { color: TEXT, align: "left" },
       axisLabel: { color: TEXT },
       splitLine: { lineStyle: { color: GRID } },
     },

@@ -58,7 +58,9 @@ function MetricsBlock ({metrics: rawMetrics}) {
                 ))}
             </ul>
             <div>
-                <button onClick={() => (setPopupOpen(prev => !prev))} className={style.metricsInfoButton}><InfoIcon/> {!popupOpen ? `Узнать о метриках`: `Вернуться к статистике`}</button>
+                <button onClick={() => (setPopupOpen(prev => !prev))} className={`${style.metricsInfoButton} ${popupOpen ? style.open : ""}`}>
+                    <InfoIcon/> {!popupOpen ? `Узнать о метриках`: `Вернуться к статистике`}
+                </button>
                 <AnimatePresence>
                     {popupOpen && (
                         <motion.div className={style.overlay} onClick={() => setPopupOpen(false)} style={{ overflow: "hidden" }} initial="closed" animate="open" exit="closed" variants={metricsInfoVariants}>

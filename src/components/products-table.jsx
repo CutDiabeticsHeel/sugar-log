@@ -10,7 +10,7 @@ import Preloader from "./preloader";
 
 function ProductsTable(){
     const {data: products, isLoading, refetch} = useGetProductsQuery();
-    const {data: userInfo} = useGetUserInfoQuery();
+    const {data: userInfo, isLoading: isLoadindSecond} = useGetUserInfoQuery();
     const [searchedVal, setSearchedVal] = useState("");
     const [debounceValue, setDebounceValue] = useState("");
     const [deletePopupId, setDeletePopupId] = useState(null)
@@ -46,7 +46,7 @@ function ProductsTable(){
     }, [products, debounceValue, searchedVal])
 
 
-    if (isLoading) return (<Preloader/>)
+    if (isLoading || isLoadindSecond) return (<Preloader/>)
 
     return (
         <div>
@@ -95,7 +95,7 @@ function ProductsTable(){
                                     <td>{Number(product["БЖЕ"]).toFixed(2)}</td>
                                     <td>{Number(product["ХЕ"]).toFixed(2)}</td>
                                     <td>{Number(product["ХЕ + БЖЕ"]).toFixed(2)}</td>
-                                    <td>{(Number(product["ХЕ + БЖЕ"]).toFixed(2) * userInfo.short_insulin).toFixed(2)}</td>
+                                    <td>{(Number(product["ХЕ + БЖЕ"]).toFixed(2) * userInfo?.short_insulin).toFixed(2)}</td>
                                     <td>
                                         <button className={style.icon}>
                                             <EditIcon  onClick={() => setEditPopupId(product.id)} sx={{ fill: "#013567" }}/>
