@@ -30,7 +30,6 @@ app.register(jwt, { secret: "длинный-случайный-секрет", co
 
 app.addHook("onRequest", async (req, reply) => {
     const open = ["/api/vetify"];
-    console.log("")
     if (!req.url.startsWith("/api") || open.some((p) => req.url.startsWith(p))) return;
     try {
         await req.jwtVerify();
@@ -261,7 +260,7 @@ app.post("/api/vetify", async (request, reply) => {
         if (user && String(user.code) === String(code)) {
             const token = app.jwt.sign({ id: user.id }, { expiresIn: "7d" });
             return reply
-                .setCookie("token", token, { httpOnly: true, sameSite: "lax", path: "/" })
+                .setCookie("token", token, { httpOnly: true, sameSite: "none", secure: true, path: "/" })
                 .send({ ok: true });
         } else {
             return reply.send({ ok: false})
@@ -283,7 +282,6 @@ app.delete("/api/delete-product", async (request, reply) => {
 
 app.setErrorHandler((error, request, reply) => {
   const code = error.statusCode >= 400 && error.statusCode < 500 ? error.statusCode : 500;
-  console.log(code)
 
   return reply.redirect("/")
 });
