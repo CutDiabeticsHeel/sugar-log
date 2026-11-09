@@ -152,15 +152,15 @@ function SugarLogDay({ period }) {
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td>
+                                                <td className={style.macrosBorder}>
                                                     <span className={style.macros}>Б </span> 
                                                     {record.protein}
                                                 </td>
-                                                <td>
+                                                <td className={style.macrosBorder}>
                                                     <span className={style.macros}>Ж </span>
                                                     {record.fat}
                                                 </td>
-                                                <td>
+                                                <td className={style.macrosBorder}>
                                                     <span className={style.macros}>У </span>
                                                     {record.carb}
                                                 </td>

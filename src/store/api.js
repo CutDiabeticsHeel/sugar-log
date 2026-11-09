@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { cacheGet, outboxAdd} from "../offline/db"; 
 
 const API_URL = import.meta.env.VITE_API_URL;
-const rawBaseQuery = fetchBaseQuery({ baseUrl: API_URL });
+const rawBaseQuery = fetchBaseQuery({ baseUrl: API_URL, credentials: 'include', });
 const FALLBACKS = {
     "/products": [],
     "/all-sugar-log": [],
@@ -39,7 +39,7 @@ const baseQueryWithOffline = async (args, api, extraOptions) => {
                     method: args.method,
                     path: args.url,
                     body: args.body,
-                    createdAt: Date.now(),
+                    createdAt: Date.now()
                 });
                 return { data: { queued: true }, meta: { queued: true } };
             } catch (e) {

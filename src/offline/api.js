@@ -10,7 +10,11 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 export async function apiGet(path) {
   try {
-    const res = await fetch(`${API_URL}${path}`);
+    const res = await fetch(`${API_URL}${path}`, {credentials: 'include',});
+    if (res.status === 401) {
+      window.location.replace("/");
+      throw new Error("Unauthorized");
+    }
     if (!res.ok) {
       throw new Error(`HTTP ${res.status}`);
     }
@@ -30,12 +34,16 @@ export async function apiWrite(method, path, body) {
   try {
     const res = await fetch(`${API_URL}${path}`, {
       method,
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(body)
     });
 
+    if (res.status === 401) {
+      window.location.replace("/");
+    }
     if (!res.ok) {
       throw new Error(`HTTP ${res.status}`);
     }
@@ -96,6 +104,7 @@ export async function syncOutbox() {
             try {
                 res = await fetch(`${API_URL}${item.path}`, {
                     method: item.method,
+                    credentials: 'include',
                     headers: {
                         'Content-Type': 'application/json'
                     },
@@ -103,6 +112,9 @@ export async function syncOutbox() {
                 });
             } catch {
                 break;
+            }
+            if (res.status === 401) {
+              window.location.replace("/");
             }
             if (res.status >= 500) {
                 break;

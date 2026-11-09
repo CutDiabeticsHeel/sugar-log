@@ -1,9 +1,17 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
+import cookie from "@fastify/cookie";
+import jwt from "@fastify/jwt";
 import dayjs from "dayjs";
+import { readFile } from "node:fs/promises";
+
 import {getAll, getOne, getUserId, addProduct, sugarTable, updateUserInfo, addSugarRecord, addQuestion,
     deleteQuestions, updateEndocrinologistInfo, deleteSugarLogById, deleteProductById
 } from "./database-function.js";
+
+const usersCode = JSON.parse(
+    await readFile(new URL("./usersCode.json", import.meta.url), "utf-8")
+);
 
 const PORT = process.env.PORT || 5000;
 
@@ -14,6 +22,21 @@ const app = Fastify({
 app.register(cors, {
     origin: ["http://localhost:4000", "http://localhost:4173", "https://sugar-log-feeb.onrender.com", "https://sugar-log-k53m.onrender.com"],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    credentials: true,
+});
+
+app.register(cookie);
+app.register(jwt, { secret: "длинный-случайный-секрет", cookie: { cookieName: "token", signed: false } });
+
+app.addHook("onRequest", async (req, reply) => {
+    const open = ["/api/vetify"];
+    console.log("")
+    if (!req.url.startsWith("/api") || open.some((p) => req.url.startsWith(p))) return;
+    try {
+        await req.jwtVerify();
+    } catch {
+        return reply.code(401).send({ error: "unauthorized" });
+    }
 });
 
 app.get("/", async (request, reply) => {
@@ -131,6 +154,7 @@ app.get("/api/today-sugar-log", async (request, reply) => {
     }
 });
 
+
 app.post("/api/addSugar", async (request, reply) => {
     try {
         const userId = getUserId(request);
@@ -220,15 +244,30 @@ app.put("/api/update-endocrinologist", async (request, reply) => {
 
 app.delete("/api/delete-sugar-record", async (request, reply) => {
     try {
-        console.log("BODY:", request.body);
-        console.log("USER ID:", getUserId(request));
-
         const userId = getUserId(request);
         await deleteSugarLogById(request.body, userId);
         return { message: "Успешно" };
     } catch (err) {
         console.log("DELETE-SUGAR-RECORD ERROR:", err);
         return reply.code(500).send({ error: err.message });
+    }
+});
+
+app.post("/api/vetify", async (request, reply) => {
+    try {
+        const userId = getUserId(request);
+        const code = request.body;
+        const user = usersCode.find((u) => String(u.id) === String(userId));
+        if (user && String(user.code) === String(code)) {
+            const token = app.jwt.sign({ id: user.id }, { expiresIn: "7d" });
+            return reply
+                .setCookie("token", token, { httpOnly: true, sameSite: "lax", path: "/" })
+                .send({ ok: true });
+        } else {
+            return reply.send({ ok: false})
+        }
+    } catch(err) {
+        console.log("VERIFY ERROR:", err);
     }
 });
 
@@ -240,6 +279,13 @@ app.delete("/api/delete-product", async (request, reply) => {
         console.log("DELETE-PRODUCT ERROR:", err);
         return reply.code(500).send({ error: err.message });
     }
+});
+
+app.setErrorHandler((error, request, reply) => {
+  const code = error.statusCode >= 400 && error.statusCode < 500 ? error.statusCode : 500;
+  console.log(code)
+
+  return reply.redirect("/")
 });
 
 const start = async () => {
