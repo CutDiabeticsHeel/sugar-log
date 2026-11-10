@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 
 import { apiWrite } from "../offline/api";
 import style from "../css/pages/verify.module.css";
+import Preloader from "../components/preloader";
 
 function Verify() {
     const [code, setCode] = useState(['', '', '', '']);
@@ -13,6 +14,7 @@ function Verify() {
     const isButtonDisabled = code.some(digit => digit === '');
     const inputsRef = useRef([]);
     const buttonRef = useRef();
+    const [isLoading, setIsLoading] = useState(false)
 
     const handleOtpChange = (value, index) => {
         const newCode = [...code];
@@ -30,6 +32,7 @@ function Verify() {
 
     const submit = async (value) => {
         try {
+            setIsLoading(true)
             const code = value.join("");
             const res = await apiWrite(
                 "POST",
@@ -46,6 +49,8 @@ function Verify() {
         } catch (err) {
             console.log(err)
             setCode('');
+        } finally {
+            setIsLoading(false)
         }
     };
 
@@ -75,6 +80,9 @@ function Verify() {
                         </dialog>
                     </div>
                 )}
+            {isLoading && (
+                <Preloader/>
+            )}
         </div>
     );
 }

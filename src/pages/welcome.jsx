@@ -1,14 +1,24 @@
 import style from "../css/pages/welcome.module.css"
 import MedicalScene from "../components/MedicalScene";
+import Preloader from "../components/preloader";
 
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 function Welcome() {
 
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false)
 
     const register = async (id) => {
-        navigate("/verify",{ state: {userId: id}})
+        try {
+            setIsLoading(true)
+            navigate("/verify",{ state: {userId: id}})
+        } catch (err) {
+            console.log(err)
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     return (
@@ -25,6 +35,9 @@ function Welcome() {
                 </button>
             </div>
             <MedicalScene/>
+            {isLoading && (
+                <Preloader/>
+            )}
         </section>
     )
 }
